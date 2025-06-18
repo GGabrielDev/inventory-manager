@@ -1,5 +1,4 @@
 import express from 'express'
-import sequelize from './config'
 
 const app = express()
 
@@ -10,4 +9,4 @@ app.get('/ping', (req, res) => {
   res.send('pong')
 })
 
-export { app, sequelize }
+export default app

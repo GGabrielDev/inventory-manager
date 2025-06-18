@@ -1,4 +1,4 @@
-import { sequelize } from '../app'
+import sequelize from '@/loaders/sequelize'
 
 describe('Database connection', () => {
   it('should authenticate successfully', async () => {

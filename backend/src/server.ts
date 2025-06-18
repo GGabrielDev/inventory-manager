@@ -1,4 +1,5 @@
-import { app, sequelize } from './app'
+import app from './app'
+import sequelize from './loaders/sequelize'
 import dotenv from 'dotenv'
 
 dotenv.config()

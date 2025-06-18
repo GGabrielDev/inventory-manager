@@ -1,15 +1,15 @@
-import { sequelize } from '../app'
+import sequelize from '@/loaders/sequelize'
 
-// Antes de correr cualquier prueba
+// Una sola instancia global que todos los tests usan
 beforeAll(async () => {
-  await sequelize.sync({ force: true }) // Primera sincronización completa
+  await sequelize.sync({ force: true }) // garantiza que esté todo limpio
 })
 
-// Antes de cada test individual
-beforeEach(async () => {
-  // Borrar todos los registros de todas las tablas sin reiniciar la estructura
+// Despues de cada test individual
+afterEach(async () => {
+  // Limpia todas las tablas sin reiniciar la conexión
   for (const model of Object.values(sequelize.models)) {
-    await model.destroy({ where: {}, truncate: true })
+    await model.destroy({ where: {}, truncate: true, force: true })
   }
 })
 
