@@ -1,13 +1,16 @@
 import {
-  Table,
+  AllowNull,
+  AutoIncrement,
   Column,
+  CreatedAt,
+  HasMany,
   Model,
   PrimaryKey,
-  AutoIncrement,
-  HasMany,
-  AllowNull,
+  Table,
   Unique,
+  UpdatedAt,
 } from 'sequelize-typescript'
+
 import { Item } from '.'
 
 const RELATIONS = {
@@ -25,6 +28,12 @@ export default class Category extends Model {
   @Unique
   @Column
   name!: string
+
+  @CreatedAt
+  creationDate: Date
+
+  @UpdatedAt
+  updatedOn: Date
 
   @HasMany(() => Item)
   items!: Item[]

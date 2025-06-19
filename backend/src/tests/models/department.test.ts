@@ -1,5 +1,6 @@
+import { describe, expect, it } from '@jest/globals'
+
 import { Department, Item } from '@/models'
-import { describe, it, expect } from '@jest/globals'
 
 describe('Department model', () => {
   it('should create a department with valid name', async () => {

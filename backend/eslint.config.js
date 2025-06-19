@@ -1,14 +1,13 @@
 import js from '@eslint/js'
-import globals from 'globals'
-import prettierPlugin from 'eslint-plugin-prettier'
-import typescriptParser from '@typescript-eslint/parser'
 import typescriptPlugin from '@typescript-eslint/eslint-plugin'
+import typescriptParser from '@typescript-eslint/parser'
+import prettierPlugin from 'eslint-plugin-prettier'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import globals from 'globals'
 
 export default [
-  // ESLint recommended rules
   js.configs.recommended,
 
-  // Global environment setup
   {
     languageOptions: {
       parser: typescriptParser,
@@ -24,19 +23,16 @@ export default [
     },
   },
 
-  // TypeScript plugin setup
   {
+    files: ['**/*.{js,ts,jsx,tsx}'],
     plugins: {
       '@typescript-eslint': typescriptPlugin,
-    },
-  },
-
-  // Prettier integration (disables conflicting rules + enables prettier rule)
-  {
-    plugins: {
       prettier: prettierPlugin,
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
       ...prettierPlugin.configs.recommended.rules,
       'prettier/prettier': 'error',
     },

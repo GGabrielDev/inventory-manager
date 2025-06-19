@@ -1,16 +1,19 @@
 import {
-  Table,
+  AllowNull,
+  AutoIncrement,
+  BelongsTo,
   Column,
+  CreatedAt,
+  DataType,
+  Default,
+  ForeignKey,
   Model,
   PrimaryKey,
-  AutoIncrement,
-  ForeignKey,
-  BelongsTo,
-  AllowNull,
-  Default,
-  DataType,
+  Table,
+  UpdatedAt,
   Validate,
 } from 'sequelize-typescript'
+
 import { Category, Department } from '.'
 
 const RELATIONS = {
@@ -55,25 +58,35 @@ export default class Item extends Model {
       }
     },
   })
-  @Column({
-    type: DataType.ENUM(...Object.values(UnitType)),
-  })
+  @Column(DataType.ENUM(...Object.values(UnitType)))
   unit!: UnitType
+
+  @CreatedAt
+  creationDate: Date
+
+  @UpdatedAt
+  updatedOn: Date
 
   @ForeignKey(() => Category)
   @AllowNull(true)
   @Column
   categoryId?: number
 
-  @BelongsTo(() => Category)
-  category?: Category
-
   @ForeignKey(() => Department)
   @AllowNull(false)
   @Column
   departmentId!: number
 
-  @BelongsTo(() => Department)
+  @BelongsTo(() => Category, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  })
+  category?: Category
+
+  @BelongsTo(() => Department, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  })
   department?: Department
 
   static readonly RELATIONS = RELATIONS

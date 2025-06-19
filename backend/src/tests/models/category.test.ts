@@ -1,5 +1,6 @@
+import { beforeEach, describe, expect, it } from '@jest/globals'
+
 import { Category, Department, Item } from '@/models'
-import { beforeEach, describe, it, expect } from '@jest/globals'
 
 describe('Category model', () => {
   let departmentId: number

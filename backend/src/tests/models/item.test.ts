@@ -1,4 +1,4 @@
-import { Department, Category, Item } from '@/models'
+import { Category, Department, Item } from '@/models'
 import { UnitType } from '@/models/Item'
 
 describe('Item model validations', () => {
