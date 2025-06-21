@@ -14,6 +14,7 @@ export default [
       parserOptions: {
         ecmaVersion: 2021,
         sourceType: 'module',
+        project: './tsconfig.json',
       },
       globals: {
         ...globals.node,
@@ -31,6 +32,19 @@ export default [
       'simple-import-sort': simpleImportSort,
     },
     rules: {
+      // disable core:
+      'no-unused-vars': 'off',
+      // enable TS plugin:
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          args: 'after-used',
+          ignoreRestSiblings: true,
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       ...prettierPlugin.configs.recommended.rules,
