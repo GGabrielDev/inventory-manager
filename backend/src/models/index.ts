@@ -1,4 +1,6 @@
 export { default as Category } from './Category'
+export { default as ChangeLog } from './ChangeLog'
+export { default as ChangeLogDetail } from './ChangeLogDetail'
 export { default as Department } from './Department'
 export { default as Item } from './Item'
 export { default as Role } from './Role'

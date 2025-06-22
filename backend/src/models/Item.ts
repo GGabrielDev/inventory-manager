@@ -8,6 +8,7 @@ import {
   Default,
   DeletedAt,
   ForeignKey,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -15,10 +16,11 @@ import {
   Validate,
 } from 'sequelize-typescript'
 
-import { Category, Department } from '.'
+import { Category, ChangeLog, Department } from '.'
 
 const RELATIONS = {
   CATEGORY: 'category',
+  CHANGELOGS: 'changeLogs',
   DEPARTMENT: 'department',
 } as const satisfies Record<string, keyof Item>
 
@@ -92,6 +94,9 @@ export default class Item extends Model {
     onUpdate: 'CASCADE',
   })
   department?: Department
+
+  @HasMany(() => ChangeLog)
+  changeLogs!: ChangeLog[]
 
   static readonly RELATIONS = RELATIONS
 }

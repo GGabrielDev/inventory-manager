@@ -11,9 +11,10 @@ import {
   UpdatedAt,
 } from 'sequelize-typescript'
 
-import { Item } from '.'
+import { ChangeLog, Item } from '.'
 
 const RELATIONS = {
+  CHANGELOGS: 'changeLogs',
   ITEMS: 'items',
 } as const satisfies Record<string, keyof Category>
 
@@ -37,6 +38,9 @@ export default class Category extends Model {
 
   @HasMany(() => Item)
   items!: Item[]
+
+  @HasMany(() => ChangeLog)
+  changeLogs!: ChangeLog[]
 
   static readonly RELATIONS = RELATIONS
 }

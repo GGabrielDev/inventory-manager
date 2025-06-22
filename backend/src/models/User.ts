@@ -8,6 +8,7 @@ import {
   Column,
   CreatedAt,
   DeletedAt,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -15,10 +16,11 @@ import {
   UpdatedAt,
 } from 'sequelize-typescript'
 
-import { Role } from '.'
+import { ChangeLog, Role } from '.'
 import { UserRole } from './join'
 
 const RELATIONS = {
+  CHANGELOGS: 'changeLogs',
   ROLES: 'roles',
 } as const satisfies Record<string, keyof User>
 
@@ -40,6 +42,9 @@ export default class User extends Model {
 
   @BelongsToMany(() => Role, () => UserRole)
   roles!: Array<Role & { UserRole: UserRole }>
+
+  @HasMany(() => ChangeLog)
+  changeLogs!: ChangeLog[]
 
   @CreatedAt
   creationDate!: Date
