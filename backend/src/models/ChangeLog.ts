@@ -27,9 +27,10 @@ export const OPERATION_TYPES = [
   'create',
   'update',
   'delete',
-  'archive',
   'link',
+  'unlink',
 ] as const
+
 export type OperationType = (typeof OPERATION_TYPES)[number]
 
 @Table

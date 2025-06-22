@@ -12,12 +12,13 @@ import {
 
 import { ChangeLog } from '.'
 
+type DiffType = (typeof DIFF_TYPES)[number]
+
 const RELATIONS = {
   CHANGELOG: 'changeLog',
 } as const satisfies Record<string, keyof ChangeLogDetail>
 
 export const DIFF_TYPES = ['added', 'removed', 'changed'] as const
-type DiffType = (typeof DIFF_TYPES)[number]
 
 @Table
 export default class ChangeLogDetail extends Model {
