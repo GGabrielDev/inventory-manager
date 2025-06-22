@@ -1,11 +1,11 @@
 import { Sequelize } from 'sequelize-typescript'
 
 import { dbConfig } from '@/config'
-import { Models } from '@/models'
+import { ModelsArray } from '@/models'
 
 const sequelize = new Sequelize({
   ...dbConfig,
-  models: Models,
+  models: ModelsArray,
   define: {
     timestamps: true,
   },

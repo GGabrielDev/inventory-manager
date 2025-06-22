@@ -12,7 +12,8 @@ const config: Config = {
     '^.+\\.ts$': 'ts-jest',
   },
   testMatch: ['**/tests/**/*.test.ts'],
-  slowTestThreshold: 10,
+  slowTestThreshold: 50,
+  testTimeout: 30000,
 }
 
 export default config

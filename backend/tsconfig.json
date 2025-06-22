@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "src", // <- Esto permite que "@" apunte a la carpeta "src"
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./*"]
     },
     "target": "es6",
     "module": "CommonJS",

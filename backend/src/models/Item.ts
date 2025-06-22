@@ -6,6 +6,7 @@ import {
   CreatedAt,
   DataType,
   Default,
+  DeletedAt,
   ForeignKey,
   Model,
   PrimaryKey,
@@ -62,10 +63,13 @@ export default class Item extends Model {
   unit!: UnitType
 
   @CreatedAt
-  creationDate: Date
+  creationDate!: Date
 
   @UpdatedAt
-  updatedOn: Date
+  updatedOn!: Date
+
+  @DeletedAt
+  deletionDate?: Date
 
   @ForeignKey(() => Category)
   @AllowNull(true)

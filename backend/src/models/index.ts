@@ -1,7 +1,14 @@
-import Category from './Category'
-import Department from './Department'
-import Item from './Item'
+export { default as Category } from './Category'
+export { default as Department } from './Department'
+export { default as Item } from './Item'
+export { default as Role } from './Role'
+export { default as User } from './User'
 
-export const Models = [Category, Department, Item]
+// TypeScript: `import * as` gets all named exports from this file
+import * as models from './index' // This is safe because TypeScript's module system resolves this after the exports above
+import { JoinModels } from './join'
 
-export { Category, Department, Item }
+// Build ModelsArray dynamically from the named exports, excluding non-model exports
+const { ModelsArray: _ignore1, ...namedModels } = models
+
+export const ModelsArray = [...Object.values(namedModels), ...JoinModels]
