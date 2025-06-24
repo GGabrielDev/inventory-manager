@@ -3,7 +3,7 @@ import { Model, Transaction } from 'sequelize'
 import { ChangeLog, ChangeLogDetail } from '@/models'
 import { OperationType } from '@/models/ChangeLog'
 
-type RELATIONS = keyof typeof ChangeLog.RELATIONS
+type RELATIONS = (typeof ChangeLog.RELATIONS)[keyof typeof ChangeLog.RELATIONS]
 
 type LogChangeProps = {
   instance: Model
@@ -14,6 +14,22 @@ type LogChangeProps = {
   relation?: string // for link/unlink actions
   relatedId?: number | string // optional for association actions
   transaction?: Transaction
+}
+
+// Exporting for testing, not expected to be used standalone
+export function inferOperation(instance: any, operation: OperationType) {
+  if (operation === 'update') {
+    const changedFields = instance.changed() as string[] // get changed fields
+    if (changedFields.some((f) => f.endsWith('Id'))) {
+      // You can further check if it's a new value (link) or set to null (unlink)
+      return instance.getDataValue(
+        changedFields.find((f) => f.endsWith('Id')!)!
+      ) == null
+        ? 'unlink'
+        : 'link'
+    }
+  }
+  return operation
 }
 
 export async function logChange({
@@ -55,7 +71,12 @@ export async function logChange({
   } else if (operation === 'link' || operation === 'unlink') {
     details.push({
       field: relation,
-      oldValue: operation === 'link' ? null : relatedId,
+      oldValue:
+        operation === 'link'
+          ? null
+          : relation
+            ? instance.previous(relation)
+            : null,
       newValue: operation === 'link' ? relatedId : null,
       diffType: operation,
     })
@@ -71,8 +92,8 @@ export async function logChange({
     modelId,
   }
   // Optionally, add relation info for link/unlink
-  if (relation) logData.relation = relation
-  if (relatedId) logData.relatedId = relatedId
+  if (relation !== undefined) logData.relation = relation
+  if (relation !== undefined) logData.relatedId = relatedId
 
   const changeLog = await ChangeLog.create(logData, { transaction })
 
@@ -90,4 +111,45 @@ export async function logChange({
       { transaction }
     )
   }
+}
+
+export async function logHook(
+  operation: OperationType,
+  instance: Model,
+  options: any
+) {
+  // Infer operation (link/unlink if needed)
+  const actualOperation = inferOperation(instance, operation)
+
+  // Extract userId (adjust according to how you pass it in your app)
+  const userId = options.userId || (options as any).userId
+  if (!userId) throw new Error('userId missing in options for logHook')
+
+  // Get model name and id
+  const modelName = (instance.constructor as any).name as RELATIONS
+  const modelId = instance.get('id') as string | number
+
+  // For link/unlink, infer relation/relatedId
+  let relation: string | undefined = undefined
+  let relatedId: number | string | undefined = undefined
+
+  if (actualOperation === 'link' || actualOperation === 'unlink') {
+    const changedFields = instance.changed() as string[]
+    const relField = changedFields.find((f) => f.endsWith('Id'))
+    if (relField) {
+      relation = relField
+      relatedId = instance.get(relField) as string | number | undefined
+    }
+  }
+
+  await logChange({
+    instance,
+    operation: actualOperation as OperationType,
+    userId,
+    modelName,
+    modelId,
+    relation,
+    relatedId,
+    transaction: options.transaction,
+  })
 }
