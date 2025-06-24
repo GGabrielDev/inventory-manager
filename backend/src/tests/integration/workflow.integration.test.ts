@@ -1,11 +1,4 @@
-import {
-  Category,
-  ChangeLog,
-  ChangeLogDetail,
-  Department,
-  Item,
-  User,
-} from '@/models'
+import { Category, ChangeLog, Department, Item, User } from '@/models'
 
 describe('Integration: Items & ChangeLogging Workflow', () => {
   let user: User
@@ -26,7 +19,7 @@ describe('Integration: Items & ChangeLogging Workflow', () => {
         Item.create({
           name: `Item${i}`,
           quantity: i * 10,
-          unit: 'pcs',
+          unit: 'und.',
           categoryId: category.id,
           departmentId: department.id,
           creationDate: new Date(),
@@ -56,7 +49,7 @@ describe('Integration: Items & ChangeLogging Workflow', () => {
 
     // UPDATE
     await Promise.all(
-      items.map((item, idx) =>
+      items.map((item) =>
         item.update({ quantity: item.quantity + 5, updatedOn: new Date() })
       )
     )

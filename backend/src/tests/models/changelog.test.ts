@@ -39,7 +39,7 @@ describe('ChangeLog Model', () => {
   test('creates with only departmentId', async () => {
     const log = await ChangeLog.create({
       departmentId: department.id,
-      operation: 'archive',
+      operation: 'create',
       changedBy: user.id,
     })
     expect(log.departmentId).toBe(department.id)

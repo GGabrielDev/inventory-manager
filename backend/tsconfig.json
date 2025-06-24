@@ -1,4 +1,8 @@
 {
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts"
+  ],
   "compilerOptions": {
     "baseUrl": "src", // <- Esto permite que "@" apunte a la carpeta "src"
     "paths": {

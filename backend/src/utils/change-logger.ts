@@ -5,6 +5,13 @@ import { OperationType } from '@/models/ChangeLog'
 
 type RELATIONS = (typeof ChangeLog.RELATIONS)[keyof typeof ChangeLog.RELATIONS]
 
+const MODEL_TO_FK = {
+  User: 'userId',
+  Item: 'itemId',
+  Category: 'categoryId',
+  Department: 'departmentId',
+} as const
+
 type LogChangeProps = {
   instance: Model
   operation: OperationType
@@ -88,12 +95,20 @@ export async function logChange({
     changedBy: userId,
     changedAt,
     updatedAt: changedAt,
-    modelName,
-    modelId,
   }
+
+  // Set the correct FK based on modelName and modelId
+  const fkField = MODEL_TO_FK[modelName as keyof typeof MODEL_TO_FK]
+  if (fkField) logData[fkField] = modelId
+
   // Optionally, add relation info for link/unlink
-  if (relation !== undefined) logData.relation = relation
-  if (relation !== undefined) logData.relatedId = relatedId
+  if (relation && relatedId) {
+    logData.changeDetails = {
+      ...(logData.changeDetails || {}),
+      relation,
+      relatedId,
+    }
+  }
 
   const changeLog = await ChangeLog.create(logData, { transaction })
 
@@ -118,18 +133,15 @@ export async function logHook(
   instance: Model,
   options: any
 ) {
-  // Infer operation (link/unlink if needed)
   const actualOperation = inferOperation(instance, operation)
 
-  // Extract userId (adjust according to how you pass it in your app)
   const userId = options.userId || (options as any).userId
-  if (!userId) throw new Error('userId missing in options for logHook')
+  if (typeof userId !== 'number' || userId == null)
+    throw new Error('userId missing in options for logHook')
 
-  // Get model name and id
-  const modelName = (instance.constructor as any).name as RELATIONS
+  const modelName = (instance.constructor as any).name
   const modelId = instance.get('id') as string | number
 
-  // For link/unlink, infer relation/relatedId
   let relation: string | undefined = undefined
   let relatedId: number | string | undefined = undefined
 
@@ -140,6 +152,12 @@ export async function logHook(
       relation = relField
       relatedId = instance.get(relField) as string | number | undefined
     }
+  }
+
+  // For direct User changes, record as relation to userId
+  if (!relation && modelName === 'User') {
+    relation = 'userId'
+    relatedId = modelId
   }
 
   await logChange({

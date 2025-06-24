@@ -56,28 +56,31 @@ export default class ChangeLog extends Model {
   @AllowNull(false)
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
-  changedBy!: number
+  changedBy!: User['id']
 
   @BelongsTo(() => User)
   user!: User
 
+  @Column(DataType.INTEGER)
+  userId?: User['id']
+
   @ForeignKey(() => Item)
   @Column(DataType.INTEGER)
-  itemId?: number
+  itemId?: Item['id']
 
   @BelongsTo(() => Item)
   item?: Item
 
   @ForeignKey(() => Category)
   @Column(DataType.INTEGER)
-  categoryId?: number
+  categoryId?: Category['id']
 
   @BelongsTo(() => Category)
   category?: Category
 
   @ForeignKey(() => Department)
   @Column(DataType.INTEGER)
-  departmentId?: number
+  departmentId?: Department['id']
 
   @BelongsTo(() => Department)
   department?: Department
@@ -87,8 +90,8 @@ export default class ChangeLog extends Model {
 
   @BeforeValidate
   static enforceAtLeastOneAssociation(instance: ChangeLog) {
-    const { itemId, categoryId, departmentId } = instance
-    if (!itemId && !categoryId && !departmentId) {
+    const { itemId, categoryId, departmentId, userId } = instance
+    if (!itemId && !categoryId && !departmentId && !userId) {
       throw new Error('ChangeLog: At least one association must be set.')
     }
   }
