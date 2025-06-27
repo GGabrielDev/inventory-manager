@@ -7,7 +7,10 @@ describe('Integration: Items & ChangeLogging Workflow', () => {
   let items: Item[] = []
 
   beforeEach(async () => {
-    user = await User.create({ username: 'test_user', passwordHash: 'pw' })
+    user = await User.create(
+      { id: 0, username: 'test_user', passwordHash: 'pw' },
+      { userId: 0 }
+    )
     department = await Department.create({ name: 'Integration Dept' })
     category = await Category.create({ name: 'Integration Cat' })
   })

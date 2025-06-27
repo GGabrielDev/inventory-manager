@@ -8,11 +8,11 @@ describe('User Model', () => {
   beforeEach(async () => {
     systemUser = await User.create(
       {
-        username: 'system',
-        passwordHash: 'sys',
-        id: 0, // Simulates bypass user
+        id: 0,
+        username: 'systemUser',
+        passwordHash: 'password',
       },
-      { userId: 0 } // Not used when declaring the bypass user, but stil has to be declared
+      { userId: 0 }
     )
     logHookSpy = jest
       .spyOn(changeLogger, 'logHook')

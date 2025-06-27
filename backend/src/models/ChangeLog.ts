@@ -13,15 +13,24 @@ import {
   Table,
 } from 'sequelize-typescript'
 
-import { Category, ChangeLogDetail, Department, Item, User } from '.'
+import { Category, ChangeLogDetail, Department, Item, Role, User } from '.'
 
 const RELATIONS = {
   CHANGELOG_DETAILS: 'changeLogDetails',
   CATEGORY: 'category',
   DEPARTMENT: 'department',
   ITEM: 'item',
+  ROLE: 'role',
   USER: 'user',
 } as const satisfies Record<string, keyof ChangeLog>
+
+const RELATIONS_ID = {
+  CATEGORY: 'categoryId',
+  DEPARTMENT: 'departmentId',
+  ITEM: 'itemId',
+  ROLE: 'roleId',
+  USER: 'userId',
+}
 
 export const OPERATION_TYPES = [
   'create',
@@ -78,6 +87,13 @@ export default class ChangeLog extends Model {
   @BelongsTo(() => Category)
   category?: Category
 
+  @ForeignKey(() => Role)
+  @Column(DataType.INTEGER)
+  roleId?: Role['id']
+
+  @BelongsTo(() => Role)
+  role?: Role
+
   @ForeignKey(() => Department)
   @Column(DataType.INTEGER)
   departmentId?: Department['id']
@@ -88,13 +104,18 @@ export default class ChangeLog extends Model {
   @HasMany(() => ChangeLogDetail)
   changeLogDetails!: ChangeLogDetail[]
 
+  static readonly RELATIONS = RELATIONS
+
+  static readonly RELATIONS_ID = RELATIONS_ID
+
   @BeforeValidate
   static enforceAtLeastOneAssociation(instance: ChangeLog) {
-    const { itemId, categoryId, departmentId, userId } = instance
-    if (!itemId && !categoryId && !departmentId && !userId) {
+    if (
+      !Object.values(ChangeLog.RELATIONS_ID)
+        .filter((field): field is keyof ChangeLog => field in instance)
+        .some((field) => Boolean(instance[field]))
+    ) {
       throw new Error('ChangeLog: At least one association must be set.')
     }
   }
-
-  static readonly RELATIONS = RELATIONS
 }

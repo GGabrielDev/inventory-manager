@@ -8,6 +8,7 @@ import {
   Column,
   CreatedAt,
   DeletedAt,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -18,7 +19,7 @@ import {
 import { UserActionOptions } from '@/types/UserActionOptions'
 import { logHook } from '@/utils/change-logger'
 
-import { User } from '.'
+import { ChangeLog, User } from '.'
 import { UserRole } from './join'
 
 const RELATIONS = {
@@ -48,6 +49,9 @@ export default class Role extends Model {
 
   @DeletedAt
   deletionDate?: Date
+
+  @HasMany(() => ChangeLog)
+  changeLogs!: ChangeLog[]
 
   static readonly RELATIONS = RELATIONS
 

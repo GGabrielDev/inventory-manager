@@ -8,9 +8,18 @@ describe('ChangeLogDetail Model', () => {
   let item: Item
 
   beforeEach(async () => {
-    user = await User.create({ username: 'TestUser', passwordHash: 'test' })
-    department = await Department.create({ name: 'Test Department' })
-    item = await Item.create({ name: 'Test Item', departmentId: department.id })
+    user = await User.create(
+      { id: 0, username: 'TestUser', passwordHash: 'test' },
+      { userId: 0 }
+    )
+    department = await Department.create(
+      { name: 'Test Department' },
+      { userId: user.id }
+    )
+    item = await Item.create(
+      { name: 'Test Item', departmentId: department.id },
+      { userId: user.id }
+    )
     changeLog = await ChangeLog.create({
       operation: 'update',
       changedBy: user.id,

@@ -7,9 +7,9 @@ beforeAll(async () => {
 
 // Despues de cada test individual
 afterEach(async () => {
-  // Limpia todas las tablas sin reiniciar la conexión
+  // Clean all the tables without restarting the connection
   for (const model of Object.values(sequelize.models)) {
-    await model.destroy({ where: {}, truncate: true, force: true })
+    await model.destroy({ where: {}, truncate: true, force: true, userId: 0 })
   }
 })
 

@@ -85,6 +85,7 @@ export default class User extends Model {
   static async logCreate(instance: User, options: UserActionOptions) {
     if (typeof options.userId !== 'number' || options.userId == null)
       throw new Error('userId required for changelog')
+    // Bypass to create first user (Bypass User)
     if (!(instance.id === 0))
       await logHook('create', instance, {
         userId: options.userId,

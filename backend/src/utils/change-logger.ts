@@ -5,13 +5,6 @@ import { OperationType } from '@/models/ChangeLog'
 
 type RELATIONS = (typeof ChangeLog.RELATIONS)[keyof typeof ChangeLog.RELATIONS]
 
-const MODEL_TO_FK = {
-  User: 'userId',
-  Item: 'itemId',
-  Category: 'categoryId',
-  Department: 'departmentId',
-} as const
-
 type LogChangeProps = {
   instance: Model
   operation: OperationType
@@ -98,7 +91,10 @@ export async function logChange({
   }
 
   // Set the correct FK based on modelName and modelId
-  const fkField = MODEL_TO_FK[modelName as keyof typeof MODEL_TO_FK]
+  const fkField =
+    ChangeLog.RELATIONS_ID[
+      String(modelName).toUpperCase() as keyof typeof ChangeLog.RELATIONS_ID
+    ]
   if (fkField) logData[fkField] = modelId
 
   // Optionally, add relation info for link/unlink

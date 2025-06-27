@@ -1,6 +1,7 @@
 import {
-  AfterCreate,
-  AfterDestroy,
+  AfterBulkCreate,
+  AfterBulkDestroy,
+  BeforeBulkDestroy,
   Column,
   ForeignKey,
   Model,
@@ -22,31 +23,42 @@ export default class UserRole extends Model {
   roleId!: number
 
   // Add hooks for link/unlink
-  @AfterCreate
-  static async logLink(instance: UserRole, options: UserActionOptions) {
+  @AfterBulkCreate
+  static async logLink(instances: UserRole[], options: UserActionOptions) {
     if (typeof options.userId !== 'number' || options.userId == null)
       throw new Error('userId required for changelog')
-    await logHook('link', instance, {
-      userId: options.userId,
-      modelName: 'UserRole',
-      modelId: instance.userId,
-      relation: 'roleId',
-      relatedId: instance.roleId,
-      transaction: options.transaction,
-    })
+    for (const instance of instances) {
+      await logHook('link', instance, {
+        userId: options.userId,
+        modelName: 'UserRole',
+        modelId: instance.userId,
+        relation: 'roleId',
+        relatedId: instance.roleId,
+        transaction: options.transaction,
+      })
+    }
   }
 
-  @AfterDestroy
-  static async logUnlink(instance: UserRole, options: UserActionOptions) {
+  @BeforeBulkDestroy
+  static async cacheDestroyedInstances(options: any) {
+    // Find affected instances and attach to options
+    options.instancesToLog = await UserRole.findAll({ where: options.where })
+  }
+
+  @AfterBulkDestroy
+  static async logUnlink(options: any) {
     if (typeof options.userId !== 'number' || options.userId == null)
       throw new Error('userId required for changelog')
-    await logHook('unlink', instance, {
-      userId: options.userId,
-      modelName: 'UserRole',
-      modelId: instance.userId,
-      relation: 'roleId',
-      relatedId: instance.roleId,
-      transaction: options.transaction,
-    })
+    // Log each deleted instance
+    for (const instance of options.instancesToLog || []) {
+      await logHook('unlink', instance, {
+        userId: options.userId,
+        modelName: 'UserRole',
+        modelId: instance.userId,
+        relation: 'roleId',
+        relatedId: instance.roleId,
+        transaction: options.transaction,
+      })
+    }
   }
 }
