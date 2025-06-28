@@ -79,7 +79,7 @@ export default class Category extends Model {
   }
 
   @AfterDestroy
-  static async logDestroy(instance: Role, options: UserActionOptions) {
+  static async logDestroy(instance: Category, options: UserActionOptions) {
     if (typeof options.userId !== 'number' || options.userId == null)
       throw new Error('userId required for changelog')
     await logHook('delete', instance, {
