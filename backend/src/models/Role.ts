@@ -61,7 +61,7 @@ export default class Role extends Model {
       throw new Error('userId required for changelog')
     await logHook('create', instance, {
       userId: options.userId,
-      modelName: 'Role',
+      modelName: ChangeLog.RELATIONS.ROLE,
       modelId: instance.id,
       transaction: options.transaction,
     })
@@ -73,7 +73,7 @@ export default class Role extends Model {
       throw new Error('userId required for changelog')
     await logHook('update', instance, {
       userId: options.userId,
-      modelName: 'Role',
+      modelName: ChangeLog.RELATIONS.ROLE,
       modelId: instance.id,
       transaction: options.transaction,
     })
@@ -85,7 +85,7 @@ export default class Role extends Model {
       throw new Error('userId required for changelog')
     await logHook('delete', instance, {
       userId: options.userId,
-      modelName: 'Role',
+      modelName: ChangeLog.RELATIONS.ROLE,
       modelId: instance.id,
       transaction: options.transaction,
     })

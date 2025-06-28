@@ -1,5 +1,5 @@
 import { ChangeLog, ChangeLogDetail, Department, Item, User } from '@/models'
-import { DIFF_TYPES } from '@/models/ChangeLogDetail'
+import { DIFF_TYPES } from '@/models/ChangeLog'
 
 describe('ChangeLogDetail Model', () => {
   let user: User

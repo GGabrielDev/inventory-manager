@@ -1,7 +1,7 @@
 import { Model, Transaction } from 'sequelize'
 
 import { ChangeLog, ChangeLogDetail } from '@/models'
-import { OperationType } from '@/models/ChangeLog'
+import { operationToDiffType, OperationType } from '@/models/ChangeLog'
 
 type RELATIONS = (typeof ChangeLog.RELATIONS)[keyof typeof ChangeLog.RELATIONS]
 
@@ -54,7 +54,7 @@ export async function logChange({
           field: key,
           oldValue: prev,
           newValue: curr,
-          diffType: 'update',
+          diffType: operationToDiffType('update'),
         })
       }
     }
@@ -65,7 +65,7 @@ export async function logChange({
         field: key,
         oldValue: operation === 'create' ? null : instance.get(key),
         newValue: operation === 'create' ? instance.get(key) : null,
-        diffType: operation,
+        diffType: operationToDiffType(operation),
       })
     }
   } else if (operation === 'link' || operation === 'unlink') {
@@ -78,7 +78,7 @@ export async function logChange({
             ? instance.previous(relation)
             : null,
       newValue: operation === 'link' ? relatedId : null,
-      diffType: operation,
+      diffType: operationToDiffType(operation),
     })
   }
 

@@ -1,18 +1,26 @@
+import { Op } from 'sequelize'
+
 import { Category, ChangeLog, Department, Item, User } from '@/models'
 
 describe('Integration: Items & ChangeLogging Workflow', () => {
-  let user: User
+  let systemUser: User
   let department: Department
   let category: Category
   let items: Item[] = []
 
   beforeEach(async () => {
-    user = await User.create(
+    systemUser = await User.create(
       { id: 0, username: 'test_user', passwordHash: 'pw' },
       { userId: 0 }
     )
-    department = await Department.create({ name: 'Integration Dept' })
-    category = await Category.create({ name: 'Integration Cat' })
+    department = await Department.create(
+      { name: 'Integration Dept' },
+      { userId: systemUser.id }
+    )
+    category = await Category.create(
+      { name: 'Integration Cat' },
+      { userId: systemUser.id }
+    )
   })
 
   it('should create, update, delete items and record changelogs', async () => {
@@ -34,7 +42,7 @@ describe('Integration: Items & ChangeLogging Workflow', () => {
     for (const item of items) {
       await ChangeLog.create({
         operation: 'create',
-        changedBy: user.id,
+        changedBy: systemUser.id,
         itemId: item.id,
         categoryId: category.id,
         departmentId: department.id,
@@ -47,7 +55,9 @@ describe('Integration: Items & ChangeLogging Workflow', () => {
     const itemsInDb = await Item.findAll()
     expect(itemsInDb.length).toBe(3)
 
-    let logs = await ChangeLog.findAll({ where: { operation: 'create' } })
+    let logs = await ChangeLog.findAll({
+      where: { operation: 'create', itemId: { [Op.ne]: null } },
+    })
     expect(logs.length).toBe(3)
 
     // UPDATE
@@ -59,7 +69,7 @@ describe('Integration: Items & ChangeLogging Workflow', () => {
     for (const item of items) {
       await ChangeLog.create({
         operation: 'update',
-        changedBy: user.id,
+        changedBy: systemUser.id,
         itemId: item.id,
         categoryId: category.id,
         departmentId: department.id,
@@ -77,7 +87,7 @@ describe('Integration: Items & ChangeLogging Workflow', () => {
     for (const item of items) {
       await ChangeLog.create({
         operation: 'delete',
-        changedBy: user.id,
+        changedBy: systemUser.id,
         itemId: item.id,
         categoryId: category.id,
         departmentId: department.id,
@@ -95,9 +105,11 @@ describe('Integration: Items & ChangeLogging Workflow', () => {
 
     // VALIDATE CHANGELOG DETAILS IF NEEDED
     // Example: Check all changelogs are associated to the right user and item
-    const allLogs = await ChangeLog.findAll()
+    const allLogs = await ChangeLog.findAll({
+      where: { itemId: { [Op.ne]: null } },
+    })
     for (const log of allLogs) {
-      expect(log.changedBy).toBe(user.id)
+      expect(log.changedBy).toBe(systemUser.id)
       expect(items.map((i) => i.id)).toContain(log.itemId)
     }
   })

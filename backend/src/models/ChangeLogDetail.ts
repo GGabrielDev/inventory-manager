@@ -11,14 +11,11 @@ import {
 } from 'sequelize-typescript'
 
 import { ChangeLog } from '.'
-
-type DiffType = (typeof DIFF_TYPES)[number]
+import { DIFF_TYPES, DiffType } from './ChangeLog'
 
 const RELATIONS = {
   CHANGELOG: 'changeLog',
 } as const satisfies Record<string, keyof ChangeLogDetail>
-
-export const DIFF_TYPES = ['added', 'removed', 'changed'] as const
 
 @Table
 export default class ChangeLogDetail extends Model {

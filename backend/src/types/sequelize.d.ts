@@ -1,5 +1,4 @@
 import 'sequelize'
-import 'sequelize-typescript'
 
 import { User } from '@/models'
 
@@ -10,7 +9,13 @@ declare module 'sequelize' {
   interface UpdateOptions {
     userId?: User['id']
   }
+  interface SaveOptions {
+    userId?: User['id']
+  }
   interface DestroyOptions {
+    userId?: User['id']
+  }
+  interface InstanceDestroyOptions {
     userId?: User['id']
   }
 }

@@ -135,4 +135,19 @@ describe('User-Role Integration', () => {
     // unlink
     await expect(user.$remove('roles', role)).rejects.toThrow(/userId required/)
   })
+
+  it('should not throw when unlinking a non-linked role', async () => {
+    const user = await User.create(
+      { username: 'nolink', passwordHash: 'pw' },
+      { userId: systemUser.id }
+    )
+    const role = await Role.create(
+      { name: 'notlinked' },
+      { userId: systemUser.id }
+    )
+    // Should not throw (adjust if your design expects otherwise)
+    await expect(
+      user.$remove('roles', role, { userId: systemUser.id })
+    ).resolves.not.toThrow()
+  })
 })

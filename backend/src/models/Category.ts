@@ -1,8 +1,12 @@
 import {
+  AfterCreate,
+  AfterDestroy,
+  AfterUpdate,
   AllowNull,
   AutoIncrement,
   Column,
   CreatedAt,
+  DeletedAt,
   HasMany,
   Model,
   PrimaryKey,
@@ -11,7 +15,10 @@ import {
   UpdatedAt,
 } from 'sequelize-typescript'
 
-import { ChangeLog, Item } from '.'
+import { UserActionOptions } from '@/types/UserActionOptions'
+import { logHook } from '@/utils/change-logger'
+
+import { ChangeLog, Item, Role } from '.'
 
 const RELATIONS = {
   CHANGELOGS: 'changeLogs',
@@ -36,6 +43,9 @@ export default class Category extends Model {
   @UpdatedAt
   updatedOn: Date
 
+  @DeletedAt
+  deletionDate?: Date
+
   @HasMany(() => Item)
   items!: Item[]
 
@@ -43,4 +53,40 @@ export default class Category extends Model {
   changeLogs!: ChangeLog[]
 
   static readonly RELATIONS = RELATIONS
+
+  @AfterCreate
+  static async logCreate(instance: Category, options: UserActionOptions) {
+    if (typeof options.userId !== 'number' || options.userId == null)
+      throw new Error('userId required for changelog')
+    await logHook('create', instance, {
+      userId: options.userId,
+      modelName: ChangeLog.RELATIONS.CATEGORY,
+      modelId: instance.id,
+      transaction: options.transaction,
+    })
+  }
+
+  @AfterUpdate
+  static async logUpdate(instance: Category, options: UserActionOptions) {
+    if (typeof options.userId !== 'number' || options.userId == null)
+      throw new Error('userId required for changelog')
+    await logHook('update', instance, {
+      userId: options.userId,
+      modelName: ChangeLog.RELATIONS.CATEGORY,
+      modelId: instance.id,
+      transaction: options.transaction,
+    })
+  }
+
+  @AfterDestroy
+  static async logDestroy(instance: Role, options: UserActionOptions) {
+    if (typeof options.userId !== 'number' || options.userId == null)
+      throw new Error('userId required for changelog')
+    await logHook('delete', instance, {
+      userId: options.userId,
+      modelName: ChangeLog.RELATIONS.CATEGORY,
+      modelId: instance.id,
+      transaction: options.transaction,
+    })
+  }
 }

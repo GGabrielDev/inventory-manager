@@ -1,4 +1,4 @@
-import { User } from '@/models'
+import { ChangeLog, User } from '@/models'
 import * as changeLogger from '@/utils/change-logger'
 
 describe('User Model', () => {
@@ -41,7 +41,7 @@ describe('User Model', () => {
       expect.any(User),
       expect.objectContaining({
         userId: systemUser.id,
-        modelName: 'User',
+        modelName: ChangeLog.RELATIONS.USER,
         modelId: expect.any(Number),
       })
     )
@@ -77,6 +77,37 @@ describe('User Model', () => {
     ).rejects.toThrow()
     expect(logHookSpy).toHaveBeenCalledWith(
       'create',
+      expect.any(User),
+      expect.objectContaining({ userId: systemUser.id })
+    )
+  })
+
+  it('should update password and call update log hook', async () => {
+    const user = await User.create(
+      { username: 'updateuser', passwordHash: 'first' },
+      { userId: systemUser.id }
+    )
+    logHookSpy.mockClear()
+    user.passwordHash = 'second'
+    await user.save({ userId: systemUser.id })
+    expect(await user.validatePassword('second')).toBe(true)
+    expect(logHookSpy).toHaveBeenCalledWith(
+      'update',
+      expect.any(User),
+      expect.objectContaining({ userId: systemUser.id })
+    )
+  })
+
+  it('should soft-delete a user and call delete log hook', async () => {
+    const user = await User.create(
+      { username: 'deluser', passwordHash: 'x' },
+      { userId: systemUser.id }
+    )
+    logHookSpy.mockClear()
+    await user.destroy({ userId: systemUser.id })
+    expect(user.deletionDate).toBeInstanceOf(Date)
+    expect(logHookSpy).toHaveBeenCalledWith(
+      'delete',
       expect.any(User),
       expect.objectContaining({ userId: systemUser.id })
     )

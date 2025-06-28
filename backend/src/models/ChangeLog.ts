@@ -42,6 +42,27 @@ export const OPERATION_TYPES = [
 
 export type OperationType = (typeof OPERATION_TYPES)[number]
 
+// Map OperationType to DiffType
+export const OPERATION_TO_DIFF_TYPE = {
+  create: 'added',
+  link: 'added',
+  update: 'changed',
+  delete: 'removed',
+  unlink: 'removed',
+} as const
+
+export type DiffType = (typeof OPERATION_TO_DIFF_TYPE)[OperationType]
+
+// Export valid diff types for use in ChangeLogDetail
+export const DIFF_TYPES = Array.from(
+  new Set(Object.values(OPERATION_TO_DIFF_TYPE))
+) as DiffType[]
+
+// Helper to convert operation to diffType
+export function operationToDiffType(op: OperationType): DiffType {
+  return OPERATION_TO_DIFF_TYPE[op]
+}
+
 @Table
 export default class ChangeLog extends Model {
   @PrimaryKey

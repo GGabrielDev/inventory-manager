@@ -3,7 +3,6 @@ import { jest } from '@jest/globals'
 import { ChangeLog, ChangeLogDetail } from '@/models'
 import { logChange, logHook } from '@/utils/change-logger'
 
-// Sobrescribe los métodos estáticos con mocks antes de los tests
 beforeAll(() => {
   // @ts-ignore
   ChangeLog.create = jest.fn().mockResolvedValue({ id: 1 })
@@ -18,8 +17,6 @@ beforeAll(() => {
 afterAll(() => {
   jest.restoreAllMocks()
 })
-
-// ... aquí van tus tests, sin errores de tipo
 
 describe('calls to logChange and logHook', () => {
   beforeEach(() => {

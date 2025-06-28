@@ -1,25 +1,52 @@
-import { beforeEach, describe, expect, it } from '@jest/globals'
-
-import { Category, Department, Item } from '@/models'
+import { Category, ChangeLog, Department, Item, User } from '@/models'
+import * as changeLogger from '@/utils/change-logger'
 
 describe('Category model', () => {
   let departmentId: number
+  let systemUser: User
+  let logHookSpy: jest.SpyInstance
 
   beforeEach(async () => {
-    const dept = await Department.create({ name: 'Tech' })
+    systemUser = await User.create(
+      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { userId: 0 }
+    )
+    const dept = await Department.create(
+      { name: 'Tech' },
+      { userId: systemUser.id }
+    )
     departmentId = dept.id
+    logHookSpy = jest
+      .spyOn(changeLogger, 'logHook')
+      .mockResolvedValue(undefined)
   })
 
-  it('should create category with valid name', async () => {
-    const category = await Category.create({ name: 'Hardware', departmentId })
+  afterEach(() => {
+    if (logHookSpy) logHookSpy.mockRestore()
+  })
+
+  it('should create category with valid name and call create log hook', async () => {
+    const category = await Category.create(
+      { name: 'Hardware', departmentId },
+      { userId: systemUser.id }
+    )
     expect(category).toBeDefined()
     expect(category.name).toBe('Hardware')
+    expect(logHookSpy).toHaveBeenCalledWith(
+      'create',
+      expect.any(Category),
+      expect.objectContaining({
+        userId: systemUser.id,
+        modelName: ChangeLog.RELATIONS.CATEGORY,
+        modelId: category.id,
+      })
+    )
   })
 
   it('should fail if name is missing', async () => {
     expect.assertions(1)
     try {
-      await Category.create({ departmentId })
+      await Category.create({ departmentId }, { userId: systemUser.id })
     } catch (err: any) {
       expect(err.name).toMatch(/Sequelize.*Error/)
     }
@@ -27,20 +54,67 @@ describe('Category model', () => {
 
   it('should not allow duplicate category names', async () => {
     expect.assertions(1)
-    await Category.create({ name: 'Tools' })
+    await Category.create({ name: 'Tools' }, { userId: systemUser.id })
     try {
-      await Category.create({ name: 'Tools' })
+      await Category.create({ name: 'Tools' }, { userId: systemUser.id })
     } catch (err: any) {
       expect(err.name).toMatch(/Sequelize.*Error/)
     }
+  })
+
+  it('should update category and call update log hook', async () => {
+    const category = await Category.create(
+      { name: 'Hardware', departmentId },
+      { userId: systemUser.id }
+    )
+    logHookSpy.mockClear()
+    category.name = 'Peripherals'
+    await category.save({ userId: systemUser.id })
+    expect(category.name).toBe('Peripherals')
+    expect(logHookSpy).toHaveBeenCalledWith(
+      'update',
+      expect.any(Category),
+      expect.objectContaining({
+        userId: systemUser.id,
+        modelName: ChangeLog.RELATIONS.CATEGORY,
+        modelId: category.id,
+      })
+    )
+  })
+
+  it('should soft-delete category and call delete log hook', async () => {
+    const category = await Category.create(
+      { name: 'Obsolete', departmentId },
+      { userId: systemUser.id }
+    )
+    logHookSpy.mockClear()
+    await category.destroy({ userId: systemUser.id })
+    expect(category.deletionDate).toBeInstanceOf(Date)
+    expect(logHookSpy).toHaveBeenCalledWith(
+      'delete',
+      expect.any(Category),
+      expect.objectContaining({
+        userId: systemUser.id,
+        modelName: ChangeLog.RELATIONS.CATEGORY,
+        modelId: category.id,
+      })
+    )
   })
 })
 
 describe('Category associations', () => {
   let item: Item
+  let systemUser: User
 
   beforeEach(async () => {
-    const dept = await Department.create({ name: 'Tech' })
+    systemUser = await User.create(
+      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { userId: 0 }
+    )
+    const dept = await Department.create(
+      { name: 'Tech' },
+      { userId: systemUser.id }
+    )
     item = await Item.create({
       name: 'Laptop',
       quantity: 2,
@@ -49,9 +123,11 @@ describe('Category associations', () => {
   })
 
   it('should allow associating a category after item creation', async () => {
-    const category = await Category.create({ name: 'Electronics' })
+    const category = await Category.create(
+      { name: 'Electronics' },
+      { userId: systemUser.id }
+    )
     await item.$set(Item.RELATIONS.CATEGORY, category)
-
     const fetched = await Item.findByPk(item.id, { include: Category })
     expect(fetched?.category?.name).toBe('Electronics')
   })

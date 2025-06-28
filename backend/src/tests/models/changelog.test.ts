@@ -83,7 +83,7 @@ describe('ChangeLog Model', () => {
   test('fails if all associations are null', async () => {
     await expect(
       ChangeLog.create({
-        operation: 'noop',
+        operation: 'create',
         changedBy: systemUser.id,
         userId: systemUser.id,
       })
@@ -104,7 +104,7 @@ describe('ChangeLog Model', () => {
     await expect(
       ChangeLog.create({
         itemId: item.id,
-        operation: 'modify',
+        operation: 'update',
         userId: systemUser.id,
       })
     ).rejects.toThrow()

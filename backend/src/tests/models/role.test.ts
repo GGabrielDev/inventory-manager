@@ -1,4 +1,4 @@
-import { Role, User } from '@/models'
+import { ChangeLog, Role, User } from '@/models'
 import * as changeLogger from '@/utils/change-logger'
 
 describe('Role Model', () => {
@@ -41,7 +41,7 @@ describe('Role Model', () => {
       expect.any(Role),
       expect.objectContaining({
         userId: systemUser.id,
-        modelName: 'Role',
+        modelName: ChangeLog.RELATIONS.ROLE,
         modelId: expect.any(Number),
       })
     )
@@ -60,6 +60,37 @@ describe('Role Model', () => {
     ).rejects.toThrow()
     expect(logHookSpy).toHaveBeenCalledWith(
       'create',
+      expect.any(Role),
+      expect.objectContaining({ userId: systemUser.id })
+    )
+  })
+
+  it('should update role name and call update log hook', async () => {
+    const role = await Role.create(
+      { name: 'user', description: 'desc' },
+      { userId: systemUser.id }
+    )
+    logHookSpy.mockClear()
+    role.name = 'user2'
+    await role.save({ userId: systemUser.id })
+    expect(role.name).toBe('user2')
+    expect(logHookSpy).toHaveBeenCalledWith(
+      'update',
+      expect.any(Role),
+      expect.objectContaining({ userId: systemUser.id })
+    )
+  })
+
+  it('should soft-delete a role and call delete log hook', async () => {
+    const role = await Role.create(
+      { name: 'todelete', description: 'desc' },
+      { userId: systemUser.id }
+    )
+    logHookSpy.mockClear()
+    await role.destroy({ userId: systemUser.id })
+    expect(role.deletionDate).toBeInstanceOf(Date)
+    expect(logHookSpy).toHaveBeenCalledWith(
+      'delete',
       expect.any(Role),
       expect.objectContaining({ userId: systemUser.id })
     )

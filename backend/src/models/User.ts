@@ -89,7 +89,7 @@ export default class User extends Model {
     if (!(instance.id === 0))
       await logHook('create', instance, {
         userId: options.userId,
-        modelName: 'User',
+        modelName: ChangeLog.RELATIONS.USER,
         modelId: instance.id,
         transaction: options.transaction,
       })
@@ -101,7 +101,7 @@ export default class User extends Model {
       throw new Error('userId required for changelog')
     await logHook('update', instance, {
       userId: options.userId,
-      modelName: 'User',
+      modelName: ChangeLog.RELATIONS.USER,
       modelId: instance.id,
       transaction: options.transaction,
     })
@@ -113,7 +113,7 @@ export default class User extends Model {
       throw new Error('userId required for changelog')
     await logHook('delete', instance, {
       userId: options.userId,
-      modelName: 'User',
+      modelName: ChangeLog.RELATIONS.USER,
       modelId: instance.id,
       transaction: options.transaction,
     })
