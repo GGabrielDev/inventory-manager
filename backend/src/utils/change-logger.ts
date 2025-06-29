@@ -109,18 +109,22 @@ export async function logChange({
   const changeLog = await ChangeLog.create(logData, { transaction })
 
   for (const detail of details) {
-    await ChangeLogDetail.create(
-      {
-        changeLogId: changeLog.id,
-        field: detail.field,
-        oldValue: detail.oldValue,
-        newValue: detail.newValue,
-        diffType: detail.diffType,
-        createdAt: changedAt,
-        updatedAt: changedAt,
-      },
-      { transaction }
-    )
+    try {
+      await ChangeLogDetail.create(
+        {
+          changeLogId: changeLog.id,
+          field: detail.field,
+          oldValue: detail.oldValue,
+          newValue: detail.newValue,
+          diffType: detail.diffType,
+          createdAt: changedAt,
+          updatedAt: changedAt,
+        },
+        { transaction }
+      )
+    } catch (err) {
+      console.error('Error creating ChangeLogDetail:', err)
+    }
   }
 }
 

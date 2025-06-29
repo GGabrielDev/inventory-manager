@@ -1,4 +1,5 @@
 import { config as loadEnv } from 'dotenv'
+import sqlite3 from 'sqlite3'
 
 const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
 loadEnv({ path: envFile })
@@ -14,4 +15,16 @@ export const dbConfig = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   logging: false,
+  ...(isTest &&
+  process.env.DB_DIALECT === 'sqlite' &&
+  process.env.DB_STORAGE === ':memory:'
+    ? {
+        dialectOptions: {
+          mode:
+            sqlite3.OPEN_READWRITE |
+            sqlite3.OPEN_CREATE |
+            sqlite3.OPEN_SHAREDCACHE,
+        },
+      }
+    : {}),
 }
