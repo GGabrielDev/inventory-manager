@@ -115,11 +115,14 @@ describe('Category associations', () => {
       { name: 'Tech' },
       { userId: systemUser.id }
     )
-    item = await Item.create({
-      name: 'Laptop',
-      quantity: 2,
-      departmentId: dept.id,
-    })
+    item = await Item.create(
+      {
+        name: 'Laptop',
+        quantity: 2,
+        departmentId: dept.id,
+      },
+      { userId: systemUser.id }
+    )
   })
 
   it('should allow associating a category after item creation', async () => {
@@ -127,7 +130,9 @@ describe('Category associations', () => {
       { name: 'Electronics' },
       { userId: systemUser.id }
     )
-    await item.$set(Item.RELATIONS.CATEGORY, category)
+    await item.$set(Item.RELATIONS.CATEGORY, category, {
+      userId: systemUser.id,
+    })
     const fetched = await Item.findByPk(item.id, { include: Category })
     expect(fetched?.category?.name).toBe('Electronics')
   })

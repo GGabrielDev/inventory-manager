@@ -27,30 +27,33 @@ describe('Integration: Items & ChangeLogging Workflow', () => {
     // CREATE
     items = await Promise.all(
       [1, 2, 3].map((i) =>
-        Item.create({
-          name: `Item${i}`,
-          quantity: i * 10,
-          unit: 'und.',
-          categoryId: category.id,
-          departmentId: department.id,
-          creationDate: new Date(),
-          updatedOn: new Date(),
-        })
+        Item.create(
+          {
+            name: `Item${i}`,
+            quantity: i * 10,
+            unit: 'und.',
+            categoryId: category.id,
+            departmentId: department.id,
+            creationDate: new Date(),
+            updatedOn: new Date(),
+          },
+          { userId: systemUser.id }
+        )
       )
     )
     // Simulate changelog entries for create (if not automatic)
-    for (const item of items) {
-      await ChangeLog.create({
-        operation: 'create',
-        changedBy: systemUser.id,
-        itemId: item.id,
-        categoryId: category.id,
-        departmentId: department.id,
-        changedAt: new Date(),
-        updatedAt: new Date(),
-        changeDetails: { createdFields: Object.keys(item.toJSON()) },
-      })
-    }
+    // for (const item of items) {
+    //   await ChangeLog.create({
+    //     operation: 'create',
+    //     changedBy: systemUser.id,
+    //     itemId: item.id,
+    //     categoryId: category.id,
+    //     departmentId: department.id,
+    //     changedAt: new Date(),
+    //     updatedAt: new Date(),
+    //     changeDetails: { createdFields: Object.keys(item.toJSON()) },
+    //   })
+    // }
 
     const itemsInDb = await Item.findAll()
     expect(itemsInDb.length).toBe(3)
@@ -63,39 +66,46 @@ describe('Integration: Items & ChangeLogging Workflow', () => {
     // UPDATE
     await Promise.all(
       items.map((item) =>
-        item.update({ quantity: item.quantity + 5, updatedOn: new Date() })
+        item.update(
+          { quantity: item.quantity + 5, updatedOn: new Date() },
+          { userId: systemUser.id }
+        )
       )
     )
-    for (const item of items) {
-      await ChangeLog.create({
-        operation: 'update',
-        changedBy: systemUser.id,
-        itemId: item.id,
-        categoryId: category.id,
-        departmentId: department.id,
-        changedAt: new Date(),
-        updatedAt: new Date(),
-        changeDetails: { updatedFields: { quantity: item.quantity } },
-      })
-    }
+
+    // for (const item of items) {
+    //   await ChangeLog.create({
+    //     operation: 'update',
+    //     changedBy: systemUser.id,
+    //     itemId: item.id,
+    //     categoryId: category.id,
+    //     departmentId: department.id,
+    //     changedAt: new Date(),
+    //     updatedAt: new Date(),
+    //     changeDetails: { updatedFields: { quantity: item.quantity } },
+    //   })
+    // }
 
     logs = await ChangeLog.findAll({ where: { operation: 'update' } })
     expect(logs.length).toBe(3)
 
     // DELETE
-    await Promise.all(items.map((item) => item.destroy()))
-    for (const item of items) {
-      await ChangeLog.create({
-        operation: 'delete',
-        changedBy: systemUser.id,
-        itemId: item.id,
-        categoryId: category.id,
-        departmentId: department.id,
-        changedAt: new Date(),
-        updatedAt: new Date(),
-        changeDetails: { deleted: true },
-      })
-    }
+    await Promise.all(
+      items.map((item) => item.destroy({ userId: systemUser.id }))
+    )
+
+    // for (const item of items) {
+    //   await ChangeLog.create({
+    //     operation: 'delete',
+    //     changedBy: systemUser.id,
+    //     itemId: item.id,
+    //     categoryId: category.id,
+    //     departmentId: department.id,
+    //     changedAt: new Date(),
+    //     updatedAt: new Date(),
+    //     changeDetails: { deleted: true },
+    //   })
+    // }
 
     const itemsAfterDelete = await Item.findAll()
     expect(itemsAfterDelete.length).toBe(0)

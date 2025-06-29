@@ -70,15 +70,18 @@ describe('Department associations', () => {
       { userId: systemUser.id }
     )
 
-    let item = await Item.create({
-      name: 'Laptop',
-      quantity: 2,
-      departmentId: dept1.id,
-    })
+    let item = await Item.create(
+      {
+        name: 'Laptop',
+        quantity: 2,
+        departmentId: dept1.id,
+      },
+      { userId: systemUser.id }
+    )
     let fetched = await Item.findByPk(item.id, { include: Department })
     expect(fetched?.department?.name).toBe('Warehouse')
 
-    await item.$set(Item.RELATIONS.DEPARTMENT, dept2)
+    await item.$set(Item.RELATIONS.DEPARTMENT, dept2, { userId: systemUser.id })
     fetched = await Item.findByPk(item.id, { include: Department })
     expect(fetched?.department?.name).toBe('Admin')
   })
