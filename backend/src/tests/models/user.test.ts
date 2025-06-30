@@ -112,4 +112,26 @@ describe('User Model', () => {
       expect.objectContaining({ userId: systemUser.id })
     )
   })
+
+  it('should retrieve user without passwordHash by default', async () => {
+    const user = await User.create(
+      { username: 'nopassword', passwordHash: 'secret' },
+      { userId: systemUser.id }
+    )
+    const foundUser = await User.findByPk(user.id)
+    expect(foundUser).toBeDefined()
+    expect(foundUser?.passwordHash).toBeUndefined()
+  })
+
+  it('should retrieve user with passwordHash when explicitly included', async () => {
+    const user = await User.create(
+      { username: 'withpassword', passwordHash: 'secret' },
+      { userId: systemUser.id }
+    )
+    const foundUser = await User.unscoped().findByPk(user.id, {
+      attributes: { include: ['passwordHash'] },
+    })
+    expect(foundUser).toBeDefined()
+    expect(foundUser?.passwordHash).toBeDefined()
+  })
 })

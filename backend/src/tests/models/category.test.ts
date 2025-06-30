@@ -102,6 +102,47 @@ describe('Category model', () => {
   })
 })
 
+describe('Category deletion constraints', () => {
+  let systemUser: User
+  let category: Category
+
+  beforeEach(async () => {
+    systemUser = await User.create(
+      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { userId: 0 }
+    )
+    category = await Category.create(
+      { name: 'Hardware' },
+      { userId: systemUser.id }
+    )
+  })
+
+  it('should not delete category with assigned items', async () => {
+    const dept = await Department.create(
+      { name: 'test' },
+      { userId: systemUser.id }
+    )
+    await Item.create(
+      { name: 'Laptop', categoryId: category.id, departmentId: dept.id },
+      { userId: systemUser.id }
+    )
+
+    await expect(category.destroy({ userId: systemUser.id })).rejects.toThrow(
+      'Cannot delete category with assigned items.'
+    )
+  })
+
+  it('should soft-delete category without assigned items', async () => {
+    await category.destroy({ userId: systemUser.id })
+
+    const foundCategory = await Category.findByPk(category.id, {
+      paranoid: false,
+    })
+    expect(foundCategory).not.toBeNull()
+    expect(foundCategory?.deletionDate).not.toBeNull()
+  })
+})
+
 describe('Category associations', () => {
   let item: Item
   let systemUser: User

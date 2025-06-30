@@ -41,6 +41,43 @@ describe('Department model', () => {
   })
 })
 
+describe('Department deletion constraints', () => {
+  let systemUser: User
+  let department: Department
+
+  beforeEach(async () => {
+    systemUser = await User.create(
+      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { userId: 0 }
+    )
+    department = await Department.create(
+      { name: 'Tech' },
+      { userId: systemUser.id }
+    )
+  })
+
+  it('should not delete department with assigned items', async () => {
+    await Item.create(
+      { name: 'Laptop', departmentId: department.id },
+      { userId: systemUser.id }
+    )
+
+    await expect(department.destroy({ userId: systemUser.id })).rejects.toThrow(
+      'Cannot delete department with assigned items.'
+    )
+  })
+
+  it('should soft-delete department without assigned items', async () => {
+    await department.destroy({ userId: systemUser.id })
+
+    const foundDepartment = await Department.findByPk(department.id, {
+      paranoid: false,
+    })
+    expect(foundDepartment).not.toBeNull()
+    expect(foundDepartment?.deletionDate).not.toBeNull()
+  })
+})
+
 describe('Department associations', () => {
   let systemUser: User
 

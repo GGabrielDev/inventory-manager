@@ -145,7 +145,6 @@ describe('Integration: ChangeLogDetail on Item update', () => {
     expect(nameDetail?.newValue).toBe('New Name')
     expect(qtyDetail?.oldValue).toBe(5)
     expect(qtyDetail?.newValue).toBe(10)
-    // Replace with your actual DIFF_TYPES if needed
     expect([nameDetail?.diffType, qtyDetail?.diffType]).toContain(
       OPERATION_TO_DIFF_TYPE.update
     )

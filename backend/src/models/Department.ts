@@ -4,8 +4,10 @@ import {
   AfterUpdate,
   AllowNull,
   AutoIncrement,
+  BeforeDestroy,
   Column,
   CreatedAt,
+  DeletedAt,
   HasMany,
   Model,
   PrimaryKey,
@@ -24,7 +26,7 @@ const RELATIONS = {
   ITEMS: 'items',
 } as const satisfies Record<string, keyof Department>
 
-@Table
+@Table({ paranoid: true })
 export default class Department extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -41,6 +43,9 @@ export default class Department extends Model {
 
   @UpdatedAt
   updatedOn: Date
+
+  @DeletedAt
+  deletionDate?: Date
 
   @HasMany(() => Item)
   items!: Item[]
@@ -72,6 +77,14 @@ export default class Department extends Model {
       modelId: instance.id,
       transaction: options.transaction,
     })
+  }
+
+  @BeforeDestroy
+  static async checkItemsBeforeDestroy(instance: Department) {
+    const itemCount = await instance.$count('items')
+    if (itemCount > 0) {
+      throw new Error('Cannot delete department with assigned items.')
+    }
   }
 
   @AfterDestroy

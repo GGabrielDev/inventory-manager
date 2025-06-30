@@ -10,6 +10,7 @@ import {
   BelongsToMany,
   Column,
   CreatedAt,
+  DefaultScope,
   DeletedAt,
   HasMany,
   Model,
@@ -30,6 +31,9 @@ const RELATIONS = {
   ROLES: 'roles',
 } as const satisfies Record<string, keyof User>
 
+@DefaultScope(() => ({
+  attributes: { exclude: ['passwordHash'] },
+}))
 @Table
 export default class User extends Model {
   @PrimaryKey

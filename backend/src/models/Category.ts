@@ -4,6 +4,7 @@ import {
   AfterUpdate,
   AllowNull,
   AutoIncrement,
+  BeforeDestroy,
   Column,
   CreatedAt,
   DeletedAt,
@@ -18,14 +19,14 @@ import {
 import { UserActionOptions } from '@/types/UserActionOptions'
 import { logHook } from '@/utils/change-logger'
 
-import { ChangeLog, Item, Role } from '.'
+import { ChangeLog, Item } from '.'
 
 const RELATIONS = {
   CHANGELOGS: 'changeLogs',
   ITEMS: 'items',
 } as const satisfies Record<string, keyof Category>
 
-@Table
+@Table({ paranoid: true })
 export default class Category extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -76,6 +77,14 @@ export default class Category extends Model {
       modelId: instance.id,
       transaction: options.transaction,
     })
+  }
+
+  @BeforeDestroy
+  static async checkItemsBeforeDestroy(instance: Category) {
+    const itemCount = await instance.$count('items')
+    if (itemCount > 0) {
+      throw new Error('Cannot delete category with assigned items.')
+    }
   }
 
   @AfterDestroy
