@@ -33,26 +33,52 @@ This backend (Node.js, Express, TypeScript, Sequelize) powers the Inventory Mana
 - `creationDate`: datetime, auto
 - `updatedOn`: datetime, auto
 
+#### **User**
+
+- `id`: integer, PK, auto-increment
+- `username`: string, required, unique
+- `passwordHash`: string, required (excluded by default in queries)
+- `roles`: many-to-many relationship with Role
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable
+
+#### **Role**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, required, unique
+- `users`: many-to-many relationship with User
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+
+#### **ChangeLog**
+
+- `id`: integer, PK, auto-increment
+- `operation`: enum (`create`, `update`, `delete`, `link`, `unlink`)
+- `changeDetails`: JSON, optional
+- `changedAt`: datetime, auto
+- `changedBy`: FK to User, required
+
+#### **ChangeLogDetail**
+
+- `id`: integer, PK, auto-increment
+- `changeLogId`: FK to ChangeLog, required
+- `field`: string, required
+- `oldValue`: JSON, optional
+- `newValue`: JSON, optional
+- `metadata`: JSON, optional
+- `diffType`: enum (`added`, `changed`, `removed`), required
+
 ### Relations
 
 - **Item** belongs to **Category** (nullable)
 - **Item** belongs to **Department** (required)
 - **Category** has many **Items**
 - **Department** has many **Items**
-
----
-
-### Planned Models
-
-#### **User**
-
-- `id`, `username`, `password_hash`, `role`, timestamps
-
-#### **ChangeLog**
-
-- `id`, `table_name`, `record_id`, `operation`, `changed_by`, `changed_at`, `change_details`
-
----
+- **User** has many **ChangeLogs**
+- **Role** has many **Users** (many-to-many)
+- **ChangeLog** belongs to **User**, **Item**, **Category**, **Department**, **Role**
+- **ChangeLogDetail** belongs to **ChangeLog**
 
 ## ERD Diagram
 
@@ -67,4 +93,7 @@ erDiagram
   CHANGELOG }o--|| ITEM : "on item"
   CHANGELOG }o--|| CATEGORY : "on category"
   CHANGELOG }o--|| DEPARTMENT : "on department"
+  CHANGELOG }o--|| ROLE : "on role"
+  ROLE ||--o{ USER : "has many"
+  CHANGELOGDETAIL }o--|| CHANGELOG : "details"
 ```
