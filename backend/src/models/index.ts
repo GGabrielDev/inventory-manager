@@ -3,6 +3,7 @@ export { default as ChangeLog } from './ChangeLog'
 export { default as ChangeLogDetail } from './ChangeLogDetail'
 export { default as Department } from './Department'
 export { default as Item } from './Item'
+export { default as Permission } from './Permission'
 export { default as Role } from './Role'
 export { default as User } from './User'
 
