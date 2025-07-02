@@ -13,13 +13,22 @@ import {
   Table,
 } from 'sequelize-typescript'
 
-import { Category, ChangeLogDetail, Department, Item, Role, User } from '.'
+import {
+  Category,
+  ChangeLogDetail,
+  Department,
+  Item,
+  Permission,
+  Role,
+  User,
+} from '.'
 
 const RELATIONS = {
   CHANGELOG_DETAILS: 'changeLogDetails',
   CATEGORY: 'category',
   DEPARTMENT: 'department',
   ITEM: 'item',
+  PERMISSION: 'permission',
   ROLE: 'role',
   USER: 'user',
 } as const satisfies Record<string, keyof ChangeLog>
@@ -28,6 +37,7 @@ const RELATIONS_ID = {
   CATEGORY: 'categoryId',
   DEPARTMENT: 'departmentId',
   ITEM: 'itemId',
+  PERMISSION: 'permissionId',
   ROLE: 'roleId',
   USER: 'userId',
 }
@@ -121,6 +131,13 @@ export default class ChangeLog extends Model {
 
   @BelongsTo(() => Department)
   department?: Department
+
+  @ForeignKey(() => Permission)
+  @Column(DataType.INTEGER)
+  permissionId?: Permission['id']
+
+  @BelongsTo(() => Permission)
+  permission?: Permission
 
   @HasMany(() => ChangeLogDetail)
   changeLogDetails!: ChangeLogDetail[]
