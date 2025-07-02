@@ -21,7 +21,7 @@ import {
 } from 'sequelize-typescript'
 
 import { UserActionOptions } from '@/types/UserActionOptions'
-import { logHook } from '@/utils/change-logger'
+import { logEntityAction } from '@/utils/entity-hooks'
 
 import { ChangeLog, Role } from '.'
 import { UserRole } from './join'
@@ -87,39 +87,22 @@ export default class User extends Model {
 
   @AfterCreate
   static async logCreate(instance: User, options: UserActionOptions) {
-    if (typeof options.userId !== 'number' || options.userId == null)
-      throw new Error('userId required for changelog')
-    // Bypass to create first user (Bypass User)
     if (!(instance.id === 0))
-      await logHook('create', instance, {
-        userId: options.userId,
-        modelName: ChangeLog.RELATIONS.USER,
-        modelId: instance.id,
-        transaction: options.transaction,
-      })
+      await logEntityAction(
+        'create',
+        instance,
+        options,
+        ChangeLog.RELATIONS.USER
+      )
   }
 
   @AfterUpdate
   static async logUpdate(instance: User, options: UserActionOptions) {
-    if (typeof options.userId !== 'number' || options.userId == null)
-      throw new Error('userId required for changelog')
-    await logHook('update', instance, {
-      userId: options.userId,
-      modelName: ChangeLog.RELATIONS.USER,
-      modelId: instance.id,
-      transaction: options.transaction,
-    })
+    await logEntityAction('update', instance, options, ChangeLog.RELATIONS.USER)
   }
 
   @AfterDestroy
   static async logDestroy(instance: User, options: UserActionOptions) {
-    if (typeof options.userId !== 'number' || options.userId == null)
-      throw new Error('userId required for changelog')
-    await logHook('delete', instance, {
-      userId: options.userId,
-      modelName: ChangeLog.RELATIONS.USER,
-      modelId: instance.id,
-      transaction: options.transaction,
-    })
+    await logEntityAction('delete', instance, options, ChangeLog.RELATIONS.USER)
   }
 }

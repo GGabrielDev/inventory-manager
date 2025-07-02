@@ -17,7 +17,7 @@ import {
 } from 'sequelize-typescript'
 
 import { UserActionOptions } from '@/types/UserActionOptions'
-import { logHook } from '@/utils/change-logger'
+import { logEntityAction } from '@/utils/entity-hooks'
 
 import { ChangeLog, Item } from '.'
 
@@ -57,26 +57,22 @@ export default class Department extends Model {
 
   @AfterCreate
   static async logCreate(instance: Department, options: UserActionOptions) {
-    if (typeof options.userId !== 'number' || options.userId == null)
-      throw new Error('userId required for changelog')
-    await logHook('create', instance, {
-      userId: options.userId,
-      modelName: ChangeLog.RELATIONS.DEPARTMENT,
-      modelId: instance.id,
-      transaction: options.transaction,
-    })
+    await logEntityAction(
+      'create',
+      instance,
+      options,
+      ChangeLog.RELATIONS.DEPARTMENT
+    )
   }
 
   @AfterUpdate
   static async logUpdate(instance: Department, options: UserActionOptions) {
-    if (typeof options.userId !== 'number' || options.userId == null)
-      throw new Error('userId required for changelog')
-    await logHook('update', instance, {
-      userId: options.userId,
-      modelName: ChangeLog.RELATIONS.DEPARTMENT,
-      modelId: instance.id,
-      transaction: options.transaction,
-    })
+    await logEntityAction(
+      'update',
+      instance,
+      options,
+      ChangeLog.RELATIONS.DEPARTMENT
+    )
   }
 
   @BeforeDestroy
@@ -89,13 +85,11 @@ export default class Department extends Model {
 
   @AfterDestroy
   static async logDestroy(instance: Department, options: UserActionOptions) {
-    if (typeof options.userId !== 'number' || options.userId == null)
-      throw new Error('userId required for changelog')
-    await logHook('delete', instance, {
-      userId: options.userId,
-      modelName: ChangeLog.RELATIONS.DEPARTMENT,
-      modelId: instance.id,
-      transaction: options.transaction,
-    })
+    await logEntityAction(
+      'delete',
+      instance,
+      options,
+      ChangeLog.RELATIONS.DEPARTMENT
+    )
   }
 }

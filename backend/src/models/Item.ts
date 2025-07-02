@@ -20,7 +20,7 @@ import {
 } from 'sequelize-typescript'
 
 import { UserActionOptions } from '@/types/UserActionOptions'
-import { logHook } from '@/utils/change-logger'
+import { logEntityAction } from '@/utils/entity-hooks'
 
 import { Category, ChangeLog, Department } from '.'
 
@@ -108,37 +108,16 @@ export default class Item extends Model {
 
   @AfterCreate
   static async logCreate(instance: Item, options: UserActionOptions) {
-    if (typeof options.userId !== 'number' || options.userId == null)
-      throw new Error('userId required for changelog')
-    await logHook('create', instance, {
-      userId: options.userId,
-      modelName: ChangeLog.RELATIONS.ITEM,
-      modelId: instance.id,
-      transaction: options.transaction,
-    })
+    await logEntityAction('create', instance, options, ChangeLog.RELATIONS.ITEM)
   }
 
   @AfterUpdate
   static async logUpdate(instance: Item, options: UserActionOptions) {
-    if (typeof options.userId !== 'number' || options.userId == null)
-      throw new Error('userId required for changelog')
-    await logHook('update', instance, {
-      userId: options.userId,
-      modelName: ChangeLog.RELATIONS.ITEM,
-      modelId: instance.id,
-      transaction: options.transaction,
-    })
+    await logEntityAction('update', instance, options, ChangeLog.RELATIONS.ITEM)
   }
 
   @AfterDestroy
   static async logDestroy(instance: Item, options: UserActionOptions) {
-    if (typeof options.userId !== 'number' || options.userId == null)
-      throw new Error('userId required for changelog')
-    await logHook('delete', instance, {
-      userId: options.userId,
-      modelName: ChangeLog.RELATIONS.ITEM,
-      modelId: instance.id,
-      transaction: options.transaction,
-    })
+    await logEntityAction('delete', instance, options, ChangeLog.RELATIONS.ITEM)
   }
 }
