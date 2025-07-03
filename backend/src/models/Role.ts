@@ -26,6 +26,8 @@ import { ChangeLog, Permission, User } from '.'
 import { RolePermission, UserRole } from './join'
 
 const RELATIONS = {
+  CHANGELOGS: 'changeLogs',
+  PERMISSIONS: 'permissions',
   USERS: 'users',
 } as const satisfies Record<string, keyof Role>
 

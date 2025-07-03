@@ -45,8 +45,18 @@ export async function logChange({
   const changedAt = new Date()
   const details: any[] = []
 
+  const dataValues = instance.dataValues || {}
+  const idFields = Object.keys(dataValues).filter((k) => k.endsWith('Id'))
+
+  // Heuristic: join table if all fields are ...Id or known meta fields
+  const metaFields = ['createdAt', 'updatedAt', 'deletedAt']
+  const nonIdFields = Object.keys(dataValues).filter(
+    (k) => !k.endsWith('Id') && !metaFields.includes(k)
+  )
+  const isJoinTable = idFields.length > 1 && nonIdFields.length === 0
+
   if (operation === 'update') {
-    for (const key of Object.keys(instance.dataValues)) {
+    for (const key of Object.keys(dataValues)) {
       const prev = instance.previous(key)
       const curr = instance.get(key)
       if (prev !== curr) {
@@ -60,7 +70,7 @@ export async function logChange({
     }
     if (details.length === 0) return
   } else if (operation === 'create' || operation === 'delete') {
-    for (const key of Object.keys(instance.dataValues)) {
+    for (const key of Object.keys(dataValues)) {
       details.push({
         field: key,
         oldValue: operation === 'create' ? null : instance.get(key),
@@ -69,17 +79,28 @@ export async function logChange({
       })
     }
   } else if (operation === 'link' || operation === 'unlink') {
-    details.push({
-      field: relation,
-      oldValue:
-        operation === 'link'
-          ? null
-          : relation
-            ? instance.previous(relation)
-            : null,
-      newValue: operation === 'link' ? relatedId : null,
-      diffType: operationToDiffType(operation),
-    })
+    if (isJoinTable) {
+      for (const fk of idFields) {
+        details.push({
+          field: fk,
+          oldValue: operation === 'link' ? null : instance.get(fk),
+          newValue: operation === 'link' ? instance.get(fk) : null,
+          diffType: operationToDiffType(operation),
+        })
+      }
+    } else {
+      details.push({
+        field: relation || 'relation',
+        oldValue:
+          operation === 'link'
+            ? null
+            : relation
+              ? instance.previous?.(relation)
+              : null,
+        newValue: operation === 'link' ? relatedId : null,
+        diffType: operationToDiffType(operation),
+      })
+    }
   }
 
   // Build dynamic object for ChangeLog associations
@@ -90,23 +111,11 @@ export async function logChange({
     updatedAt: changedAt,
   }
 
-  const dataValues = instance.dataValues || {}
-  const idFields = Object.keys(dataValues).filter((k) => k.endsWith('Id'))
-
-  // Heuristic: join table if all fields are ...Id or known meta fields
-  const metaFields = ['createdAt', 'updatedAt', 'deletedAt']
-  const nonIdFields = Object.keys(dataValues).filter(
-    (k) => !k.endsWith('Id') && !metaFields.includes(k)
-  )
-  const isJoinTable = idFields.length > 1 && nonIdFields.length === 0
-
   if (isJoinTable) {
-    // Join table: set all FKs
     for (const fk of idFields) {
       logData[fk] = dataValues[fk]
     }
   } else {
-    // Regular model: use RELATIONS_ID mapping
     const fkField =
       ChangeLog.RELATIONS_ID[
         String(modelName).toUpperCase() as keyof typeof ChangeLog.RELATIONS_ID
@@ -114,7 +123,6 @@ export async function logChange({
     if (fkField) logData[fkField] = modelId
   }
 
-  // Optionally, add relation info for link/unlink
   if (relation && relatedId) {
     logData.changeDetails = {
       ...(logData.changeDetails || {}),
