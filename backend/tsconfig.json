@@ -1,13 +1,10 @@
 {
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts"
-  ],
   "compilerOptions": {
-    "baseUrl": "src", // <- Esto permite que "@" apunte a la carpeta "src"
+    "baseUrl": "src",
     "paths": {
       "@/*": ["./*"]
     },
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "target": "es6",
     "module": "CommonJS",
     "rootDir": "src",
@@ -18,5 +15,7 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "skipLibCheck": true
-  }
+  },
+  "include": ["src/**/*", "src/types/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

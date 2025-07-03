@@ -133,11 +133,25 @@ export async function logHook(
   instance: Model,
   options: any
 ) {
+  // TODO: Remove debug to console
+  console.log(
+    '[logHook] instance type:',
+    instance?.constructor?.name,
+    'has .get:',
+    typeof instance?.get === 'function'
+  )
+
   const actualOperation = inferOperation(instance, operation)
 
   const userId = options.userId || (options as any).userId
   if (typeof userId !== 'number' || userId == null)
     throw new Error('userId missing in options for logHook')
+
+  // TODO: Remove debug to console
+  if (typeof instance.get !== 'function') {
+    console.error('[logHook] instance does not have .get:', instance)
+    throw new Error('logHook: instance is not a Sequelize Model')
+  }
 
   const modelName = (instance.constructor as any).name
   const modelId = instance.get('id') as string | number

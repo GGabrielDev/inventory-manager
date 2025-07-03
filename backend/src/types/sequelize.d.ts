@@ -6,6 +6,9 @@ declare module 'sequelize' {
   interface CreateOptions {
     userId?: User['id']
   }
+  interface BulkCreateOptions {
+    userId?: User['id']
+  }
   interface UpdateOptions {
     userId?: User['id']
   }
@@ -16,6 +19,9 @@ declare module 'sequelize' {
     userId?: User['id']
   }
   interface InstanceDestroyOptions {
+    userId?: User['id']
+  }
+  interface FindOrCreateOptions {
     userId?: User['id']
   }
 }
