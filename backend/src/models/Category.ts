@@ -1,4 +1,7 @@
 import {
+  AfterBulkCreate,
+  AfterBulkDestroy,
+  AfterBulkUpdate,
   AfterCreate,
   AfterDestroy,
   AfterUpdate,
@@ -56,7 +59,11 @@ export default class Category extends Model {
   static readonly RELATIONS = RELATIONS
 
   @AfterCreate
-  static async logCreate(instance: Category, options: UserActionOptions) {
+  @AfterBulkCreate
+  static async logCreate(
+    instance: Category | Category[],
+    options: UserActionOptions
+  ) {
     await logEntityAction(
       'create',
       instance,
@@ -66,7 +73,11 @@ export default class Category extends Model {
   }
 
   @AfterUpdate
-  static async logUpdate(instance: Category, options: UserActionOptions) {
+  @AfterBulkUpdate
+  static async logUpdate(
+    instance: Category | Category[],
+    options: UserActionOptions
+  ) {
     await logEntityAction(
       'update',
       instance,
@@ -84,7 +95,11 @@ export default class Category extends Model {
   }
 
   @AfterDestroy
-  static async logDestroy(instance: Category, options: UserActionOptions) {
+  @AfterBulkDestroy
+  static async logDestroy(
+    instance: Category | Category[],
+    options: UserActionOptions
+  ) {
     await logEntityAction(
       'delete',
       instance,

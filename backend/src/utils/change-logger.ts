@@ -90,12 +90,29 @@ export async function logChange({
     updatedAt: changedAt,
   }
 
-  // Set the correct FK based on modelName and modelId
-  const fkField =
-    ChangeLog.RELATIONS_ID[
-      String(modelName).toUpperCase() as keyof typeof ChangeLog.RELATIONS_ID
-    ]
-  if (fkField) logData[fkField] = modelId
+  const dataValues = instance.dataValues || {}
+  const idFields = Object.keys(dataValues).filter((k) => k.endsWith('Id'))
+
+  // Heuristic: join table if all fields are ...Id or known meta fields
+  const metaFields = ['createdAt', 'updatedAt', 'deletedAt']
+  const nonIdFields = Object.keys(dataValues).filter(
+    (k) => !k.endsWith('Id') && !metaFields.includes(k)
+  )
+  const isJoinTable = idFields.length > 1 && nonIdFields.length === 0
+
+  if (isJoinTable) {
+    // Join table: set all FKs
+    for (const fk of idFields) {
+      logData[fk] = dataValues[fk]
+    }
+  } else {
+    // Regular model: use RELATIONS_ID mapping
+    const fkField =
+      ChangeLog.RELATIONS_ID[
+        String(modelName).toUpperCase() as keyof typeof ChangeLog.RELATIONS_ID
+      ]
+    if (fkField) logData[fkField] = modelId
+  }
 
   // Optionally, add relation info for link/unlink
   if (relation && relatedId) {
@@ -133,38 +150,40 @@ export async function logHook(
   instance: Model,
   options: any
 ) {
-  // TODO: Remove debug to console
-  console.log(
-    '[logHook] instance type:',
-    instance?.constructor?.name,
-    'has .get:',
-    typeof instance?.get === 'function'
-  )
-
   const actualOperation = inferOperation(instance, operation)
 
   const userId = options.userId || (options as any).userId
   if (typeof userId !== 'number' || userId == null)
     throw new Error('userId missing in options for logHook')
 
-  // TODO: Remove debug to console
-  if (typeof instance.get !== 'function') {
-    console.error('[logHook] instance does not have .get:', instance)
-    throw new Error('logHook: instance is not a Sequelize Model')
-  }
-
   const modelName = (instance.constructor as any).name
   const modelId = instance.get('id') as string | number
 
   let relation: string | undefined = undefined
-  let relatedId: number | string | undefined = undefined
+  let relatedId: string | number | undefined = undefined
 
   if (actualOperation === 'link' || actualOperation === 'unlink') {
-    const changedFields = instance.changed() as string[]
-    const relField = changedFields.find((f) => f.endsWith('Id'))
-    if (relField) {
-      relation = relField
-      relatedId = instance.get(relField) as string | number | undefined
+    const changedFields = instance.changed?.()
+    if (Array.isArray(changedFields)) {
+      const relField = changedFields.find((f) => f.endsWith('Id'))
+      if (relField) {
+        relation = relField
+        const value = instance.get(relField)
+        relatedId =
+          typeof value === 'string' || typeof value === 'number'
+            ? value
+            : undefined
+      }
+    } else {
+      // Fallback for bulk-created join models like UserRole
+      if ('roleId' in instance && 'userId' in instance) {
+        relation = 'roleId'
+        const value = instance.get('roleId')
+        relatedId =
+          typeof value === 'string' || typeof value === 'number'
+            ? value
+            : undefined
+      }
     }
   }
 

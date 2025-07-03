@@ -1,4 +1,7 @@
 import {
+  AfterBulkCreate,
+  AfterBulkDestroy,
+  AfterBulkUpdate,
   AfterCreate,
   AfterDestroy,
   AfterUpdate,
@@ -107,17 +110,20 @@ export default class Item extends Model {
   static readonly RELATIONS = RELATIONS
 
   @AfterCreate
-  static async logCreate(instance: Item, options: UserActionOptions) {
+  @AfterBulkCreate
+  static async logCreate(instance: Item | Item[], options: UserActionOptions) {
     await logEntityAction('create', instance, options, ChangeLog.RELATIONS.ITEM)
   }
 
   @AfterUpdate
-  static async logUpdate(instance: Item, options: UserActionOptions) {
+  @AfterBulkUpdate
+  static async logUpdate(instance: Item | Item[], options: UserActionOptions) {
     await logEntityAction('update', instance, options, ChangeLog.RELATIONS.ITEM)
   }
 
   @AfterDestroy
-  static async logDestroy(instance: Item, options: UserActionOptions) {
+  @AfterBulkDestroy
+  static async logDestroy(instance: Item | Item[], options: UserActionOptions) {
     await logEntityAction('delete', instance, options, ChangeLog.RELATIONS.ITEM)
   }
 }

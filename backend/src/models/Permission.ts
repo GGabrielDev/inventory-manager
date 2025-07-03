@@ -1,5 +1,7 @@
 import {
   AfterBulkCreate,
+  AfterBulkDestroy,
+  AfterBulkUpdate,
   AfterCreate,
   AfterDestroy,
   AfterUpdate,
@@ -63,7 +65,10 @@ export default class Permission extends Model {
 
   @AfterCreate
   @AfterBulkCreate
-  static async logCreate(instance: Permission, options: UserActionOptions) {
+  static async logCreate(
+    instance: Permission | Permission[],
+    options: UserActionOptions
+  ) {
     await logEntityAction(
       'create',
       instance,
@@ -73,7 +78,11 @@ export default class Permission extends Model {
   }
 
   @AfterUpdate
-  static async logUpdate(instance: Permission, options: UserActionOptions) {
+  @AfterBulkUpdate
+  static async logUpdate(
+    instance: Permission | Permission[],
+    options: UserActionOptions
+  ) {
     await logEntityAction(
       'update',
       instance,
@@ -83,7 +92,11 @@ export default class Permission extends Model {
   }
 
   @AfterDestroy
-  static async logDestroy(instance: Permission, options: UserActionOptions) {
+  @AfterBulkDestroy
+  static async logDestroy(
+    instance: Permission | Permission[],
+    options: UserActionOptions
+  ) {
     await logEntityAction(
       'delete',
       instance,

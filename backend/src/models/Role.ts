@@ -1,4 +1,7 @@
 import {
+  AfterBulkCreate,
+  AfterBulkDestroy,
+  AfterBulkUpdate,
   AfterCreate,
   AfterDestroy,
   AfterUpdate,
@@ -63,17 +66,20 @@ export default class Role extends Model {
   static readonly RELATIONS = RELATIONS
 
   @AfterCreate
-  static async logCreate(instance: Role, options: UserActionOptions) {
+  @AfterBulkCreate
+  static async logCreate(instance: Role | Role[], options: UserActionOptions) {
     await logEntityAction('create', instance, options, ChangeLog.RELATIONS.ROLE)
   }
 
   @AfterUpdate
-  static async logUpdate(instance: Role, options: UserActionOptions) {
+  @AfterBulkUpdate
+  static async logUpdate(instance: Role | Role[], options: UserActionOptions) {
     await logEntityAction('update', instance, options, ChangeLog.RELATIONS.ROLE)
   }
 
   @AfterDestroy
-  static async logDestroy(instance: Role, options: UserActionOptions) {
+  @AfterBulkDestroy
+  static async logDestroy(instance: Role | Role[], options: UserActionOptions) {
     await logEntityAction('delete', instance, options, ChangeLog.RELATIONS.ROLE)
   }
 }

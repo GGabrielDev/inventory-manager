@@ -1,5 +1,8 @@
 import bcrypt from 'bcrypt'
 import {
+  AfterBulkCreate,
+  AfterBulkDestroy,
+  AfterBulkUpdate,
   AfterCreate,
   AfterDestroy,
   AfterUpdate,
@@ -86,8 +89,9 @@ export default class User extends Model {
   }
 
   @AfterCreate
-  static async logCreate(instance: User, options: UserActionOptions) {
-    if (!(instance.id === 0))
+  @AfterBulkCreate
+  static async logCreate(instance: User | User[], options: UserActionOptions) {
+    if (Array.isArray(instance) || instance.id !== 0)
       await logEntityAction(
         'create',
         instance,
@@ -97,12 +101,14 @@ export default class User extends Model {
   }
 
   @AfterUpdate
-  static async logUpdate(instance: User, options: UserActionOptions) {
+  @AfterBulkUpdate
+  static async logUpdate(instance: User | User[], options: UserActionOptions) {
     await logEntityAction('update', instance, options, ChangeLog.RELATIONS.USER)
   }
 
   @AfterDestroy
-  static async logDestroy(instance: User, options: UserActionOptions) {
+  @AfterBulkDestroy
+  static async logDestroy(instance: User | User[], options: UserActionOptions) {
     await logEntityAction('delete', instance, options, ChangeLog.RELATIONS.USER)
   }
 }

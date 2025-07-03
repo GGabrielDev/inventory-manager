@@ -1,4 +1,4 @@
-import { Permission, Role, User } from '@/models' // Adjust the import paths as necessary
+import { Permission, Role, User } from '@/models'
 
 const entities = [
   'Category',
@@ -25,34 +25,40 @@ export type PermissionType =
 
 async function populateAdminAndPermissions() {
   try {
-    // Create permissions
-    await Permission.bulkCreate(permissions, {
-      ignoreDuplicates: true,
+    // 1. Create admin user first
+    const [adminUser, userCreated] = await User.findOrCreate({
+      where: { username: 'admin' },
+      defaults: {
+        id: 0,
+        passwordHash: 'admin',
+      },
       userId: 0,
     })
 
-    // Create admin role
+    // 2. Use adminUser.id for all subsequent creates
+    const userId = adminUser.id
+
+    // 3. Create permissions
+    await Permission.bulkCreate(permissions, {
+      ignoreDuplicates: true,
+      userId,
+    })
+
+    // 4. Create admin role
     const [adminRole, roleCreated] = await Role.findOrCreate({
       where: { name: 'admin' },
       defaults: { description: 'Administrator role with full permissions' },
-      userId: 0,
+      userId,
     })
+
+    // 5. Associate admin user and admin role (many-to-many)
+    await adminUser.$add(User.RELATIONS.ROLES, adminRole, { userId })
 
     if (roleCreated) {
       console.log('Admin role created')
     } else {
       console.log('Admin role already exists')
     }
-
-    // Create admin user with ID 0
-    const [_adminUser, userCreated] = await User.findOrCreate({
-      where: { username: 'admin' },
-      defaults: {
-        passwordHash: 'admin',
-        roleId: adminRole.id,
-      },
-      userId: 0,
-    })
 
     if (userCreated) {
       console.log('Admin user created')
