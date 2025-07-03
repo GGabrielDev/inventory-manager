@@ -19,8 +19,8 @@ import {
 import { UserActionOptions } from '@/types/UserActionOptions'
 import { logEntityAction } from '@/utils/entity-hooks'
 
-import { ChangeLog, User } from '.'
-import { UserRole } from './join'
+import { ChangeLog, Permission, User } from '.'
+import { RolePermission, UserRole } from './join'
 
 const RELATIONS = {
   USERS: 'users',
@@ -38,8 +38,9 @@ export default class Role extends Model {
   @Column
   name!: string
 
-  @BelongsToMany(() => User, () => UserRole)
-  users!: Array<User & { UserRole: UserRole }>
+  @AllowNull(true)
+  @Column
+  description?: string
 
   @CreatedAt
   creationDate!: Date
@@ -49,6 +50,12 @@ export default class Role extends Model {
 
   @DeletedAt
   deletionDate?: Date
+
+  @BelongsToMany(() => User, () => UserRole)
+  users!: Array<User & { UserRole: UserRole }>
+
+  @BelongsToMany(() => Permission, () => RolePermission)
+  permissions!: Array<Permission & { RolePermission: RolePermission }>
 
   @HasMany(() => ChangeLog)
   changeLogs!: ChangeLog[]

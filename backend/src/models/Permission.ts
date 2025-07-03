@@ -1,8 +1,10 @@
 import {
+  AfterBulkCreate,
   AfterCreate,
   AfterDestroy,
   AfterUpdate,
   AutoIncrement,
+  BelongsToMany,
   Column,
   DataType,
   DeletedAt,
@@ -15,7 +17,8 @@ import {
 import { UserActionOptions } from '@/types/UserActionOptions'
 import { logEntityAction } from '@/utils/entity-hooks'
 
-import { ChangeLog } from '.'
+import { ChangeLog, Role } from '.'
+import { RolePermission } from './join'
 
 const RELATIONS = {
   CHANGELOGS: 'changeLogs',
@@ -50,12 +53,16 @@ export default class Permission extends Model {
   @DeletedAt
   deletionDate?: Date
 
+  @BelongsToMany(() => Role, () => RolePermission)
+  roles!: Array<Role & { RolePermission: RolePermission }>
+
   @HasMany(() => ChangeLog)
   changeLogs!: ChangeLog[]
 
   static readonly RELATIONS = RELATIONS
 
   @AfterCreate
+  @AfterBulkCreate
   static async logCreate(instance: Permission, options: UserActionOptions) {
     await logEntityAction(
       'create',

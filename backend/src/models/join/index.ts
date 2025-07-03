@@ -1,5 +1,6 @@
+import RolePermission from './RolePermission'
 import UserRole from './UserRole'
 
-export const JoinModels = [UserRole]
+export const JoinModels = [RolePermission, UserRole]
 
-export { UserRole }
+export { RolePermission, UserRole }
