@@ -4,6 +4,8 @@ import sqlite3 from 'sqlite3'
 const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
 loadEnv({ path: envFile })
 
+export const BASE_URL = process.env.BASE_URL || 'localhost'
+
 export const isTest = process.env.NODE_ENV === 'test'
 
 export const dbConfig = {
