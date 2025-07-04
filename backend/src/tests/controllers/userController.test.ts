@@ -1,0 +1,183 @@
+import { UserController } from '@/controllers/User'
+import { Role, User } from '@/models'
+
+describe('UserController', () => {
+  let systemUser: User
+  let adminRole: Role
+  let userRole: Role
+
+  beforeEach(async () => {
+    systemUser = await User.create(
+      {
+        id: 0,
+        username: 'systemUser',
+        passwordHash: 'password',
+      },
+      { userId: 0 }
+    )
+
+    adminRole = await Role.create(
+      {
+        name: 'admin',
+        description: 'Administrator',
+      },
+      { userId: systemUser.id }
+    )
+
+    userRole = await Role.create(
+      {
+        name: 'user',
+        description: 'Regular User',
+      },
+      { userId: systemUser.id }
+    )
+  })
+
+  it('should create a user with valid fields and roles', async () => {
+    const user = await UserController.createUser(
+      'testuser',
+      'test',
+      systemUser.id,
+      [adminRole.id]
+    )
+    expect(user.id).toBeDefined()
+    expect(user.username).toBe('testuser')
+
+    const roles = await user.$get(User.RELATIONS.ROLES)
+    expect(roles.length).toBe(1)
+    expect(roles[0].name).toBe('admin')
+  })
+
+  it('should update a user and change roles', async () => {
+    const user = await UserController.createUser(
+      'updateuser',
+      'test',
+      systemUser.id,
+      [adminRole.id]
+    )
+
+    const updatedUser = await UserController.updateUser(
+      user.id,
+      { username: 'updated' },
+      systemUser.id,
+      [userRole.id]
+    )
+    expect(updatedUser).toBeDefined()
+    expect(updatedUser?.username).toBe('updated')
+
+    const roles = await updatedUser?.$get(User.RELATIONS.ROLES)
+    expect(roles?.length).toBe(1)
+    expect(roles?.[0].name).toBe('user')
+  })
+
+  it('should get a user by ID', async () => {
+    const createdUser = await UserController.createUser(
+      'getuser',
+      'test',
+      systemUser.id
+    )
+    const user = await UserController.getUserById(createdUser.id)
+    expect(user).toBeDefined()
+    expect(user?.username).toBe('getuser')
+  })
+
+  it('should get all users with pagination', async () => {
+    await UserController.createUser('user1', 'test', systemUser.id)
+    await UserController.createUser('user2', 'test', systemUser.id)
+
+    const result = await UserController.getAllUsers({ page: 1, pageSize: 1 })
+    expect(result.data.length).toBe(1)
+    expect(result.total).toBeGreaterThanOrEqual(2)
+    expect(result.totalPages).toBeGreaterThanOrEqual(2)
+  })
+
+  it('should delete a user', async () => {
+    const user = await UserController.createUser(
+      'deleteuser',
+      'test',
+      systemUser.id
+    )
+    const result = await UserController.deleteUser(user.id, systemUser.id)
+    expect(result).toBe(true)
+
+    const deletedUser = await User.findByPk(user.id)
+    expect(deletedUser).toBeNull()
+  })
+
+  it('should not find a non-existent user', async () => {
+    const user = await UserController.getUserById(9999)
+    expect(user).toBeNull()
+  })
+
+  it('should handle unique username constraint', async () => {
+    await UserController.createUser('uniqueuser', 'test', systemUser.id)
+    await expect(
+      UserController.createUser('uniqueuser', 'test', systemUser.id)
+    ).rejects.toThrow()
+  })
+})
+
+describe('UserController - Edge Cases and Invalid Inputs', () => {
+  let systemUser: User
+
+  beforeEach(async () => {
+    systemUser = await User.create(
+      {
+        id: 0,
+        username: 'systemUser',
+        passwordHash: 'password',
+      },
+      { userId: 0 }
+    )
+  })
+
+  it('should throw an error if username is missing when creating a user', async () => {
+    await expect(
+      UserController.createUser('', 'test', systemUser.id)
+    ).rejects.toThrow('Validation error')
+  })
+
+  it('should throw an error if password is missing when creating a user', async () => {
+    await expect(
+      UserController.createUser('nousername', '', systemUser.id)
+    ).rejects.toThrow('Validation error')
+  })
+
+  it('should throw an error if userId is invalid when creating a user', async () => {
+    await expect(
+      UserController.createUser('invaliduser', 'test', -1)
+    ).rejects.toThrow('Invalid userId')
+  })
+
+  it('should return null if trying to update a non-existent user', async () => {
+    const result = await UserController.updateUser(
+      9999,
+      { username: 'newname' },
+      systemUser.id
+    )
+    expect(result).toBeNull()
+  })
+
+  it('should return false if trying to delete a non-existent user', async () => {
+    const result = await UserController.deleteUser(9999, systemUser.id)
+    expect(result).toBe(false)
+  })
+
+  it('should handle invalid page number in pagination', async () => {
+    const result = await UserController.getAllUsers({ page: -1, pageSize: 1 })
+    expect(result.data.length).toBe(0)
+    expect(result.total).toBe(0)
+  })
+
+  it('should handle invalid page size in pagination', async () => {
+    const result = await UserController.getAllUsers({ page: 1, pageSize: -1 })
+    expect(result.data.length).toBe(0)
+    expect(result.total).toBe(0)
+  })
+
+  it('should handle non-numeric userId in getUserById', async () => {
+    await expect(UserController.getUserById(NaN)).rejects.toThrow(
+      'Invalid userId'
+    )
+  })
+})
