@@ -18,6 +18,7 @@ import {
   Model,
   PrimaryKey,
   Table,
+  Unique,
   UpdatedAt,
   Validate,
 } from 'sequelize-typescript'
@@ -48,6 +49,7 @@ export default class Item extends Model {
   id!: number
 
   @AllowNull(false)
+  @Unique
   @Column
   name!: string
 

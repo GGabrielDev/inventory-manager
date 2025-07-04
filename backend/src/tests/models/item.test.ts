@@ -72,6 +72,22 @@ describe('Item model validations', () => {
       expect(error.name).toMatch(/Sequelize.*Error/)
     }
   })
+
+  it('should not allow duplicate item names', async () => {
+    expect.assertions(1)
+    await Item.create(
+      { name: 'UniqueItem', departmentId },
+      { userId: systemUser.id }
+    )
+    try {
+      await Item.create(
+        { name: 'UniqueItem', departmentId },
+        { userId: systemUser.id }
+      )
+    } catch (error: any) {
+      expect(error.name).toMatch(/Sequelize.*Error/)
+    }
+  })
 })
 
 describe('Item associations', () => {
