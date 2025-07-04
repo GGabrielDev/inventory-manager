@@ -52,12 +52,12 @@ async function populateAdminAndPermissions() {
     })
 
     // 5. Associate admin role and permissions (many-to-many)
-    await adminRole.$add(Role.RELATIONS.PERMISSIONS, createdPermissions, {
+    await adminRole.$set(Role.RELATIONS.PERMISSIONS, createdPermissions, {
       userId,
     })
 
     // 6. Associate admin user and admin role (many-to-many)
-    await adminUser.$add(User.RELATIONS.ROLES, adminRole, { userId })
+    await adminUser.$set(User.RELATIONS.ROLES, adminRole, { userId })
 
     if (roleCreated) {
       console.log('Admin role created')
