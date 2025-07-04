@@ -2,6 +2,16 @@ import { Permission, Role, User } from '@/models'
 import populateAdminAndPermissions from '@/services/populateAdmin'
 
 describe('populateAdminAndPermissions (integration)', () => {
+  let consoleSpy: jest.SpyInstance
+
+  beforeAll(() => {
+    consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+  })
+
+  afterAll(() => {
+    consoleSpy.mockRestore()
+  })
+
   it('should create permissions', async () => {
     await populateAdminAndPermissions()
 
