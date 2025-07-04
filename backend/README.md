@@ -192,3 +192,4 @@ The backend includes several controllers to manage different aspects of the appl
   - `getAllUsers({ page, pageSize })`: Retrieves all users with pagination.
   - `updateUser(userId, updates, actionUserId, roleIds)`: Updates a user and their roles.
   - `deleteUser(userId, actionUserId)`: Deletes a user.
+  - `login(username, password)`: Authenticates a user and returns a JWT token. This method uses the `unscoped` option to include the `passwordHash` for authentication purposes.

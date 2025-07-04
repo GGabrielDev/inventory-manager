@@ -1,7 +1,7 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
 import { StringValue } from 'ms'
 
-const SECRET_KEY: string = process.env.JWT_SECRET || 'your-secret-key'
+export const SECRET_KEY: string = process.env.JWT_SECRET || 'your-secret-key'
 
 // Function to check if a value is a valid time format or a number
 function isValidExpireTime(value: string): boolean {

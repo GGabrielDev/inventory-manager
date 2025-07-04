@@ -1,5 +1,6 @@
 import { UserController } from '@/controllers'
 import { Role, User } from '@/models'
+import { verifyToken } from '@/utils/auth-utils'
 
 describe('UserController', () => {
   let systemUser: User
@@ -114,6 +115,41 @@ describe('UserController', () => {
     await expect(
       UserController.createUser('uniqueuser', 'test', systemUser.id)
     ).rejects.toThrow()
+  })
+})
+
+describe('UserController - Login and Authentication', () => {
+  let systemUser: User
+
+  beforeEach(async () => {
+    systemUser = await User.create(
+      {
+        id: 0,
+        username: 'systemUser',
+        passwordHash: 'password',
+      },
+      { userId: 0 }
+    )
+  })
+
+  it('should login a user with valid credentials', async () => {
+    const token = await UserController.login('systemUser', 'password')
+    expect(token).toBeDefined()
+
+    const decoded = verifyToken(token)
+    expect(decoded.userId).toBe(systemUser.id)
+  })
+
+  it('should throw an error for invalid username', async () => {
+    await expect(
+      UserController.login('invalidUser', 'password')
+    ).rejects.toThrow('Invalid username or password')
+  })
+
+  it('should throw an error for invalid password', async () => {
+    await expect(
+      UserController.login('systemUser', 'wrongpassword')
+    ).rejects.toThrow('Invalid username or password')
   })
 })
 

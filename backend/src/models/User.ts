@@ -71,6 +71,11 @@ export default class User extends Model {
   static readonly RELATIONS = RELATIONS
   static SALT_ROUNDS = 10
 
+  // Password Verification
+  async validatePassword(password: string): Promise<boolean> {
+    return bcrypt.compare(password, this.passwordHash)
+  }
+
   // Password Hashing
   @BeforeCreate
   @BeforeUpdate
@@ -81,11 +86,6 @@ export default class User extends Model {
         User.SALT_ROUNDS
       )
     }
-  }
-
-  // Password Verification
-  async validatePassword(password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.passwordHash)
   }
 
   @AfterCreate

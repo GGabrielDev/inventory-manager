@@ -1,4 +1,7 @@
+import jwt from 'jsonwebtoken'
+
 import { Role, User } from '@/models'
+import { SECRET_KEY } from '@/utils/auth-utils'
 
 interface PaginationOptions {
   page: number
@@ -41,6 +44,22 @@ export class UserController {
     }
 
     return user
+  }
+
+  // User login
+  static async login(username: string, password: string): Promise<string> {
+    const user = await User.unscoped().findOne({ where: { username } })
+
+    if (!user || !(await user.validatePassword(password))) {
+      throw new Error('Invalid username or password')
+    }
+
+    // Generate a JWT token
+    const token = jwt.sign({ userId: user.id }, SECRET_KEY, {
+      expiresIn: '1h',
+    })
+
+    return token
   }
 
   // Get a user by ID
