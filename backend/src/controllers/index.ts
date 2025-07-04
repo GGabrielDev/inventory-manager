@@ -1,5 +1,6 @@
 export { CategoryController } from './Category'
 export { DepartmentController } from './Department'
+export { ItemController } from './Item'
 export { PermissionController } from './Permission'
 export { RoleController } from './Role'
 export { UserController } from './User'
