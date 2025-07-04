@@ -1,4 +1,5 @@
 export { CategoryController } from './Category'
+export { ChangeLogController } from './ChangeLog'
 export { DepartmentController } from './Department'
 export { ItemController } from './Item'
 export { PermissionController } from './Permission'
