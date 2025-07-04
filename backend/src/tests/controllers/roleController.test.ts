@@ -1,4 +1,4 @@
-import { RoleController } from '@/controllers/Role'
+import { RoleController } from '@/controllers'
 import { Permission, Role, User } from '@/models'
 
 describe('RoleController', () => {

@@ -1,4 +1,4 @@
-import { CategoryController } from '@/controllers/Category'
+import { CategoryController } from '@/controllers'
 import { Category, Department, Item, User } from '@/models'
 
 describe('CategoryController', () => {

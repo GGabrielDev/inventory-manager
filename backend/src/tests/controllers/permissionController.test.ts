@@ -1,4 +1,4 @@
-import { PermissionController } from '@/controllers/Permission'
+import { PermissionController } from '@/controllers'
 import { Permission, User } from '@/models'
 
 describe('PermissionController', () => {
