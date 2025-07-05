@@ -1,3 +1,7 @@
+/// <reference path="./types/express.d.ts" />
+/// <reference path="./types/sequelize.d.ts" />
+/// <reference path="./types/sequelize-typescript.d.ts" />
+
 import dotenv from 'dotenv'
 
 import app from './app'
@@ -12,7 +16,7 @@ async function startServer() {
     await sequelize.authenticate()
     console.log('✅ Database connection has been established successfully.')
 
-    await sequelize.sync() // si deseas crear tablas automáticamente
+    await sequelize.sync()
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`)

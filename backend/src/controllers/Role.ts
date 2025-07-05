@@ -1,4 +1,4 @@
-import { Permission, Role } from '@/models'
+import { Permission, Role, User } from '@/models'
 
 interface PaginationOptions {
   page: number
@@ -17,8 +17,8 @@ export class RoleController {
   static async createRole(
     name: Role['name'],
     description: Role['description'],
-    userId: number,
-    permissionIds: number[] = []
+    userId: User['id'],
+    permissionIds: Permission['id'][] = []
   ): Promise<Role> {
     if (!name) {
       throw new Error('Validation error: Role name is required')
@@ -40,7 +40,7 @@ export class RoleController {
   }
 
   // Get a role by ID
-  static async getRoleById(roleId: number): Promise<Role | null> {
+  static async getRoleById(roleId: Role['id']): Promise<Role | null> {
     if (typeof roleId !== 'number' || isNaN(roleId)) {
       throw new Error('Invalid roleId')
     }
@@ -81,10 +81,10 @@ export class RoleController {
 
   // Update a role and its permissions
   static async updateRole(
-    roleId: number,
+    roleId: Role['id'],
     updates: Partial<Role>,
-    actionUserId: number,
-    permissionIds: number[] = []
+    actionUserId: User['id'],
+    permissionIds: Permission['id'][] = []
   ): Promise<Role | null> {
     if (typeof roleId !== 'number' || isNaN(roleId)) {
       throw new Error('Invalid roleId')
@@ -109,8 +109,8 @@ export class RoleController {
 
   // Delete a role
   static async deleteRole(
-    roleId: number,
-    actionUserId: number
+    roleId: Role['id'],
+    actionUserId: User['id']
   ): Promise<boolean> {
     if (typeof roleId !== 'number' || isNaN(roleId)) {
       throw new Error('Invalid roleId')

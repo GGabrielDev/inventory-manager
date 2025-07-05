@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "start": "ts-node -r tsconfig-paths/register src/server.ts",
+    "start": "ts-node -r tsconfig-paths/register  src/server.ts",
     "db:populate": "ts-node -r tsconfig-paths/register src/scripts/populate.ts",
     "db:clear": "ts-node -r tsconfig-paths/register src/scripts/clear.ts",
     "test": "NODE_ENV=test jest --verbose",
