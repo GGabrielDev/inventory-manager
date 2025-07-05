@@ -1,4 +1,4 @@
-import { Permission, Role, User } from '@/models'
+import { ChangeLog, Permission, Role, User } from '@/models'
 
 interface PaginationOptions {
   page: number
@@ -46,7 +46,13 @@ export class RoleController {
     }
 
     return Role.findByPk(roleId, {
-      include: [Role.RELATIONS.PERMISSIONS, Role.RELATIONS.CHANGELOGS],
+      include: [
+        Role.RELATIONS.PERMISSIONS,
+        {
+          model: ChangeLog,
+          include: [ChangeLog.RELATIONS.CHANGELOG_DETAILS],
+        },
+      ],
     })
   }
 
@@ -68,7 +74,6 @@ export class RoleController {
     const { count, rows } = await Role.findAndCountAll({
       offset,
       limit: pageSize,
-      include: [Role.RELATIONS.PERMISSIONS],
     })
 
     return {
