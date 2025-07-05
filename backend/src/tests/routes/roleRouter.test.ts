@@ -45,7 +45,6 @@ describe('Role Routes', () => {
       .send({ username: 'Test', password: 'pass' })
 
     const token = loginResponse.body.token
-    console.log('Token: ', token)
 
     const response = await request(app)
       .post('/roles')
