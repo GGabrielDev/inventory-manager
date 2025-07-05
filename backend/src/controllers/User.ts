@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-import { Role, User } from '@/models'
+import { ChangeLog, Role, User } from '@/models'
 import { SECRET_KEY } from '@/utils/auth-utils'
 
 interface PaginationOptions {
@@ -68,9 +68,44 @@ export class UserController {
       throw new Error('Invalid userId')
     }
 
-    return User.findByPk(userId, {
-      include: [User.RELATIONS.ROLES, User.RELATIONS.CHANGELOGS],
+    const user = await User.findByPk(userId, {
+      include: [
+        User.RELATIONS.ROLES,
+        {
+          model: ChangeLog,
+          as: User.RELATIONS.CHANGELOGS,
+          include: [ChangeLog.RELATIONS.CHANGELOG_DETAILS],
+        },
+      ],
     })
+
+    if (!user) {
+      return null
+    }
+
+    // Clone user to a plain object with toJSON method
+    const userData = user.toJSON()
+
+    // Process the change logs to obfuscate passwordHash fields
+    userData.changeLogs = user.changeLogs.map((changeLog) => {
+      const obfuscatedDetails = changeLog.changeLogDetails.map((detail) => {
+        if (detail.field === 'passwordHash') {
+          return {
+            ...detail.toJSON(), // Convert Sequelize instance to plain object
+            oldValue: '************',
+            newValue: '************',
+          }
+        }
+        return detail.toJSON()
+      })
+
+      return {
+        ...changeLog.toJSON(),
+        changeLogDetails: obfuscatedDetails,
+      }
+    })
+
+    return userData as User
   }
 
   // Get all users with pagination
