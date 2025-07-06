@@ -50,6 +50,7 @@ export class RoleController {
         Role.RELATIONS.PERMISSIONS,
         {
           model: ChangeLog,
+          as: Role.RELATIONS.CHANGELOGS,
           include: [ChangeLog.RELATIONS.CHANGELOG_DETAILS],
         },
       ],
