@@ -64,7 +64,6 @@ export class CategoryController {
     const { count, rows } = await Category.findAndCountAll({
       offset,
       limit: pageSize,
-      include: [Category.RELATIONS.ITEMS],
     })
 
     return {

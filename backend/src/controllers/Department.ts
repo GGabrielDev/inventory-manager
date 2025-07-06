@@ -59,7 +59,6 @@ export class DepartmentController {
     const { count, rows } = await Department.findAndCountAll({
       offset,
       limit: pageSize,
-      include: [Department.RELATIONS.ITEMS],
     })
 
     return {
