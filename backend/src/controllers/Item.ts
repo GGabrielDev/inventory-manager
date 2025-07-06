@@ -1,4 +1,4 @@
-import { Item } from '@/models'
+import { ChangeLog, Item, User } from '@/models'
 import { UnitType } from '@/models/Item'
 
 interface PaginationOptions {
@@ -17,11 +17,11 @@ export class ItemController {
   // Create a new item
   static async createItem(
     name: Item['name'],
-    departmentId: number,
-    userId: number,
-    quantity: number = 1,
-    unit: UnitType = UnitType.UND,
-    categoryId?: number
+    departmentId: Item['departmentId'],
+    userId: User['id'],
+    quantity: Item['quantity'] = 1,
+    unit: Item['unit'] = UnitType.UND,
+    categoryId?: Item['categoryId']
   ): Promise<Item> {
     if (!name) {
       throw new Error('Validation error: Item name is required')
@@ -55,7 +55,11 @@ export class ItemController {
       include: [
         Item.RELATIONS.CATEGORY,
         Item.RELATIONS.DEPARTMENT,
-        Item.RELATIONS.CHANGELOGS,
+        {
+          model: ChangeLog,
+          as: Item.RELATIONS.CHANGELOGS,
+          include: [ChangeLog.RELATIONS.CHANGELOG_DETAILS],
+        },
       ],
     })
   }
