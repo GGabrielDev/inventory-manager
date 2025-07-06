@@ -29,7 +29,7 @@ const RELATIONS = {
   ITEMS: 'items',
 } as const satisfies Record<string, keyof Department>
 
-@Table({ paranoid: true })
+@Table
 export default class Department extends Model {
   @PrimaryKey
   @AutoIncrement
