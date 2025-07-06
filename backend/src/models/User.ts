@@ -91,7 +91,7 @@ export default class User extends Model {
   @AfterCreate
   @AfterBulkCreate
   static async logCreate(instance: User | User[], options: UserActionOptions) {
-    if (Array.isArray(instance) || instance.id !== 0)
+    if (options.userId !== 0)
       await logEntityAction(
         'create',
         instance,

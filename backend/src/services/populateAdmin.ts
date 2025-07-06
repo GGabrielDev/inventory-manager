@@ -29,7 +29,6 @@ async function populateAdminAndPermissions() {
     const [adminUser, userCreated] = await User.findOrCreate({
       where: { username: 'admin' },
       defaults: {
-        id: 0,
         passwordHash: 'admin',
       },
       userId: 0,
