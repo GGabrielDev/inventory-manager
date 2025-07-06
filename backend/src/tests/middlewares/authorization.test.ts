@@ -33,7 +33,7 @@ describe('Authorization Middleware', () => {
 
   beforeEach(async () => {
     user = await User.create(
-      { id: 0, username: 'test', passwordHash: 'x' },
+      { username: 'test', passwordHash: 'x' },
       { userId: 0 }
     )
     userId = user.id

@@ -11,7 +11,6 @@ describe('ChangeLogController', () => {
   beforeEach(async () => {
     systemUser = await User.create(
       {
-        id: 0,
         username: 'systemUser',
         passwordHash: 'password',
       },
@@ -96,7 +95,6 @@ describe('CategoryController - Edge Cases and Invalid Inputs', () => {
   beforeEach(async () => {
     systemUser = await User.create(
       {
-        id: 0,
         username: 'systemUser',
         passwordHash: 'password',
       },

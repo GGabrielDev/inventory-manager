@@ -6,7 +6,7 @@ describe('CategoryController', () => {
 
   beforeEach(async () => {
     systemUser = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { username: 'TestUser', passwordHash: 'pw' },
       { userId: 0 }
     )
   })
@@ -114,7 +114,7 @@ describe('CategoryController - Edge Cases and Invalid Inputs', () => {
 
   beforeEach(async () => {
     systemUser = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { username: 'TestUser', passwordHash: 'pw' },
       { userId: 0 }
     )
   })

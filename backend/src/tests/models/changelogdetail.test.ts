@@ -19,7 +19,7 @@ describe('ChangeLogDetail Model', () => {
 
   beforeEach(async () => {
     user = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'test' },
+      { username: 'TestUser', passwordHash: 'test' },
       { userId: 0 }
     )
     department = await Department.create(

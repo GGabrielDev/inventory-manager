@@ -10,7 +10,6 @@ describe('ChangeLog Model', () => {
     // Simulates the bypass user
     systemUser = await User.create(
       {
-        id: 0,
         username: 'systemUser',
         passwordHash: 'password',
       },
@@ -85,7 +84,6 @@ describe('ChangeLog Model', () => {
       ChangeLog.create({
         operation: 'create',
         changedBy: systemUser.id,
-        userId: systemUser.id,
       })
     ).rejects.toThrow(/at least one/i)
   })

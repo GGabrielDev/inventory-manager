@@ -9,7 +9,6 @@ describe('RoleController', () => {
   beforeEach(async () => {
     systemUser = await User.create(
       {
-        id: 0,
         username: 'systemUser',
         passwordHash: 'password',
       },
@@ -123,7 +122,6 @@ describe('RoleController - Edge Cases and Invalid Inputs', () => {
   beforeEach(async () => {
     systemUser = await User.create(
       {
-        id: 0,
         username: 'systemUser',
         passwordHash: 'password',
       },

@@ -9,7 +9,7 @@ describe('ItemController', () => {
 
   beforeEach(async () => {
     systemUser = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { username: 'TestUser', passwordHash: 'pw' },
       { userId: 0 }
     )
 
@@ -108,7 +108,7 @@ describe('ItemController - Edge Cases and Invalid Inputs', () => {
 
   beforeEach(async () => {
     systemUser = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { username: 'TestUser', passwordHash: 'pw' },
       { userId: 0 }
     )
 

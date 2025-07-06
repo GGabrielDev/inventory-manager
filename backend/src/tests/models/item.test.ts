@@ -7,7 +7,7 @@ describe('Item model validations', () => {
 
   beforeEach(async () => {
     systemUser = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { username: 'TestUser', passwordHash: 'pw' },
       { userId: 0 }
     )
     const dept = await Department.create(
@@ -93,12 +93,12 @@ describe('Item model validations', () => {
 describe('Item associations', () => {
   it('should relate item to category and department', async () => {
     const systemUser = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { username: 'TestUser', passwordHash: 'pw' },
       { userId: 0 }
     )
     const dept = await Department.create(
       { name: 'Office Supplies' },
-      { userId: 0 }
+      { userId: systemUser.id }
     )
 
     const cat = await Category.create(

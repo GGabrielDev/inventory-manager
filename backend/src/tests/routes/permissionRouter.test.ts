@@ -13,7 +13,7 @@ let user: User, role: Role, permission: Permission
 beforeEach(async () => {
   // Insert test data
   user = await User.create(
-    { id: 0, username: 'Test', passwordHash: 'pass' },
+    { username: 'Test', passwordHash: 'pass' },
     { userId: 0 }
   )
   role = await Role.create({ name: 'Test Role' }, { userId: user.id })

@@ -10,7 +10,6 @@ describe('UserController', () => {
   beforeEach(async () => {
     systemUser = await User.create(
       {
-        id: 0,
         username: 'systemUser',
         passwordHash: 'password',
       },
@@ -124,7 +123,6 @@ describe('UserController - Login and Authentication', () => {
   beforeEach(async () => {
     systemUser = await User.create(
       {
-        id: 0,
         username: 'systemUser',
         passwordHash: 'password',
       },
@@ -159,7 +157,6 @@ describe('UserController - Edge Cases and Invalid Inputs', () => {
   beforeEach(async () => {
     systemUser = await User.create(
       {
-        id: 0,
         username: 'systemUser',
         passwordHash: 'password',
       },

@@ -9,7 +9,6 @@ describe('logEntityAction', () => {
   beforeEach(async () => {
     systemUser = await User.create(
       {
-        id: 0,
         username: 'systemUser',
         passwordHash: 'password',
       },

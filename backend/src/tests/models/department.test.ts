@@ -7,7 +7,7 @@ describe('Department model', () => {
 
   beforeEach(async () => {
     systemUser = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { username: 'TestUser', passwordHash: 'pw' },
       { userId: 0 }
     )
   })
@@ -47,7 +47,7 @@ describe('Department deletion constraints', () => {
 
   beforeEach(async () => {
     systemUser = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { username: 'TestUser', passwordHash: 'pw' },
       { userId: 0 }
     )
     department = await Department.create(
@@ -83,7 +83,7 @@ describe('Department associations', () => {
 
   beforeEach(async () => {
     systemUser = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { username: 'TestUser', passwordHash: 'pw' },
       { userId: 0 }
     )
   })

@@ -5,7 +5,7 @@ describe('Permission Model', () => {
 
   beforeEach(async () => {
     systemUser = await User.create(
-      { id: 0, username: 'TestUser', passwordHash: 'pw' },
+      { username: 'TestUser', passwordHash: 'pw' },
       { userId: 0 }
     )
   })
