@@ -81,6 +81,18 @@ describe('Role Model', () => {
     )
   })
 
+  it('should throw if soft-deleting with users associated', async () => {
+    const role = await Role.create(
+      { name: 'todelete', description: 'desc' },
+      { userId: systemUser.id }
+    )
+    await role.$add(Role.RELATIONS.USERS, systemUser, { userId: systemUser.id })
+
+    await expect(role.destroy({ userId: systemUser.id })).rejects.toThrow(
+      'Cannot delete role with assigned users.'
+    )
+  })
+
   it('should soft-delete a role and call delete log hook', async () => {
     const role = await Role.create(
       { name: 'todelete', description: 'desc' },

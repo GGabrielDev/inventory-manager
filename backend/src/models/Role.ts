@@ -7,6 +7,7 @@ import {
   AfterUpdate,
   AllowNull,
   AutoIncrement,
+  BeforeDestroy,
   BelongsToMany,
   Column,
   CreatedAt,
@@ -77,6 +78,14 @@ export default class Role extends Model {
   @AfterBulkUpdate
   static async logUpdate(instance: Role | Role[], options: UserActionOptions) {
     await logEntityAction('update', instance, options, ChangeLog.RELATIONS.ROLE)
+  }
+
+  @BeforeDestroy
+  static async checkUsersBeforeDestroy(instance: Role) {
+    const userCount = await instance.$count(Role.RELATIONS.USERS)
+    if (userCount > 0) {
+      throw new Error('Cannot delete role with assigned users.')
+    }
   }
 
   @AfterDestroy

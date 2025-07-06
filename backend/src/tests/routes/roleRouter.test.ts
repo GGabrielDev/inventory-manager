@@ -124,7 +124,7 @@ describe('Role Routes', () => {
     expect(response.body).toHaveProperty('name', 'Updated Role')
   })
 
-  it('should delete a role with valid authentication and authorization', async () => {
+  it('should throw if trying to delete a role with associated users', async () => {
     const loginResponse = await request(app)
       .post('/auth/login')
       .send({ username: 'Test', password: 'pass' })
@@ -133,6 +133,30 @@ describe('Role Routes', () => {
 
     const response = await request(app)
       .delete(`/roles/${role.id}`)
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(response.status).toBe(400)
+    expect(response.body).toHaveProperty(
+      'error',
+      'Cannot delete role with assigned users.'
+    )
+  })
+
+  it('should delete a role with valid authentication and authorization', async () => {
+    // Create role that has no associations
+    const deleteRole = await Role.create(
+      { name: 'deleterole' },
+      { userId: user.id }
+    )
+
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({ username: 'Test', password: 'pass' })
+
+    const token = loginResponse.body.token
+
+    const response = await request(app)
+      .delete(`/roles/${deleteRole.id}`)
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.status).toBe(204)
