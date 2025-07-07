@@ -15,7 +15,7 @@ interface PaginatedResult<T> {
 export class ChangeLogController {
   // Get change logs by category ID
   static async getChangeLogsByCategoryId(
-    categoryId: number,
+    categoryId: ChangeLog['categoryId'],
     { page, pageSize }: PaginationOptions
   ): Promise<PaginatedResult<ChangeLog>> {
     if (categoryId == null || isNaN(categoryId)) {
@@ -32,6 +32,7 @@ export class ChangeLogController {
         ChangeLog.RELATIONS.USER,
         ChangeLog.RELATIONS.CHANGELOG_DETAILS,
       ],
+      distinct: true,
     })
 
     return {
@@ -44,7 +45,7 @@ export class ChangeLogController {
 
   // Get change logs by item ID
   static async getChangeLogsByItemId(
-    itemId: number,
+    itemId: ChangeLog['itemId'],
     { page, pageSize }: PaginationOptions
   ): Promise<PaginatedResult<ChangeLog>> {
     if (itemId == null || isNaN(itemId)) {
@@ -61,6 +62,7 @@ export class ChangeLogController {
         ChangeLog.RELATIONS.USER,
         ChangeLog.RELATIONS.CHANGELOG_DETAILS,
       ],
+      distinct: true,
     })
 
     return {
@@ -73,7 +75,7 @@ export class ChangeLogController {
 
   // Get change logs by department ID
   static async getChangeLogsByDepartmentId(
-    departmentId: number,
+    departmentId: ChangeLog['departmentId'],
     { page, pageSize }: PaginationOptions
   ): Promise<PaginatedResult<ChangeLog>> {
     if (departmentId == null || isNaN(departmentId)) {
@@ -90,6 +92,7 @@ export class ChangeLogController {
         ChangeLog.RELATIONS.USER,
         ChangeLog.RELATIONS.CHANGELOG_DETAILS,
       ],
+      distinct: true,
     })
 
     return {
@@ -102,7 +105,7 @@ export class ChangeLogController {
 
   // Get change logs by user ID
   static async getChangeLogsByUserId(
-    userId: number,
+    userId: ChangeLog['userId'],
     { page, pageSize }: PaginationOptions
   ): Promise<PaginatedResult<ChangeLog>> {
     if (userId == null || isNaN(userId)) {
@@ -118,6 +121,7 @@ export class ChangeLogController {
         ChangeLog.RELATIONS.USER,
         ChangeLog.RELATIONS.CHANGELOG_DETAILS,
       ],
+      distinct: true,
     })
 
     return {

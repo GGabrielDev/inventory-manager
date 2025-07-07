@@ -37,7 +37,7 @@ export class DepartmentController {
     }
 
     return Department.findByPk(departmentId, {
-      include: [Department.RELATIONS.ITEMS, Department.RELATIONS.CHANGELOGS],
+      include: [Department.RELATIONS.ITEMS],
     })
   }
 

@@ -1,4 +1,4 @@
-import { Category, ChangeLog } from '@/models'
+import { Category } from '@/models'
 
 interface PaginationOptions {
   page: number
@@ -35,14 +35,7 @@ export class CategoryController {
     }
 
     return Category.findByPk(categoryId, {
-      include: [
-        Category.RELATIONS.ITEMS,
-        {
-          model: ChangeLog,
-          as: Category.RELATIONS.CHANGELOGS,
-          include: [ChangeLog.RELATIONS.CHANGELOG_DETAILS],
-        },
-      ],
+      include: [Category.RELATIONS.ITEMS],
     })
   }
 

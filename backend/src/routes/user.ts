@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from 'express'
 
-import { UserController } from '@/controllers'
+import { ChangeLogController, UserController } from '@/controllers'
 import { requirePermission } from '@/middlewares/authorization'
 import { User } from '@/models'
 
@@ -28,6 +28,31 @@ userRouter.post(
         roleIds
       )
       res.status(201).json(await User.findByPk(user.id))
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message })
+      } else {
+        next(error)
+      }
+    }
+  }
+)
+
+// Get a user's changelogs
+userRouter.get(
+  '/changelogs/:id',
+  requirePermission('get_user'),
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userId = parseInt(req.params.id, 10)
+      const page = parseInt(req.query.page as string, 10) || 1
+      const pageSize = parseInt(req.query.pageSize as string, 10) || 10
+      const result = await ChangeLogController.getChangeLogsByUserId(userId, {
+        page,
+        pageSize,
+      })
+
+      res.json(result)
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ error: error.message })
@@ -138,9 +163,6 @@ userRouter.delete(
     try {
       const userId = parseInt(req.params.id, 10)
       const actionUserId = req.userId
-
-      console.log('Delete request for User ID:', userId)
-      console.log('Action User ID:', actionUserId)
 
       if (typeof actionUserId !== 'number') {
         res.status(401).json({ error: 'Unauthorized' })

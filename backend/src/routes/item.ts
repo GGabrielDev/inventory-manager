@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from 'express'
 
-import { ItemController } from '@/controllers'
+import { ChangeLogController, ItemController } from '@/controllers'
 import { requirePermission } from '@/middlewares/authorization'
 
 const itemRouter: Router = express.Router()
@@ -53,6 +53,31 @@ itemRouter.get(
       }
 
       res.json(item)
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message })
+      } else {
+        next(error)
+      }
+    }
+  }
+)
+
+// Get a item's changelogs
+itemRouter.get(
+  '/changelogs/:id',
+  requirePermission('get_item'),
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const itemId = parseInt(req.params.id, 10)
+      const page = parseInt(req.query.page as string, 10) || 1
+      const pageSize = parseInt(req.query.pageSize as string, 10) || 10
+      const result = await ChangeLogController.getChangeLogsByItemId(itemId, {
+        page,
+        pageSize,
+      })
+
+      res.json(result)
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ error: error.message })

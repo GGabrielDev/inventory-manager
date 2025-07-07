@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from 'express'
 
-import { DepartmentController } from '@/controllers'
+import { ChangeLogController, DepartmentController } from '@/controllers'
 import { requirePermission } from '@/middlewares/authorization'
 
 const departmentRouter: Router = express.Router()
@@ -29,6 +29,31 @@ departmentRouter.post(
         res.status(400).json({ error: error.message })
       } else {
         next(error) // Pass unknown errors to the next middleware
+      }
+    }
+  }
+)
+
+// Get a department's changelogs
+departmentRouter.get(
+  '/changelogs/:id',
+  requirePermission('get_department'),
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const departmentId = parseInt(req.params.id, 10)
+      const page = parseInt(req.query.page as string, 10) || 1
+      const pageSize = parseInt(req.query.pageSize as string, 10) || 10
+      const result = await ChangeLogController.getChangeLogsByDepartmentId(
+        departmentId,
+        { page, pageSize }
+      )
+
+      res.json(result)
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message })
+      } else {
+        next(error)
       }
     }
   }

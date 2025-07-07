@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from 'express'
 
-import { CategoryController } from '@/controllers'
+import { CategoryController, ChangeLogController } from '@/controllers'
 import { requirePermission } from '@/middlewares/authorization'
 
 const categoryRouter: Router = express.Router()
@@ -26,6 +26,31 @@ categoryRouter.post(
         res.status(400).json({ error: error.message })
       } else {
         next(error) // Pass unknown errors to the next middleware
+      }
+    }
+  }
+)
+
+// Get a category's changelogs
+categoryRouter.get(
+  '/changelogs/:id',
+  requirePermission('get_category'),
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const categoryId = parseInt(req.params.id, 10)
+      const page = parseInt(req.query.page as string, 10) || 1
+      const pageSize = parseInt(req.query.pageSize as string, 10) || 10
+      const result = await ChangeLogController.getChangeLogsByCategoryId(
+        categoryId,
+        { page, pageSize }
+      )
+
+      res.json(result)
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message })
+      } else {
+        next(error)
       }
     }
   }

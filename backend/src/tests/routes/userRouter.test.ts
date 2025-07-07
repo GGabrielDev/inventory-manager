@@ -86,6 +86,22 @@ describe('User Routes', () => {
     expect(response.body.data.length).toBeGreaterThanOrEqual(0)
   })
 
+  it('should get all changelogs for userId with pagination', async () => {
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({ username: 'TestUser', password: 'pass' })
+
+    const token = loginResponse.body.token
+
+    const response = await request(app)
+      .get(`/users/changelogs/${user.id}?page=1&pageSize=1`)
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty('data')
+    expect(response.body.data.length).toBeGreaterThanOrEqual(0)
+  })
+
   it('should update a user with valid authentication and authorization', async () => {
     const response = await request(app)
       .put(`/users/${user.id}`)

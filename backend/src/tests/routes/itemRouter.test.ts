@@ -151,6 +151,22 @@ describe('Item Routes', () => {
     expect(response.body.data.length).toBeGreaterThanOrEqual(0)
   })
 
+  it('should get all changelogs for itemId with pagination', async () => {
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({ username: 'Test', password: 'pass' })
+
+    const token = loginResponse.body.token
+
+    const response = await request(app)
+      .get(`/items/changelogs/${item.id}?page=1&pageSize=1`)
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty('data')
+    expect(response.body.data.length).toBeGreaterThanOrEqual(0)
+  })
+
   it('should update a item with valid authentication and authorization', async () => {
     const loginResponse = await request(app)
       .post('/auth/login')
