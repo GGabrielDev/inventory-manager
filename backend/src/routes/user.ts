@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from 'express'
 
 import { ChangeLogController, UserController } from '@/controllers'
+import { UserFilterOptions } from '@/controllers/User'
 import { requirePermission } from '@/middlewares/authorization'
 import { User } from '@/models'
 
@@ -88,7 +89,7 @@ userRouter.get(
   }
 )
 
-// Get all users with pagination
+// Get all users with pagination and optional filters
 userRouter.get(
   '/',
   requirePermission('get_user'),
@@ -96,7 +97,18 @@ userRouter.get(
     try {
       const page = parseInt(req.query.page as string, 10) || 1
       const pageSize = parseInt(req.query.pageSize as string, 10) || 10
-      const result = await UserController.getAllUsers({ page, pageSize })
+      const username = (req.query.username as User['username']) || undefined
+      const sortBy =
+        (req.query.sortBy as UserFilterOptions['sortBy']) || undefined
+      const sortOrder = (req.query.sortOrder as 'ASC' | 'DESC') || undefined
+
+      const result = await UserController.getAllUsers({
+        page,
+        pageSize,
+        username,
+        sortBy,
+        sortOrder,
+      })
 
       res.json(result)
     } catch (error) {

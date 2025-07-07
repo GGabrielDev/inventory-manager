@@ -153,3 +153,51 @@ describe('User Routes', () => {
     expect(response.body).toHaveProperty('error', 'Forbidden')
   })
 })
+
+describe('User Routes – filters', () => {
+  let token: string
+
+  beforeEach(async () => {
+    // Simulate login to get a token
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({ username: 'TestUser', password: 'pass' })
+
+    token = loginResponse.body.token
+
+    // create three users with different names
+    await User.create(
+      {
+        username: 'Alice',
+        passwordHash: 'pass',
+      },
+      { userId: user.id }
+    )
+    await User.create(
+      {
+        username: 'Bob',
+        passwordHash: 'pass',
+      },
+      { userId: user.id }
+    )
+    await User.create(
+      {
+        username: 'Carol',
+        passwordHash: 'pass',
+      },
+      { userId: user.id }
+    )
+  })
+
+  it('filters by partial name match', async () => {
+    const res = await request(app)
+      .get('/users?username=li') // matches "Alice"
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(200)
+    const names = res.body.data.map((u: any) => u.username)
+    expect(names).toContain('Alice')
+    expect(names).not.toContain('Carol')
+    expect(names).not.toContain('Bob')
+  })
+})

@@ -214,3 +214,157 @@ describe('UserController - Edge Cases and Invalid Inputs', () => {
     )
   })
 })
+
+describe('UserController – filters', () => {
+  let systemUser: User
+
+  beforeEach(async () => {
+    systemUser = await User.create(
+      {
+        username: 'systemUser',
+        passwordHash: 'password',
+      },
+      { userId: 0 }
+    )
+    await UserController.createUser('userA', 'pass', systemUser.id)
+    await UserController.createUser('userB', 'pass', systemUser.id)
+    await UserController.createUser('userC', 'pass', systemUser.id)
+  })
+
+  it('controller filters by name', async () => {
+    const result = await UserController.getAllUsers({
+      page: 1,
+      pageSize: 10,
+      username: 'userB',
+    })
+    expect(result.data.map((u) => u.username)).toEqual(['userB'])
+    expect(result.total).toBe(1)
+  })
+})
+
+describe('UserController – sorting', () => {
+  let systemUser: User
+
+  beforeEach(async () => {
+    const createTimestamps = [
+      new Date('2025-01-01'),
+      new Date('2025-02-01'),
+      new Date('2025-03-01'),
+      new Date('2025-04-01'),
+    ]
+
+    systemUser = await User.create(
+      {
+        username: 'user3',
+        passwordHash: 'password',
+        creationDate: createTimestamps[3],
+      },
+      { userId: 0 }
+    )
+    for (let i = 0; i < 3; i++) {
+      await User.create(
+        {
+          username: `user${i}`,
+          passwordHash: 'pass',
+          creationDate: createTimestamps[i],
+        },
+        { userId: systemUser.id }
+      )
+    }
+  })
+
+  const getSortedUsernames = (users: any[]) => users.map((u) => u.username)
+
+  it('sorts by username ASC', async () => {
+    const result = await UserController.getAllUsers({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'username',
+      sortOrder: 'ASC',
+    })
+    expect(getSortedUsernames(result.data)).toEqual([
+      'user0',
+      'user1',
+      'user2',
+      'user3',
+    ])
+  })
+
+  it('sorts by username DESC', async () => {
+    const result = await UserController.getAllUsers({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'username',
+      sortOrder: 'DESC',
+    })
+    expect(getSortedUsernames(result.data)).toEqual([
+      'user3',
+      'user2',
+      'user1',
+      'user0',
+    ])
+  })
+
+  it('sorts by creationDate ASC (createdAt)', async () => {
+    const result = await UserController.getAllUsers({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'creationDate',
+      sortOrder: 'ASC',
+    })
+    expect(getSortedUsernames(result.data)).toEqual([
+      'user0',
+      'user1',
+      'user2',
+      'user3',
+    ])
+  })
+
+  it('sorts by creationDate DESC (createdAt)', async () => {
+    const result = await UserController.getAllUsers({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'creationDate',
+      sortOrder: 'DESC',
+    })
+    expect(getSortedUsernames(result.data)).toEqual([
+      'user3',
+      'user2',
+      'user1',
+      'user0',
+    ])
+  })
+
+  it('sorts by updatedOn ASC (updatedAt) (uses sequelize asigned date))', async () => {
+    const result = await UserController.getAllUsers({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'updatedOn',
+      sortOrder: 'ASC',
+    })
+
+    console.log(result.data.map((results: any) => results.updatedOn))
+
+    expect(getSortedUsernames(result.data)).toEqual([
+      'user3',
+      'user0',
+      'user1',
+      'user2',
+    ])
+  })
+
+  it('sorts by updatedOn DESC (updatedAt) (uses sequelize asigned date)', async () => {
+    const result = await UserController.getAllUsers({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'updatedOn',
+      sortOrder: 'DESC',
+    })
+    expect(getSortedUsernames(result.data)).toEqual([
+      'user2',
+      'user1',
+      'user0',
+      'user3',
+    ])
+  })
+})

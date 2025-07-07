@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { Op, OrderItem } from 'sequelize'
 
 import { ChangeLog, Role, User } from '@/models'
 import { SECRET_KEY } from '@/utils/auth-utils'
@@ -6,6 +7,12 @@ import { SECRET_KEY } from '@/utils/auth-utils'
 interface PaginationOptions {
   page: number
   pageSize: number
+}
+
+export interface UserFilterOptions extends PaginationOptions {
+  username?: string
+  sortBy?: 'username' | 'creationDate' | 'updatedOn'
+  sortOrder?: 'ASC' | 'DESC'
 }
 
 interface PaginatedResult<T> {
@@ -108,31 +115,53 @@ export class UserController {
     return userData as User
   }
 
-  // Get all users with pagination
+  // Get all users with pagination and optional filters and sorting
   static async getAllUsers({
     page,
     pageSize,
-  }: PaginationOptions): Promise<PaginatedResult<User>> {
+    username,
+    sortBy,
+    sortOrder = 'ASC',
+  }: UserFilterOptions): Promise<PaginatedResult<User>> {
     if (page < 1 || pageSize < 1) {
-      return {
-        data: [],
-        total: 0,
-        totalPages: 0,
-        currentPage: page,
-      }
+      return { data: [], total: 0, totalPages: 0, currentPage: page }
     }
 
     const offset = (page - 1) * pageSize
-    const { count, rows } = await User.findAndCountAll({
+    const andConditions: any[] = []
+
+    // Filter by username (partial match)
+    if (username) {
+      andConditions.push({ username: { [Op.like]: `%${username}%` } })
+    }
+
+    const where = andConditions.length ? { [Op.and]: andConditions } : undefined
+
+    let order: OrderItem[] | undefined = undefined
+    if (sortBy) {
+      const column =
+        sortBy === 'creationDate'
+          ? 'creationDate'
+          : sortBy === 'updatedOn'
+            ? 'updatedOn'
+            : 'username'
+      order = [[column, sortOrder]]
+    }
+
+    const data = await User.findAll({
+      where,
       offset,
       limit: pageSize,
+      order,
       include: [User.RELATIONS.ROLES],
     })
 
+    const total = await User.count({ where })
+
     return {
-      data: rows,
-      total: count,
-      totalPages: Math.ceil(count / pageSize),
+      data,
+      total,
+      totalPages: Math.ceil(total / pageSize),
       currentPage: page,
     }
   }
