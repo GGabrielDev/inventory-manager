@@ -1,9 +1,19 @@
-import { ChangeLog, Item, User } from '@/models'
+import { Op, OrderItem } from 'sequelize'
+
+import { Category, ChangeLog, Department, Item, User } from '@/models'
 import { UnitType } from '@/models/Item'
 
 interface PaginationOptions {
   page: number
   pageSize: number
+}
+
+export interface ItemFilterOptions extends PaginationOptions {
+  name?: Item['name']
+  department?: Department['name']
+  category?: Category['name']
+  sortBy?: 'name' | 'category' | 'department' | 'creationDate' | 'updatedOn'
+  sortOrder?: 'ASC' | 'DESC'
 }
 
 interface PaginatedResult<T> {
@@ -68,7 +78,12 @@ export class ItemController {
   static async getAllItems({
     page,
     pageSize,
-  }: PaginationOptions): Promise<PaginatedResult<Item>> {
+    name,
+    department,
+    category,
+    sortBy,
+    sortOrder = 'ASC',
+  }: ItemFilterOptions): Promise<PaginatedResult<Item>> {
     if (page < 1 || pageSize < 1) {
       return {
         data: [],
@@ -79,10 +94,77 @@ export class ItemController {
     }
 
     const offset = (page - 1) * pageSize
+    const andConditions: any[] = []
+    const includeConditions: any[] = []
+
+    if (name) {
+      andConditions.push({
+        name: { [Op.like]: `%${name}%` },
+      })
+    }
+
+    // Asegura incluir Department si se filtra o se ordena por él
+    if (department || sortBy === 'department') {
+      includeConditions.push({
+        model: Department,
+        as: Item.RELATIONS.DEPARTMENT,
+        ...(department && {
+          where: { name: { [Op.like]: `%${department}%` } },
+        }),
+        required: !!department, // solo forzamos el join si hay filtro
+      })
+    }
+
+    // Asegura incluir Category si se filtra o se ordena por ella
+    if (category || sortBy === 'category') {
+      includeConditions.push({
+        model: Category,
+        as: Item.RELATIONS.CATEGORY,
+        ...(category && {
+          where: { name: { [Op.like]: `%${category}%` } },
+        }),
+        required: !!category,
+      })
+    }
+
+    const where = andConditions.length ? { [Op.and]: andConditions } : undefined
+
+    let order: OrderItem[] | undefined = undefined
+    if (sortBy) {
+      const column =
+        sortBy === 'creationDate'
+          ? 'creationDate'
+          : sortBy === 'updatedOn'
+            ? 'updatedOn'
+            : sortBy === 'name'
+              ? 'name'
+              : undefined
+      order = column
+        ? [[column, sortOrder]]
+        : sortBy === 'category'
+          ? [
+              [
+                { model: Category, as: Item.RELATIONS.CATEGORY },
+                'name',
+                sortOrder,
+              ],
+            ]
+          : [
+              [
+                { model: Department, as: Item.RELATIONS.DEPARTMENT },
+                'name',
+                sortOrder,
+              ],
+            ]
+    }
+
     const { count, rows } = await Item.findAndCountAll({
+      where,
       offset,
       limit: pageSize,
-      include: [Item.RELATIONS.CATEGORY, Item.RELATIONS.DEPARTMENT],
+      distinct: true,
+      include: includeConditions,
+      order,
     })
 
     return {

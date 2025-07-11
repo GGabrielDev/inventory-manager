@@ -191,3 +191,309 @@ describe('ItemController - Edge Cases and Invalid Inputs', () => {
     )
   })
 })
+
+describe('Item Controllers - filters', () => {
+  let systemUser: User
+  let department, differentDepartment: Department
+  let category, differentCategory: Category
+
+  beforeEach(async () => {
+    systemUser = await User.create(
+      { username: 'TestUser', passwordHash: 'pw' },
+      { userId: 0 }
+    )
+    department = await Department.create(
+      { name: 'Stationery' },
+      { userId: systemUser.id }
+    )
+    differentDepartment = await Department.create(
+      { name: 'Storage' },
+      { userId: systemUser.id }
+    )
+    category = await Category.create(
+      { name: 'Tools' },
+      { userId: systemUser.id }
+    )
+    differentCategory = await Category.create(
+      { name: 'Balls' },
+      { userId: systemUser.id }
+    )
+
+    await Promise.all([
+      ItemController.createItem(
+        'Shovel',
+        differentDepartment.id,
+        systemUser.id,
+        1,
+        UnitType.UND,
+        category.id
+      ),
+      ItemController.createItem(
+        'Strong Ball',
+        differentDepartment.id,
+        systemUser.id,
+        1,
+        UnitType.UND,
+        differentCategory.id
+      ),
+      ItemController.createItem(
+        'Super Nut',
+        department.id,
+        systemUser.id,
+        1,
+        UnitType.UND,
+        differentCategory.id
+      ),
+    ])
+  })
+
+  it('controller filters by name', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      name: 'Super',
+    })
+    expect(result.data.map((u) => u.name)).toEqual(['Super Nut'])
+    expect(result.total).toBe(1)
+  })
+
+  it('controller filters by category', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      category: 'Too',
+    })
+    expect(result.data.map((u) => u.name)).toEqual(['Shovel'])
+    expect(result.total).toBe(1)
+  })
+
+  it('controller filters by department', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      department: 'Sta',
+    })
+    expect(result.data.map((u) => u.name)).toEqual(['Super Nut'])
+    expect(result.total).toBe(1)
+  })
+})
+
+describe('Item Controllers - sorting', () => {
+  let systemUser: User
+  let department, differentDepartment: Department
+  let category, differentCategory: Category
+
+  beforeEach(async () => {
+    systemUser = await User.create(
+      { username: 'TestUser', passwordHash: 'pw' },
+      { userId: 0 }
+    )
+    department = await Department.create(
+      { name: 'Stationery' },
+      { userId: systemUser.id }
+    )
+    differentDepartment = await Department.create(
+      { name: 'Storage' },
+      { userId: systemUser.id }
+    )
+    category = await Category.create(
+      { name: 'Tools' },
+      { userId: systemUser.id }
+    )
+    differentCategory = await Category.create(
+      { name: 'Balls' },
+      { userId: systemUser.id }
+    )
+
+    await Promise.all([
+      Item.create(
+        {
+          name: 'Item 1',
+          creationDate: new Date('2025-01-01'),
+          categoryId: category.id,
+          departmentId: department.id,
+        },
+        { userId: systemUser.id }
+      ),
+      Item.create(
+        {
+          name: 'Item 2',
+          creationDate: new Date('2025-02-01'),
+          categoryId: category.id,
+          departmentId: differentDepartment.id,
+        },
+        { userId: systemUser.id }
+      ),
+      Item.create(
+        {
+          name: 'Item 3',
+          creationDate: new Date('2025-03-01'),
+          categoryId: differentCategory.id,
+          departmentId: differentDepartment.id,
+        },
+        { userId: systemUser.id }
+      ),
+      Item.create(
+        {
+          name: 'Item 4',
+          creationDate: new Date('2025-04-01'),
+          categoryId: differentCategory.id,
+          departmentId: department.id,
+        },
+        { userId: systemUser.id }
+      ),
+    ])
+  })
+
+  const getSortedNames = (users: any[]) => users.map((u) => u.name)
+
+  it('sorts by name ASC', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'name',
+      sortOrder: 'ASC',
+    })
+    expect(getSortedNames(result.data)).toEqual([
+      'Item 1',
+      'Item 2',
+      'Item 3',
+      'Item 4',
+    ])
+  })
+
+  it('sorts by name DESC', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'name',
+      sortOrder: 'DESC',
+    })
+    expect(getSortedNames(result.data)).toEqual([
+      'Item 4',
+      'Item 3',
+      'Item 2',
+      'Item 1',
+    ])
+  })
+
+  it('sorts by category name ASC', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'category',
+      sortOrder: 'ASC',
+    })
+    expect(getSortedNames(result.data)).toEqual([
+      'Item 3',
+      'Item 4',
+      'Item 1',
+      'Item 2',
+    ])
+  })
+
+  it('sorts by category name DESC', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'category',
+      sortOrder: 'DESC',
+    })
+    expect(getSortedNames(result.data)).toEqual([
+      'Item 1',
+      'Item 2',
+      'Item 3',
+      'Item 4',
+    ])
+  })
+
+  it('sorts by department name ASC', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'department',
+      sortOrder: 'ASC',
+    })
+    expect(getSortedNames(result.data)).toEqual([
+      'Item 1',
+      'Item 4',
+      'Item 2',
+      'Item 3',
+    ])
+  })
+
+  it('sorts by department name DESC', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'department',
+      sortOrder: 'DESC',
+    })
+    expect(getSortedNames(result.data)).toEqual([
+      'Item 2',
+      'Item 3',
+      'Item 1',
+      'Item 4',
+    ])
+  })
+
+  it('sorts by creationDate DESC (createdAt)', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'creationDate',
+      sortOrder: 'DESC',
+    })
+    expect(getSortedNames(result.data)).toEqual([
+      'Item 4',
+      'Item 3',
+      'Item 2',
+      'Item 1',
+    ])
+  })
+
+  it('sorts by creationDate DESC (createdAt)', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'creationDate',
+      sortOrder: 'ASC',
+    })
+    expect(getSortedNames(result.data)).toEqual([
+      'Item 1',
+      'Item 2',
+      'Item 3',
+      'Item 4',
+    ])
+  })
+
+  it('sorts by updatedOn ASC (updatedAt) (uses sequelize asigned date)', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'updatedOn',
+      sortOrder: 'ASC',
+    })
+    expect(getSortedNames(result.data)).toEqual([
+      'Item 1',
+      'Item 2',
+      'Item 3',
+      'Item 4',
+    ])
+  })
+
+  it('sorts by updatedOn DESC (updatedAt) (uses sequelize asigned date)', async () => {
+    const result = await ItemController.getAllItems({
+      page: 1,
+      pageSize: 10,
+      sortBy: 'updatedOn',
+      sortOrder: 'DESC',
+    })
+    expect(getSortedNames(result.data)).toEqual([
+      'Item 1',
+      'Item 2',
+      'Item 3',
+      'Item 4',
+    ])
+  })
+})
