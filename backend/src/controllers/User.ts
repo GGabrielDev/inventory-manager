@@ -9,10 +9,13 @@ interface PaginationOptions {
   pageSize: number
 }
 
+export const SortByOptions = ['username', 'creationDate', 'updatedOn']
+export const SortOrderOptions = ['ASC', 'DESC']
+
 export interface UserFilterOptions extends PaginationOptions {
   username?: string
-  sortBy?: 'username' | 'creationDate' | 'updatedOn'
-  sortOrder?: 'ASC' | 'DESC'
+  sortBy?: (typeof SortByOptions)[number]
+  sortOrder?: (typeof SortOrderOptions)[number]
 }
 
 interface PaginatedResult<T> {

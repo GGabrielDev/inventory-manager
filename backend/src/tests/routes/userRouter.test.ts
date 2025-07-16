@@ -191,13 +191,105 @@ describe('User Routes – filters', () => {
 
   it('filters by partial name match', async () => {
     const res = await request(app)
-      .get('/users?username=li') // matches "Alice"
+      .get('/users?username=ob') // matches "Alice"
       .set('Authorization', `Bearer ${token}`)
 
     expect(res.status).toBe(200)
     const names = res.body.data.map((u: any) => u.username)
-    expect(names).toContain('Alice')
+    expect(names).toContain('Bob')
     expect(names).not.toContain('Carol')
-    expect(names).not.toContain('Bob')
+    expect(names).not.toContain('Alice')
+  })
+})
+
+describe('User Routes – sorting', () => {
+  let token: string
+
+  beforeEach(async () => {
+    // Simulate login to get a token
+    const loginResponse = await request(app)
+      .post('/auth/login')
+      .send({ username: 'TestUser', password: 'pass' })
+
+    token = loginResponse.body.token
+
+    // create three users with different creation dates
+    await User.create(
+      {
+        username: 'Alice',
+        passwordHash: 'pass',
+        creationDate: new Date('2025-01-01'),
+      },
+      { userId: user.id }
+    )
+    await User.create(
+      {
+        username: 'Bob',
+        passwordHash: 'pass',
+        creationDate: new Date('2025-02-01'),
+      },
+      { userId: user.id }
+    )
+    await User.create(
+      {
+        username: 'Carol',
+        passwordHash: 'pass',
+        creationDate: new Date('2025-03-01'),
+      },
+      { userId: user.id }
+    )
+  })
+
+  const getSortedUsernames = (users: any[]) =>
+    users.map((u) => u.username).filter((u) => u !== 'TestUser')
+
+  it('sorts by creation date ascending', async () => {
+    const res = await request(app)
+      .get('/users?sortBy=creationDate&sortOrder=ASC')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(200)
+    const names = getSortedUsernames(res.body.data)
+    expect(names).toEqual(['Alice', 'Bob', 'Carol'])
+  })
+
+  it('sorts by creation date descending', async () => {
+    const res = await request(app)
+      .get('/users?sortBy=creationDate&sortOrder=DESC')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(200)
+    const names = getSortedUsernames(res.body.data)
+    expect(names).toEqual(['Carol', 'Bob', 'Alice'])
+  })
+
+  it('sorts by username ascending', async () => {
+    const res = await request(app)
+      .get('/users?sortBy=username&sortOrder=ASC')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(200)
+    const names = getSortedUsernames(res.body.data)
+    expect(names).toEqual(['Alice', 'Bob', 'Carol'])
+  })
+
+  it('sorts by username descending', async () => {
+    const res = await request(app)
+      .get('/users?sortBy=username&sortOrder=DESC')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(200)
+    const names = getSortedUsernames(res.body.data)
+    expect(names).toEqual(['Carol', 'Bob', 'Alice'])
+  })
+
+  it('should ignore invalid sortBy and sortOrder', async () => {
+    const res = await request(app)
+      .get('/users?sortBy=invalid&sortOrder=invalid')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(200)
+    const names = getSortedUsernames(res.body.data)
+    expect(names).toEqual(['Alice', 'Bob', 'Carol'])
   })
 })
