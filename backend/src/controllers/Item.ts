@@ -8,11 +8,20 @@ interface PaginationOptions {
   pageSize: number
 }
 
+export const validSortByOptions = Object.freeze([
+  'name',
+  'category',
+  'department',
+  'creationDate',
+  'updatedOn',
+] as const)
+
+// Update the ItemFilterOptions interface to use the array
 export interface ItemFilterOptions extends PaginationOptions {
   name?: Item['name']
   department?: Department['name']
   category?: Category['name']
-  sortBy?: 'name' | 'category' | 'department' | 'creationDate' | 'updatedOn'
+  sortBy?: (typeof validSortByOptions)[number] // Now derived from the array
   sortOrder?: 'ASC' | 'DESC'
 }
 

@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from 'express'
 
 import { ChangeLogController, ItemController } from '@/controllers'
+import { ItemFilterOptions, validSortByOptions } from '@/controllers/Item'
 import { requirePermission } from '@/middlewares/authorization'
 
 const itemRouter: Router = express.Router()
@@ -88,7 +89,7 @@ itemRouter.get(
   }
 )
 
-// Get all items with pagination
+// Get all items with pagination, filtering, and sorting
 itemRouter.get(
   '/',
   requirePermission('get_item'),
@@ -96,11 +97,24 @@ itemRouter.get(
     try {
       const page = parseInt(req.query.page as string, 10) || 1
       const pageSize = parseInt(req.query.pageSize as string, 10) || 10
+      const name = (req.query.name as string) || undefined
+      const department = (req.query.department as string) || undefined
+      const category = (req.query.category as string) || undefined
+      // Use the imported validSortByOptions
+      const sortBy = validSortByOptions.includes(req.query.sortBy as any)
+        ? (req.query.sortBy as ItemFilterOptions['sortBy'])
+        : undefined
+      const sortOrder = (req.query.sortOrder as 'ASC' | 'DESC') || 'ASC'
+
       const result = await ItemController.getAllItems({
         page,
         pageSize,
+        name,
+        department,
+        category,
+        sortBy,
+        sortOrder,
       })
-
       res.json(result)
     } catch (error) {
       if (error instanceof Error) {
