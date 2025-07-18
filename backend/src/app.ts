@@ -5,6 +5,6 @@ import mainRouter from './routes'
 const app = express()
 
 app.use(express.json())
-app.use(mainRouter)
+app.use('/api', mainRouter)
 
 export default app
