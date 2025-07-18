@@ -1,4 +1,5 @@
-module.exports = {
+/** @type {import('prettier').Options} */
+const config = {
   semi: true,
   singleQuote: true,
   trailingComma: 'all',
@@ -9,4 +10,10 @@ module.exports = {
   endOfLine: 'lf',
   bracketSameLine: false,
   jsxSingleQuote: false,
+  plugins: [
+    // Add any Prettier plugins you're using here
+    // Example: 'prettier-plugin-organize-imports',
+  ]
 };
+
+export default config;
