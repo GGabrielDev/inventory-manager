@@ -1,96 +1,93 @@
-import js from '@eslint/js';
-import ts from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
-import hooks from 'eslint-plugin-react-hooks';
-import prettier from 'eslint-config-prettier';
-import globals from 'globals';
+// @ts-check
+import js from '@eslint/js'
+import eslintReact from "@eslint-react/eslint-plugin";
+import prettierPlugin from 'eslint-plugin-prettier'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import tseslint from "typescript-eslint";
+import globals from 'globals'
 
 export default [
-  // Base ESLint recommended rules
   js.configs.recommended,
+  tseslint.configs.recommended,
 
-  // TypeScript support
   {
-    files: ['**/*.{ts,tsx}'],
-    plugins: {
-      '@typescript-eslint': ts,
-    },
     languageOptions: {
-      parser: tsParser,
+      parser: tseslint.parser,
       parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-        project: './tsconfig.json',
+        ecmaVersion: 2021,
+        sourceType: 'module',
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
       },
-    },
-    rules: {
-      ...ts.configs['recommended'].rules,
-      ...ts.configs['stylistic-type-checked'].rules,
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': [
-        'warn',
-        { argsIgnorePattern: '^_' },
-      ],
-      '@typescript-eslint/consistent-type-imports': 'error',
-    },
-  },
-
-  // React support
-  {
-    ...reactRecommended,
-    files: ['**/*.{jsx,tsx}'],
-    languageOptions: {
-      ...reactRecommended.languageOptions,
       globals: {
-        ...globals.browser,
+        ...globals.node,
+        ...globals.es2021,
+        ...globals.jest,
       },
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
-    rules: {
-      ...reactRecommended.rules,
-      'react/prop-types': 'off',
-      'react/react-in-jsx-scope': 'off',
-      'react/jsx-uses-react': 'off',
     },
   },
 
-  // React Hooks rules
   {
+    files: ['**/*.{js,ts,jsx,tsx}'],
     plugins: {
-      'react-hooks': hooks,
+      '@typescript-eslint': tseslint.plugin,
+      prettier: prettierPlugin,
+      'simple-import-sort': simpleImportSort,
     },
-    rules: hooks.configs.recommended.rules,
-  },
-
-  // Prettier compatibility (must be last)
-  prettier,
-  {
     rules: {
-      'prettier/prettier': [
+      // disable core:
+      'no-unused-vars': 'off',
+      // enable TS plugin:
+      '@typescript-eslint/no-unused-vars': [
         'error',
         {
-          semi: true,
-          singleQuote: true,
-          trailingComma: 'all',
-          printWidth: 100,
-          tabWidth: 2,
-          endOfLine: 'lf',
-          arrowParens: 'always',
-          bracketSameLine: false,
-          jsxSingleQuote: false,
+          vars: 'all',
+          args: 'after-used',
+          ignoreRestSiblings: true,
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
         },
       ],
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'prettier/prettier': 'error',
     },
-  },
-];
+  }
+]
+
+// export default tseslint.config({
+//   files: ["**/*.ts", "**/*.tsx"],
+//
+//   // Extend recommended rule sets from:
+//   // 1. ESLint JS's recommended rules
+//   // 2. TypeScript ESLint recommended rules
+//   // 3. ESLint React's recommended-typescript rules
+//   extends: [
+//     eslintJs.configs.recommended,
+//     tseslint.configs.recommended,
+//     eslintReact.configs["recommended-typescript"],
+//   ],
+//
+//   // Configure language/parsing options
+//   languageOptions: {
+//     // Use TypeScript ESLint parser for TypeScript files
+//     parser: tseslint.parser,
+//     parserOptions: {
+//       ecmaVersion: 2021,
+//       sourceType: 'module',
+//       // Enable project service for better TypeScript integration
+//       projectService: true,
+//       tsconfigRootDir: import.meta.dirname,
+//     },
+//       globals: {
+//         ...globals.node,
+//         ...globals.es2021,
+//         ...globals.jest,
+//       },
+//   },
+//
+//   // Custom rule overrides (modify rule levels or disable rules)
+//   rules: {
+//     "@eslint-react/no-missing-key": "warn",
+//   },
+// });
