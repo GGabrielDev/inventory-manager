@@ -80,7 +80,11 @@ export class UserController {
 
     const user = await User.findByPk(userId, {
       include: [
-        User.RELATIONS.ROLES,
+        {
+          model: Role,
+          as: User.RELATIONS.ROLES,
+          include: [Role.RELATIONS.PERMISSIONS],
+        },
         {
           model: ChangeLog,
           as: User.RELATIONS.CHANGELOGS,
