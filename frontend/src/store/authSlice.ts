@@ -2,6 +2,31 @@ import { createAsyncThunk,createSlice } from '@reduxjs/toolkit';
 
 import type { RootState } from '.';
 
+// Token cache key
+const TOKEN_CACHE_KEY = 'inventory-app-auth-token';
+
+// Get cached token
+const getCachedToken = (): string | null => {
+  try {
+    return localStorage.getItem(TOKEN_CACHE_KEY);
+  } catch {
+    return null;
+  }
+};
+
+// Cache token
+const setCachedToken = (token: string | null): void => {
+  try {
+    if (token) {
+      localStorage.setItem(TOKEN_CACHE_KEY, token);
+    } else {
+      localStorage.removeItem(TOKEN_CACHE_KEY);
+    }
+  } catch {
+    // Silently fail if localStorage is not available
+  }
+};
+
 // Define types for our auth state
 interface User {
   id: number;
@@ -25,7 +50,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  token: null,
+  token: getCachedToken(),
   user: null,
   status: 'idle',
   error: null,
@@ -92,6 +117,7 @@ const authSlice = createSlice({
     logout(state) {
       state.token = null;
       state.user = null;
+      setCachedToken(null);
     },
   },
   extraReducers: (builder) => {
@@ -104,6 +130,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.status = 'idle';
         state.token = action.payload;
+        setCachedToken(action.payload);
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
@@ -127,4 +154,3 @@ const authSlice = createSlice({
 
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;
-
