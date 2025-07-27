@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch,RootState } from '@/store';
 import { fetchUser, logout } from '@/store/authSlice';
 
-import { AuthContext } from './useAuth';
+import { AuthContext } from '.';
 
 export { AuthContext } from './useAuth';
 

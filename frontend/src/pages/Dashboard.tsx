@@ -2,7 +2,7 @@ import { Box, Button, Card, CardContent, Container, IconButton, Tooltip,Typograp
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { usePermissions } from '@/hooks/usePermissions';
+import { usePermissions } from '@/hooks';
 import type { AppDispatch, RootState } from '@/store';
 import { logout } from '@/store/authSlice';
 import { toggleTheme } from '@/store/themeSlice';

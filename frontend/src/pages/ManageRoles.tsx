@@ -13,8 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 import RoleFormDialog from '@/components/role/RoleFormDialog';
 import RolesTable from '@/components/role/RolesTable';
-import { usePermissions } from '@/hooks/usePermissions';
-import { useRoleManagement } from '@/hooks/useRoleManagement';
+import { usePermissions, useRoleManagement } from '@/hooks';
 import type { Role } from '@/types'
 
 const ManageRoles: React.FC = () => {
