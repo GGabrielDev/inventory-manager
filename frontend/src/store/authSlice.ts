@@ -100,12 +100,63 @@ export const fetchUser = createAsyncThunk<
       );
       const data = await response.json();
       if (!response.ok) {
-        return rejectWithValue(data.error);
+        return rejectWithValue(data.error || `HTTP ${response.status}: ${response.statusText}`);
       }
       return data;
     } catch (error: Error | unknown) {
       if (error instanceof Error) 
         return rejectWithValue(error.message);
+      return rejectWithValue('An unknown error occurred');
+    }
+  }
+);
+
+// Thunk for validating current token
+export const validateToken = createAsyncThunk<
+  boolean,
+  undefined,
+  { state: RootState; rejectValue: string }
+>(
+  'auth/validateToken',
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+      if (!token) {
+        return rejectWithValue('No token available');
+      }
+
+      // Check token expiration locally first
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const currentTime = Date.now() / 1000;
+        if (payload.exp && payload.exp < currentTime) {
+          return rejectWithValue('Token expired');
+        }
+      } catch {
+        return rejectWithValue('Invalid token format');
+      }
+
+      // Validate with backend by making a simple authenticated request
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/auth/validate`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        return rejectWithValue(`Token validation failed: ${response.status}`);
+      }
+
+      return true;
+    } catch (error: Error | unknown) {
+      if (error instanceof Error) 
+        return rejectWithValue(error.message);
+      return rejectWithValue('Token validation failed');
     }
   }
 );
@@ -144,10 +195,40 @@ const authSlice = createSlice({
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.status = 'idle';
         state.user = action.payload;
+        state.error = null;
       })
       .addCase(fetchUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
+        // If error indicates token is invalid, clear the token and user data
+        const errorMessage = action.payload as string;
+        if (errorMessage && (
+          errorMessage.includes('Invalid token') || 
+          errorMessage.includes('Token') || 
+          errorMessage.includes('401') || 
+          errorMessage.includes('403') ||
+          errorMessage.includes('Unauthorized')
+        )) {
+          state.token = null;
+          state.user = null;
+          setCachedToken(null);
+        }
+      })
+      // Handle validateToken
+      .addCase(validateToken.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(validateToken.fulfilled, (state) => {
+        state.status = 'idle';
+        state.error = null;
+      })
+      .addCase(validateToken.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+        // Token validation failed, clear auth data
+        state.token = null;
+        state.user = null;
+        setCachedToken(null);
       });
   },
 });

@@ -4,6 +4,7 @@ import { Provider} from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './App.tsx'
+import { AuthProvider } from './context/auth';
 import { store } from './store'
 import ThemeWrapper from './theme/ThemeWrapper';
 
@@ -14,7 +15,9 @@ if (root) createRoot(root).render(
     <Provider store={store}>
       <BrowserRouter>
         <ThemeWrapper>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </ThemeWrapper>
       </BrowserRouter>
     </Provider>
