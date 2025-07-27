@@ -2,6 +2,7 @@ import { Box, Button, Card, CardContent, Container, IconButton, Tooltip,Typograp
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { usePermissions } from '@/hooks/usePermissions';
 import type { AppDispatch, RootState } from '@/store';
 import { logout } from '@/store/authSlice';
 import { toggleTheme } from '@/store/themeSlice';
@@ -12,29 +13,13 @@ const Dashboard: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const themeMode = useSelector((state: RootState) => state.theme.mode);
 
-  // Helper function to check if user has a specific permission
-  const hasPermission = (permissionName: string): boolean => {
-    if (!user?.roles) return false;
-    return user.roles.some(role => 
-      role.permissions.some(permission => permission.name === permissionName)
-    );
-  };
-
-  // Check permissions for different sections
-  const canCreateUser = hasPermission('create_user');
-  const canGetUser = hasPermission('get_user');
-  const canCreateRole = hasPermission('create_role');
-  const canGetRole = hasPermission('get_role');
-  const canCreateDepartment = hasPermission('create_department');
-  const canGetDepartment = hasPermission('get_department');
-  const canCreateCategory = hasPermission('create_category');
-  const canGetCategory = hasPermission('get_category');
-
-  // Determine if user can manage each section (needs both create and get permissions)
-  const canManageUsers = canCreateUser && canGetUser;
-  const canManageRoles = canCreateRole && canGetRole;
-  const canManageDepartments = canCreateDepartment && canGetDepartment;
-  const canManageCategories = canCreateCategory && canGetCategory;
+  const {
+    canManageUsers,
+    canManageRoles,
+    canManageDepartments,
+    canManageCategories,
+    canManageItems,
+  } = usePermissions();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -45,38 +30,54 @@ const Dashboard: React.FC = () => {
     dispatch(toggleTheme());
   };
 
-  const managementSections = [
-    {
+  // Define the type for management sections
+  interface ManagementSection {
+    title: string;
+    description: string;
+    route: string;
+    color: 'primary' | 'secondary' | 'success' | 'info' | 'warning';
+  }
+
+  // Only include sections if user has the required permissions
+  const managementSections: ManagementSection[] = [
+    // Users section - only show if user can manage users
+    ...(canManageUsers ? [{
       title: 'Manage Users',
       description: 'Create, edit, and manage user accounts',
-      canAccess: canManageUsers,
       route: '/users',
       color: 'primary' as const,
-    },
-    {
+    }] : []),
+    // Roles section - only show if user can manage roles
+    ...(canManageRoles ? [{
       title: 'Manage Roles',
       description: 'Configure roles and permissions',
-      canAccess: canManageRoles,
       route: '/roles',
       color: 'secondary' as const,
-    },
-    {
+    }] : []),
+    // Departments section - only show if user can manage departments
+    ...(canManageDepartments ? [{
       title: 'Manage Departments',
       description: 'Organize and manage departments',
-      canAccess: canManageDepartments,
       route: '/departments',
       color: 'success' as const,
-    },
-    {
+    }] : []),
+    // Categories section - only show if user can manage categories
+    ...(canManageCategories ? [{
       title: 'Manage Categories',
       description: 'Create and organize item categories',
-      canAccess: canManageCategories,
       route: '/categories',
       color: 'info' as const,
-    },
+    }] : []),
+    // Items section - only show if user can manage items
+    ...(canManageItems ? [{
+      title: 'Manage Items',
+      description: 'Track and manage inventory items',
+      route: '/items',
+      color: 'warning' as const,
+    }] : []),
   ];
 
-  const accessibleSections = managementSections.filter(section => section.canAccess);
+  const accessibleSections = managementSections;
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
