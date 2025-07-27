@@ -129,8 +129,12 @@ const UserFormDialog: React.FC<UserFormDialogProps> = ({
         : `${import.meta.env.VITE_API_URL}/users`;
       
       const method = user ? 'PUT' : 'POST';
-      
-      const payload: any = {
+
+      const payload: {
+        username: string;
+        roleIds: number[];
+        password?: string;
+      } = {
         username: formData.username.trim(),
         roleIds: formData.selectedRoles,
       };

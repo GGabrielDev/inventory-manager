@@ -43,11 +43,11 @@ export const useUserManagement = () => {
         }
       );
       
-      const data: PaginatedResponse<User> = await response.json();
-      
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch users');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch users');
       }
+      const data: PaginatedResponse<User> = await response.json();
       
       // Backend returns { data, total, totalPages, currentPage }
       setUsers(data.data || []);
