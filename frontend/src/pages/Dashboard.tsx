@@ -1,14 +1,16 @@
-import { Box, Button, Card, CardContent,Container, Typography } from '@mui/material';
-import { useDispatch,useSelector } from 'react-redux';
+import { Box, Button, Card, CardContent, Container, IconButton, Tooltip,Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import type { AppDispatch,RootState } from '@/store';
+import type { AppDispatch, RootState } from '@/store';
 import { logout } from '@/store/authSlice';
+import { toggleTheme } from '@/store/themeSlice';
 
 const Dashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
+  const themeMode = useSelector((state: RootState) => state.theme.mode);
 
   // Helper function to check if user has a specific permission
   const hasPermission = (permissionName: string): boolean => {
@@ -37,6 +39,10 @@ const Dashboard: React.FC = () => {
   const handleLogout = () => {
     dispatch(logout());
     navigate('/login');
+  };
+
+  const handleThemeToggle = () => {
+    dispatch(toggleTheme());
   };
 
   const managementSections = [
@@ -84,9 +90,16 @@ const Dashboard: React.FC = () => {
             Welcome back, {user?.username || 'User'}
           </Typography>
         </Box>
-        <Button variant="outlined" onClick={handleLogout}>
-          Logout
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Tooltip title={`Switch to ${themeMode === 'light' ? 'dark' : 'light'} mode`}>
+            <IconButton onClick={handleThemeToggle} color="inherit">
+              {themeMode === 'light' ? '🌙' : '☀️'}
+            </IconButton>
+          </Tooltip>
+          <Button variant="outlined" onClick={handleLogout}>
+            Logout
+          </Button>
+        </Box>
       </Box>
 
       {/* Management Sections */}
@@ -142,7 +155,12 @@ const Dashboard: React.FC = () => {
       )}
 
       {/* User Info Section */}
-      <Box sx={{ mt: 6, p: 3, bgcolor: 'grey.50', borderRadius: 2 }}>
+      <Box sx={{ 
+        mt: 6, 
+        p: 3, 
+        bgcolor: themeMode === 'light' ? 'grey.50' : 'grey.900', 
+        borderRadius: 2 
+      }}>
         <Typography variant="h6" gutterBottom>
           Your Permissions
         </Typography>
