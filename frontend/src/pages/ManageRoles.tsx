@@ -25,7 +25,7 @@ import {
   TableRow, 
   TextField, 
   Typography} from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback,useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -79,11 +79,13 @@ const ManageRoles: React.FC = () => {
     }
   }, [canManageRoles, navigate]);
 
-  // Fetch roles
+  // Fetch roles with useCallback to prevent unnecessary re-renders
   const fetchRoles = useCallback(async (currentPage = 1) => {
     if (!canGetRole) return;
+    
     setLoading(true);
     setError('');
+    
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/roles?page=${currentPage}&pageSize=10`,
@@ -94,14 +96,24 @@ const ManageRoles: React.FC = () => {
           },
         }
       );
+      
       const data = await response.json();
+      
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch roles');
       }
+      
+      // Backend returns { data, total, totalPages, currentPage }
       setRoles(data.data || []);
       setTotalPages(data.totalPages || 1);
+      
+      // If current page is greater than total pages, reset to page 1
+      if (currentPage > data.totalPages && data.totalPages > 0) {
+        setPage(1);
+      }
     } catch (err) {
-      if (err instanceof Error) setError(err.message);
+      if (err instanceof Error)
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -109,7 +121,7 @@ const ManageRoles: React.FC = () => {
 
   useEffect(() => {
     fetchRoles(page);
-  }, [page, canGetRole, fetchRoles]);
+  }, [page, fetchRoles]);
 
   const handleDelete = async (roleId: number) => {
     if (!canDeleteRole) return;
@@ -143,10 +155,33 @@ const ManageRoles: React.FC = () => {
     }
   };
 
-  const handleEdit = (role: Role) => {
+  const handleEdit = async (role: Role) => {
     if (!canEditRole) return;
-    setEditingRole(role);
-    setShowForm(true);
+    
+    try {
+      // Fetch the full role data with permissions
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/roles/${role.id}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch role details');
+      }
+      
+      setEditingRole(data);
+      setShowForm(true);
+    } catch (err) {
+      if (err instanceof Error)
+      setError(err.message);
+    }
   };
 
   const handleCreate = () => {
@@ -337,11 +372,9 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
   canGetPermission
 }) => {
   const { token } = useSelector((state: RootState) => state.auth);
-  const [name, setName] = useState(role?.name || '');
-  const [description, setDescription] = useState(role?.description || '');
-  const [selectedPermissions, setSelectedPermissions] = useState<number[]>(
-    role?.permissions?.map(p => p.id) || []
-  );
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
   const [availablePermissions, setAvailablePermissions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -349,32 +382,44 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
   // Check if user can perform this action
   const canPerformAction = role ? canEdit : canCreate;
 
+  // Initialize form data when role changes or dialog opens
   useEffect(() => {
-    // Fetch available permissions if user has permission to view them
-    if (canGetPermission) {
-      const fetchPermissions = async () => {
-        try {
-          const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/permissions?page=1&pageSize=100`,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const data = await response.json();
-          if (response.ok) {
-            setAvailablePermissions(data.data || []);
-          }
-        } catch (err) {
-          console.error('Error fetching permissions:', err);
-        }
-      };
+    if (open) {
+      setName(role?.name || '');
+      setDescription(role?.description || '');
+      setSelectedPermissions(role?.permissions?.map(p => p.id) || []);
+      setError('');
+    }
+  }, [open, role]);
 
-      fetchPermissions();
+  // Fetch available permissions with useCallback to prevent unnecessary re-renders
+  const fetchPermissions = useCallback(async () => {
+    if (!canGetPermission) return;
+    
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/permissions?page=1&pageSize=100`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        setAvailablePermissions(data.data || []);
+      }
+    } catch (err) {
+      console.error('Error fetching permissions:', err);
     }
   }, [token, canGetPermission]);
+
+  useEffect(() => {
+    if (open && canGetPermission) {
+      fetchPermissions();
+    }
+  }, [open, fetchPermissions, canGetPermission]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -427,13 +472,15 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
     }
   };
 
-  const handlePermissionChange = (permissionId: number, checked: boolean) => {
-    if (checked) {
-      setSelectedPermissions([...selectedPermissions, permissionId]);
-    } else {
-      setSelectedPermissions(selectedPermissions.filter(id => id !== permissionId));
-    }
-  };
+  const handlePermissionChange = useCallback((permissionId: number, checked: boolean) => {
+    setSelectedPermissions(prev => {
+      if (checked) {
+        return [...prev, permissionId];
+      } else {
+        return prev.filter(id => id !== permissionId);
+      }
+    });
+  }, []);
 
   if (!canPerformAction) {
     return (
