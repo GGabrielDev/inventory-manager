@@ -15,17 +15,7 @@ import RoleFormDialog from '@/components/role/RoleFormDialog';
 import RolesTable from '@/components/role/RolesTable';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useRoleManagement } from '@/hooks/useRoleManagement';
-
-interface Role {
-  id: number;
-  name: string;
-  description: string;
-  permissions?: {
-    id: number;
-    name: string;
-    description: string;
-  }[];
-}
+import type { Role } from '@/types'
 
 const ManageRoles: React.FC = () => {
   const navigate = useNavigate();

@@ -1,18 +1,7 @@
 import { useSelector } from 'react-redux';
 
 import type { RootState } from '@/store';
-
-interface Permission {
-  id: number;
-  name: string;
-  description: string;
-}
-
-interface Role {
-  id: number;
-  name: string;
-  permissions: Permission[];
-}
+import type { Permission, Role } from '@/types'
 
 export const usePermissions = () => {
   const user = useSelector((state: RootState) => state.auth.user);

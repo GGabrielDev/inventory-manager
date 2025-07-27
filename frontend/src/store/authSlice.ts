@@ -1,5 +1,7 @@
 import { createAsyncThunk,createSlice } from '@reduxjs/toolkit';
 
+import type { AuthState, LoginCredentials,User } from '@/types';
+
 import type { RootState } from '.';
 
 // Token cache key
@@ -27,28 +29,6 @@ const setCachedToken = (token: string | null): void => {
   }
 };
 
-// Define types for our auth state
-interface User {
-  id: number;
-  username: string;
-  roles: {
-    id: number;
-    name: string;
-    permissions: {
-      id: number;
-      name: string;
-      description: string;
-    }[];
-  }[];
-}
-
-interface AuthState {
-  token: string | null;
-  user: User | null;
-  status: 'idle' | 'loading' | 'failed';
-  error: string | null;
-}
-
 const initialState: AuthState = {
   token: getCachedToken(),
   user: null,
@@ -59,7 +39,7 @@ const initialState: AuthState = {
 // Thunk for login
 export const login = createAsyncThunk(
   'auth/login',
-  async (credentials: { username: string; password: string }, { rejectWithValue }) => {
+  async (credentials: LoginCredentials, { rejectWithValue }) => {
     try {
       const response = await fetch(import.meta.env.VITE_API_URL + '/auth/login', {
         method: 'POST',

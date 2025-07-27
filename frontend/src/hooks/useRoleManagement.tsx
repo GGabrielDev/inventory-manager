@@ -2,17 +2,7 @@ import { useCallback,useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import type { RootState } from '@/store';
-
-interface Role {
-  id: number;
-  name: string;
-  description: string;
-  permissions?: {
-    id: number;
-    name: string;
-    description: string;
-  }[];
-}
+import type { Role } from '@/types'
 
 export const useRoleManagement = () => {
   const { token } = useSelector((state: RootState) => state.auth);

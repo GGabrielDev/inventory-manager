@@ -8,13 +8,6 @@ import { AuthContext } from './useAuth';
 
 export { AuthContext } from './useAuth';
 
-export interface AuthContextType {
-  user: RootState['auth']['user'];
-  token: RootState['auth']['token'];
-  loading: boolean;
-  error: string | null;
-}
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { token, user, status, error } = useSelector((state: RootState) => state.auth);

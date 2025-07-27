@@ -10,24 +10,8 @@ import {
   TableRow,
   Typography} from '@mui/material';
 
-interface Role {
-  id: number;
-  name: string;
-  description: string;
-  permissions?: {
-    id: number;
-    name: string;
-    description: string;
-  }[];
-}
+import type { RolesTableProps } from '@/types';
 
-interface RolesTableProps {
-  roles: Role[];
-  canEditRole: boolean;
-  canDeleteRole: boolean;
-  onEdit: (role: Role) => void;
-  onDelete: (roleId: number) => void;
-}
 
 const RolesTable: React.FC<RolesTableProps> = ({
   roles,

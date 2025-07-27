@@ -19,33 +19,7 @@ import { useCallback, useEffect, useMemo,useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import type { RootState } from '@/store';
-
-interface Role {
-  id: number;
-  name: string;
-  description: string;
-  permissions?: {
-    id: number;
-    name: string;
-    description: string;
-  }[];
-}
-
-interface Permission {
-  id: number;
-  name: string;
-  description: string;
-}
-
-interface RoleFormDialogProps {
-  open: boolean;
-  role: Role | null;
-  onClose: () => void;
-  onSuccess: () => void;
-  canEdit: boolean;
-  canCreate: boolean;
-  canGetPermission: boolean;
-}
+import type { Permission, RoleFormDialogProps } from '@/types';
 
 const RoleFormDialog: React.FC<RoleFormDialogProps> = ({ 
   open,
