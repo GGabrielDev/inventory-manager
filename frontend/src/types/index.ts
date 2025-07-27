@@ -73,3 +73,37 @@ export interface LoginCredentials {
   username: string;
   password: string;
 }
+
+// User-related types
+export interface UserFormDialogProps {
+  open: boolean;
+  user: User | null;
+  onClose: () => void;
+  onSuccess: () => void;
+  canEdit: boolean;
+  canCreate: boolean;
+  canGetRole: boolean;
+}
+
+export interface UsersTableProps {
+  users: User[];
+  canEditUser: boolean;
+  canDeleteUser: boolean;
+  onEdit: (user: User) => void;
+  onDelete: (userId: number) => void;
+}
+
+export interface UserFormData {
+  username: string;
+  password: string;
+  selectedRoles: number[];
+}
+
+// User filter options for API
+export interface UserFilterOptions {
+  page: number;
+  pageSize: number;
+  username?: string;
+  sortBy?: 'username' | 'creationDate' | 'updatedOn';
+  sortOrder?: 'ASC' | 'DESC';
+}

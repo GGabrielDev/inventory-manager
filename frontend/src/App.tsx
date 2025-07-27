@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import ManageRoles from './pages/ManageRoles';
+import ManageUsers from './pages/ManageUsers';
 
 const App: React.FC = () => {
   return (
@@ -25,7 +26,15 @@ const App: React.FC = () => {
           </ProtectedRoute>
         }
       />
-      {/* Add additional routes for Users, Departments, Categories as needed later */}
+      <Route 
+        path="/users" 
+        element={
+          <ProtectedRoute>
+            <ManageUsers />
+          </ProtectedRoute>
+        }
+      />
+      {/* Add additional routes for Departments, Categories as needed later */}
       <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   );
