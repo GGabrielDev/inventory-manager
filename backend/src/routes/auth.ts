@@ -37,7 +37,7 @@ authRouter.post(
 authRouter.get(
   '/validate',
   authenticateToken,
-  async (req: Request, res: Response): Promise<void> => {
+  async (_, res: Response): Promise<void> => {
     // If we reach here, the token is valid (authenticateToken middleware passed)
     res.json({ valid: true })
   }
