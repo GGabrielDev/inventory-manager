@@ -17,7 +17,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token && !user && status !== 'loading') {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        const userId = payload.userId;
         
         // Check if token is expired
         const currentTime = Date.now() / 1000;
@@ -27,7 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return;
         }
         
-        dispatch(fetchUser(userId));
+        dispatch(fetchUser());
       } catch (err) {
         console.error('Token decoding failure in AuthProvider:', err);
         dispatch(logout());
@@ -51,8 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
           
           // Optionally re-fetch user data to ensure it's still valid
-          const userId = payload.userId;
-          dispatch(fetchUser(userId));
+          dispatch(fetchUser());
         } catch (err) {
           console.error('Token validation error during periodic check:', err);
           dispatch(logout());

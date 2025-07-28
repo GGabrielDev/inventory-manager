@@ -61,15 +61,15 @@ export const login = createAsyncThunk(
 // Thunk for fetching current user details (permissions, etc.)
 export const fetchUser = createAsyncThunk<
   User,
-  number, // userId
+  undefined, // No userId needed anymore
   { state: RootState; rejectValue: string }
   >(
   'auth/fetchUser',
-  async (userId: number, { getState, rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/users/${userId}`,
+        `${import.meta.env.VITE_API_URL}/auth/me`,
         {
           method: 'GET',
           headers: {
