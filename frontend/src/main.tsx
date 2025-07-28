@@ -1,3 +1,5 @@
+import './i18n';
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider} from 'react-redux';
@@ -14,11 +16,11 @@ if (root) createRoot(root).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <ThemeWrapper>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </ThemeWrapper>
+          <ThemeWrapper>
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </ThemeWrapper>
       </BrowserRouter>
     </Provider>
   </StrictMode>,

@@ -1,4 +1,5 @@
-import { Box, Button, Card, CardContent, Container, IconButton, Tooltip,Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Container, IconButton, Tooltip, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +9,7 @@ import { logout } from '@/store/authSlice';
 import { toggleTheme } from '@/store/themeSlice';
 
 const Dashboard: React.FC = () => {
+  const { t } = useTranslation(['common', 'dashboard']); // Initialize translation hook
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
@@ -40,38 +42,33 @@ const Dashboard: React.FC = () => {
 
   // Only include sections if user has the required permissions
   const managementSections: ManagementSection[] = [
-    // Users section - only show if user can manage users
     ...(canManageUsers ? [{
-      title: 'Manage Users',
-      description: 'Create, edit, and manage user accounts',
+      title: t('dashboard.manageUsers'), 
+      description: t('dashboard.manageUsersDesc'), 
       route: '/users',
       color: 'primary' as const,
     }] : []),
-    // Roles section - only show if user can manage roles
     ...(canManageRoles ? [{
-      title: 'Manage Roles',
-      description: 'Configure roles and permissions',
+      title: t('dashboard.manageRoles'), 
+      description: t('dashboard.manageRolesDesc'), 
       route: '/roles',
       color: 'secondary' as const,
     }] : []),
-    // Departments section - only show if user can manage departments
     ...(canManageDepartments ? [{
-      title: 'Manage Departments',
-      description: 'Organize and manage departments',
+      title: t('dashboard.manageDepartments'), 
+      description: t('dashboard.manageDepartmentsDesc'), 
       route: '/departments',
       color: 'success' as const,
     }] : []),
-    // Categories section - only show if user can manage categories
     ...(canManageCategories ? [{
-      title: 'Manage Categories',
-      description: 'Create and organize item categories',
+      title: t('dashboard.manageCategories'), 
+      description: t('dashboard.manageCategoriesDesc'), 
       route: '/categories',
       color: 'info' as const,
     }] : []),
-    // Items section - only show if user can manage items
     ...(canManageItems ? [{
-      title: 'Manage Items',
-      description: 'Track and manage inventory items',
+      title: t('dashboard.manageItems'), 
+      description: t('dashboard.manageItemsDesc'), 
       route: '/items',
       color: 'warning' as const,
     }] : []),
@@ -85,20 +82,20 @@ const Dashboard: React.FC = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Box>
           <Typography variant="h4" component="h1" gutterBottom>
-            Dashboard
+            {t('dashboard.title')} 
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            Welcome back, {user?.username || 'User'}
+            {t('dashboard.welcome', { username: user?.username || 'User ' })} 
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-          <Tooltip title={`Switch to ${themeMode === 'light' ? 'dark' : 'light'} mode`}>
+          <Tooltip title={t('dashboard.switchToDark')}>
             <IconButton onClick={handleThemeToggle} color="inherit">
               {themeMode === 'light' ? '🌙' : '☀️'}
             </IconButton>
           </Tooltip>
           <Button variant="outlined" onClick={handleLogout}>
-            Logout
+            {t('dashboard.logout')} 
           </Button>
         </Box>
       </Box>
@@ -138,7 +135,7 @@ const Dashboard: React.FC = () => {
                     navigate(section.route);
                   }}
                 >
-                  Access
+                  {t('dashboard.access')} 
                 </Button>
               </CardContent>
             </Card>
@@ -147,10 +144,10 @@ const Dashboard: React.FC = () => {
       ) : (
         <Box sx={{ textAlign: 'center', mt: 8 }}>
           <Typography variant="h6" color="text.secondary" gutterBottom>
-            No Management Sections Available
+            {t('dashboard.noSectionsAvailable')} 
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            You don't have permissions to manage any sections. Please contact your administrator for access.
+            {t('dashboard.noPermissionsMessage')} 
           </Typography>
         </Box>
       )}
@@ -163,7 +160,7 @@ const Dashboard: React.FC = () => {
         borderRadius: 2 
       }}>
         <Typography variant="h6" gutterBottom>
-          Your Permissions
+          {t('dashboard.yourPermissions')} 
         </Typography>
         {user?.roles && user.roles.length > 0 ? (
           <Box>
@@ -184,7 +181,7 @@ const Dashboard: React.FC = () => {
           </Box>
         ) : (
           <Typography variant="body2" color="text.secondary">
-            No roles assigned
+            {t('dashboard.noRolesAssigned')} 
           </Typography>
         )}
       </Box>
