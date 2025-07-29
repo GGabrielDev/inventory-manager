@@ -10,7 +10,7 @@ import { logout } from '@/store/authSlice';
 import { toggleTheme } from '@/store/themeSlice';
 
 const Dashboard: React.FC = () => {
-  const { t } = useTranslation(['common', 'dashboard']); // Initialize translation hook
+  const { t } = useTranslation(); // Initialize translation hook
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);

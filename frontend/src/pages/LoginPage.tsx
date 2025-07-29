@@ -1,5 +1,6 @@
 import { Alert,Box, Button, Container, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,6 +8,7 @@ import type { AppDispatch, RootState } from '@/store';
 import { fetchUser,login } from '@/store/authSlice';
 
 const LoginPage: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const authState = useSelector((state: RootState) => state.auth);
@@ -43,10 +45,10 @@ const LoginPage: React.FC = () => {
     <Container maxWidth="sm">
       <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Inventory Management System
+          {t('auth:title')}
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
-          Login
+          {t('auth:login')}
         </Typography>
         {authState.error && (
           <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
@@ -55,7 +57,7 @@ const LoginPage: React.FC = () => {
         )}
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, width: '100%' }}>
           <TextField
-            label="Username"
+            label={t('auth:username')}
             variant="outlined"
             margin="normal"
             fullWidth
@@ -65,7 +67,7 @@ const LoginPage: React.FC = () => {
             disabled={authState.status === 'loading'}
           />
           <TextField
-            label="Password"
+            label={t('auth:password')}
             variant="outlined"
             margin="normal"
             fullWidth
@@ -82,7 +84,7 @@ const LoginPage: React.FC = () => {
             sx={{ mt: 3, mb: 2 }}
             disabled={authState.status === 'loading'}
           >
-            {authState.status === 'loading' ? 'Logging in...' : 'Login'}
+            {authState.status === 'loading' ? t('auth:loggingIn') : t('auth:login')}
           </Button>
         </Box>
       </Box>

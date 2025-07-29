@@ -1,4 +1,5 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import useAuth from '@/context/auth/useAuth';
@@ -8,6 +9,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const { t } = useTranslation(['common']);
   const { token, loading, error } = useAuth();
 
   // If no token, redirect to login
@@ -36,7 +38,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       >
         <CircularProgress size={48} thickness={4} />
         <Typography variant="body1" color="text.secondary">
-          Loading your dashboard...
+          {t('common:loading', 'Loading...')}
         </Typography>
       </Box>
     );

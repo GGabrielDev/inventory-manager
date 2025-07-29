@@ -1,4 +1,4 @@
-import i18n from 'i18next';
+import i18n from 'i18next'; // Import i18next as default
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
@@ -19,20 +19,21 @@ i18n
   .init({
     resources: {
       en: {
-        common: enCommon,
         auth: enAuth,
+        common: enCommon,
         dashboard: enDashboard,
         users: enUsers,
         roles: enRoles,
       },
       es: {
-        common: esCommon,
         auth: esAuth,
+        common: esCommon,
         dashboard: esDashboard,
         users: esUsers,
         roles: esRoles,
       },
     },
+    defaultNS: 'common',
     fallbackLng: 'en',
     debug: false,
     interpolation: {
