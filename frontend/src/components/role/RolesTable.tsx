@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
   Typography} from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import type { RolesTableProps } from '@/types';
 
@@ -20,6 +21,7 @@ const RolesTable: React.FC<RolesTableProps> = ({
   onEdit,
   onDelete
 }) => {
+  const { t } = useTranslation();
   const handleDelete = (roleId: number) => {
     if (window.confirm('Are you sure you want to delete this role?')) {
       onDelete(roleId);
@@ -31,11 +33,11 @@ const RolesTable: React.FC<RolesTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Role Name</TableCell>
-            <TableCell>Description</TableCell>
+            <TableCell>{t('roles:components.table.roleName')}</TableCell>
+            <TableCell>{t('roles:components.table.description')}</TableCell>
             {/* Only show Actions column if user has edit or delete permissions */}
             {(canEditRole || canDeleteRole) && (
-              <TableCell align="center">Actions</TableCell>
+              <TableCell align="center">{t('roles:components.table.actions')}</TableCell>
             )}
           </TableRow>
         </TableHead>
@@ -64,7 +66,7 @@ const RolesTable: React.FC<RolesTableProps> = ({
                         color="primary"
                         onClick={() => onEdit(role)}
                       >
-                        Edit
+                        {t('edit')}
                       </Button>
                     )}
                     {/* Only show Delete button if user has delete permission */}
@@ -75,7 +77,7 @@ const RolesTable: React.FC<RolesTableProps> = ({
                         color="error"
                         onClick={() => handleDelete(role.id)}
                       >
-                        Delete
+                        {t('delete')}
                       </Button>
                     )}
                   </Box>

@@ -16,6 +16,7 @@ import {
   Typography
 } from '@mui/material';
 import { useCallback, useEffect, useMemo,useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import type { RootState } from '@/store';
@@ -30,6 +31,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
   canCreate,
   canGetPermission
 }) => {
+  const { t } = useTranslation();
   const { token } = useSelector((state: RootState) => state.auth);
   const [formData, setFormData] = useState({
     name: '',
@@ -106,12 +108,12 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
     e.preventDefault();
     
     if (!canPerformAction) {
-      setError('You do not have permission to perform this action');
+      setError(t('roles:components.form.accessDenied'));
       return;
     }
 
     if (!formData.name.trim()) {
-      setError('Role name is required');
+      setError(t('roles:components.form.nameRequired'));
       return;
     }
 
@@ -141,7 +143,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to save role');
+        throw new Error(data.error || t('roles:components.form.failedToCreateRole'));
       }
 
       onSuccess();
@@ -182,14 +184,14 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
   if (!canPerformAction) {
     return (
       <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Access Denied</DialogTitle>
+        <DialogTitle>{t('roles:components.form.accessDenied')}</DialogTitle>
         <DialogContent>
           <Typography color="error">
-            You do not have permission to {role ? 'edit' : 'create'} roles.
+            {t('roles:components.form.accessDeniedRole', { action: role ? 'edit' : 'create' })}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={onClose}>{t('close')}</Button>
         </DialogActions>
       </Dialog>
     );
@@ -199,7 +201,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <form onSubmit={handleSubmit}>
         <DialogTitle>
-          {role ? 'Edit Role' : 'Create New Role'}
+          {role ? t('roles:components.form.editRole') : t('roles:components.form.createNewRole')}
         </DialogTitle>
         <DialogContent>
           {error && (
@@ -211,7 +213,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
           <TextField
             autoFocus
             margin="dense"
-            label="Role Name"
+            label={t('roles:components.form.roleName')}
             fullWidth
             variant="outlined"
             value={formData.name}
@@ -223,7 +225,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
 
           <TextField
             margin="dense"
-            label="Description"
+            label={t('roles:components.form.description')}
             fullWidth
             variant="outlined"
             multiline
@@ -248,14 +250,14 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} disabled={loading}>
-            Cancel
+            {t('cancel')}
           </Button>
           <Button 
             type="submit" 
             variant="contained" 
             disabled={loading}
           >
-            {loading ? <CircularProgress size={20} /> : (role ? 'Update Role' : 'Create Role')}
+            {loading ? <CircularProgress size={20} /> : (role ? t('roles:components.form.updateRole') : t('roles:components.form.createRole'))}
           </Button>
         </DialogActions>
       </form>

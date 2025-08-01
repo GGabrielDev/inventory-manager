@@ -6,5 +6,7 @@
   "create": "Crear",
   "loading": "Cargando...",
   "error": "Error",
-  "success": "Éxito"
+  "success": "Éxito",
+  "close": "Cerrar",
+  "backToDashboard": "Volver al Dashboard"
 }

@@ -9,6 +9,7 @@ import {
   Pagination, 
   Typography} from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import RoleFormDialog from '@/components/role/RoleFormDialog';
@@ -17,6 +18,7 @@ import { usePermissions, useRoleManagement } from '@/hooks';
 import type { Role } from '@/types'
 
 const ManageRoles: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [editingRole, setEditingRole] = useState<Role | null>(null);
@@ -104,10 +106,10 @@ const ManageRoles: React.FC = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Box>
           <Typography variant="h4" component="h1" gutterBottom>
-            Manage Roles
+            {t('roles:page.title')}
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            Configure roles and their permissions
+            {t('roles:page.subtitle')}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', gap: 1 }}>
@@ -115,7 +117,7 @@ const ManageRoles: React.FC = () => {
             variant="outlined"
             onClick={() => navigate('/dashboard')}
           >
-            Back to Dashboard
+            {t('backToDashboard')}
           </Button>
           {/* Only show Create button if user has create permission */}
           {canCreateRole && (
@@ -123,7 +125,7 @@ const ManageRoles: React.FC = () => {
               variant="contained"
               onClick={handleCreate}
             >
-              Create New Role
+              {t('roles:page.createNewRole')}
             </Button>
           )}
         </Box>
@@ -145,12 +147,12 @@ const ManageRoles: React.FC = () => {
         <Card>
           <CardContent sx={{ textAlign: 'center', p: 4 }}>
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              No Roles Found
+              {t('roles:page.noRolesFound')}
             </Typography>
             <Typography variant="body1" color="text.secondary">
               {canCreateRole 
-                ? 'Get started by creating your first role.' 
-                : 'No roles are currently configured.'
+                ? t('roles:page.getStarted')
+                : t('roles:page.noRolesConfigured')
               }
             </Typography>
           </CardContent>
