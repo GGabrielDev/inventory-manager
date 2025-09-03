@@ -5,6 +5,7 @@ export { default as Department } from './Department'
 export { default as Item } from './Item'
 export { default as Permission } from './Permission'
 export { default as Role } from './Role'
+export { default as State } from './State'
 export { default as User } from './User'
 
 // TypeScript: `import * as` gets all named exports from this file

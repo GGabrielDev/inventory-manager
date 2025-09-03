@@ -20,6 +20,7 @@ import {
   Item,
   Permission,
   Role,
+  State,
   User,
 } from '.'
 
@@ -31,6 +32,7 @@ const RELATIONS = {
   PERMISSION: 'permission',
   ROLE: 'role',
   USER: 'user',
+  STATE: 'state',
 } as const satisfies Record<string, keyof ChangeLog>
 
 const RELATIONS_ID = {
@@ -40,6 +42,7 @@ const RELATIONS_ID = {
   PERMISSION: 'permissionId',
   ROLE: 'roleId',
   USER: 'userId',
+  STATE: 'stateId',
 }
 
 export const OPERATION_TYPES = [
@@ -124,6 +127,13 @@ export default class ChangeLog extends Model {
 
   @BelongsTo(() => Role)
   role?: Role
+
+  @ForeignKey(() => State)
+  @Column(DataType.INTEGER)
+  stateId?: State['id']
+
+  @BelongsTo(() => State)
+  state?: State
 
   @ForeignKey(() => Department)
   @Column(DataType.INTEGER)
