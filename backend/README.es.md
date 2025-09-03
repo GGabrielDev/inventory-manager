@@ -104,108 +104,157 @@ El servidor se iniciará en `http://localhost:4000` (o tu PORT configurado).
 
 ## Modelos y Esquema de Base de Datos
 
-### Modelos Principales
+## Modelos Principales
 
-#### **User (Usuario)**
+#### **User**
 
-- `id`: entero, PK, auto-incremento
-- `username`: cadena, requerido, único
-- `passwordHash`: cadena, requerido (hash bcrypt, excluido de consultas por defecto)
-- `creationDate`: fecha/hora, automático
-- `updatedOn`: fecha/hora, automático
-- `deletionDate`: fecha/hora, nullable (eliminación suave)
-- **Relaciones**: Muchos-a-muchos con Role vía UserRole
-- **Hooks**: Hash de contraseña antes de guardar, registro automático de cambios
+- `id`: integer, PK, auto-increment
+- `username`: string, requerido, único
+- `passwordHash`: string, requerido (bcrypt hashed, excluido de queries por defecto)
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relaciones**: Muchos a muchos con Role vía UserRole
+- **Hooks**: Hashing de contraseña antes de guardar, logging automático de cambios
 
-#### **Role (Rol)**
+#### **Role**
 
-- `id`: entero, PK, auto-incremento
-- `name`: cadena, requerido, único
-- `description`: cadena, opcional
-- `creationDate`: fecha/hora, automático
-- `updatedOn`: fecha/hora, automático
-- `deletionDate`: fecha/hora, nullable (eliminación suave)
-- **Relaciones**: Muchos-a-muchos con User y Permission
-- **Hooks**: Previene eliminación si hay usuarios asignados, registro automático de cambios
+- `id`: integer, PK, auto-increment
+- `name`: string, requerido, único
+- `description`: string, opcional
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relaciones**: Muchos a muchos con User y Permission
+- **Hooks**: Previene eliminación si tiene usuarios asignados, logging automático de cambios
 
-#### **Permission (Permiso)**
+#### **Permission**
 
-- `id`: entero, PK, auto-incremento
-- `name`: cadena, requerido, único
-- `description`: cadena, requerido
-- `deletionDate`: fecha/hora, nullable (eliminación suave)
-- **Relaciones**: Muchos-a-muchos con Role vía RolePermission
-- **Auto-Generados**: 32 permisos (crear/obtener/editar/eliminar para cada entidad)
+- `id`: integer, PK, auto-increment
+- `name`: string, requerido, único
+- `description`: string, requerido
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relaciones**: Muchos a muchos con Role vía RolePermission
+- **Auto-Generado**: Script populate crea create/get/edit/delete por entidad y permisos de admin
 
-#### **Item (Artículo)**
+#### **State**
 
-- `id`: entero, PK, auto-incremento
-- `name`: cadena, requerido, único
-- `quantity`: entero, requerido, por defecto 1, mín 1
-- `unit`: enum (`und.`, `kg`, `l`, `m`), requerido, por defecto `und.`
-- `creationDate`: fecha/hora, automático
-- `updatedOn`: fecha/hora, automático
-- `deletionDate`: fecha/hora, nullable (eliminación suave)
+- `id`: integer, PK, auto-increment
+- `name`: string, requerido, único
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relaciones**: Tiene muchos Municipalities
+- **Hooks**: Previene eliminación si tiene municipalities asignados, logging automático de cambios
+
+#### **Municipality**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, requerido, único
+- `stateId`: FK a State, requerido
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relaciones**: Pertenece a State, tiene muchos Parishes
+- **Hooks**: Previene eliminación si tiene parishes asignados, logging automático de cambios
+
+#### **Parish**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, requerido, único
+- `municipalityId`: FK a Municipality, requerido
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relaciones**: Pertenece a Municipality, tiene muchos Offices, Quadrants y Communal Circuits
+- **Hooks**: Previene eliminación si tiene offices asignados, logging automático de cambios
+
+#### **Office**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, requerido, único
+- `parishId`: FK a Parish, requerido
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relaciones**: Pertenece a Parish, tiene muchos Items y Departments
+- **Hooks**: Previene eliminación si tiene items o departments asignados, logging automático de cambios
+
+#### **Category**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, requerido, único
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relaciones**: Tiene muchos Items
+- **Hooks**: Previene eliminación si tiene items asignados, logging automático de cambios
+
+#### **Department**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, requerido, único
+- `officeId`: FK a Office, requerido
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relaciones**: Pertenece a Office, tiene muchos Items
+- **Hooks**: Previene eliminación si tiene items asignados, logging automático de cambios
+
+#### **Item**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, requerido, único
+- `quantity`: integer, requerido, default 1, min 1
+- `unit`: enum (`und.`, `kg`, `l`, `m`), requerido, default `und.`
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
 - `categoryId`: FK a Category, nullable
 - `departmentId`: FK a Department, requerido
-- **Relaciones**: Pertenece a Category (opcional) y Department (requerido)
-- **Hooks**: Registro automático de cambios en todas las operaciones
+- `officeId`: FK a Office, requerido
+- **Relaciones**: Pertenece a Category (opcional), Department (requerido) y Office (requerido)
+- **Hooks**: Logging automático de cambios en todas las operaciones
 
-#### **Category (Categoría)**
+#### **ChangeLog**
 
-- `id`: entero, PK, auto-incremento
-- `name`: cadena, requerido, único
-- `creationDate`: fecha/hora, automático
-- `updatedOn`: fecha/hora, automático
-- `deletionDate`: fecha/hora, nullable (eliminación suave)
-- **Relaciones**: Tiene muchos Items
-- **Hooks**: Previene eliminación si hay artículos asignados, registro automático de cambios
-
-#### **Department (Departamento)**
-
-- `id`: entero, PK, auto-incremento
-- `name`: cadena, requerido, único
-- `creationDate`: fecha/hora, automático
-- `updatedOn`: fecha/hora, automático
-- `deletionDate`: fecha/hora, nullable (eliminación suave)
-- **Relaciones**: Tiene muchos Items
-- **Hooks**: Previene eliminación si hay artículos asignados, registro automático de cambios
-
-#### **ChangeLog (Registro de Cambios)**
-
-- `id`: entero, PK, auto-incremento
+- `id`: integer, PK, auto-increment
 - `operation`: enum (`create`, `update`, `delete`, `link`, `unlink`)
-- `changeDetails`: JSONB, opcional (metadatos adicionales)
-- `changedAt`: fecha/hora, automático
+- `changeDetails`: JSONB, opcional (metadata adicional)
+- `changedAt`: datetime, auto
 - `changedBy`: FK a User, requerido
 - **Asociaciones Polimórficas**: Puede pertenecer a User, Item, Category, Department, Role o Permission
-- **Validación**: Al menos una asociación debe estar establecida
+- **Validación**: Al menos una asociación debe estar definida
 
-#### **ChangeLogDetail (Detalle de Registro de Cambios)**
+#### **ChangeLogDetail**
 
-- `id`: entero, PK, auto-incremento
+- `id`: integer, PK, auto-increment
 - `changeLogId`: FK a ChangeLog, requerido
-- `field`: cadena, requerido (nombre del campo que cambió)
+- `field`: string, requerido (campo que cambió)
 - `oldValue`: JSONB, opcional (valor anterior)
-- `newValue`: JSONB, opcional (nuevo valor)
+- `newValue`: JSONB, opcional (valor nuevo)
 - `metadata`: JSONB, opcional (contexto adicional)
 - `diffType`: enum (`added`, `changed`, `removed`), requerido
 
-### Modelos de Unión (Muchos-a-Muchos)
+---
 
-#### **UserRole (UsuarioRol)**
+## Modelos de Unión (Many-to-Many)
+
+#### **UserRole**
 
 - `userId`: FK a User
 - `roleId`: FK a Role
-- **Hooks**: Registro automático de enlace/desenlace para rastro de auditoría
+- **Hooks**: Logging automático de link/unlink para auditoría
 
-#### **RolePermission (RolPermiso)**
+#### **RolePermission**
 
 - `roleId`: FK a Role
 - `permissionId`: FK a Permission
-- **Hooks**: Registro automático de enlace/desenlace para rastro de auditoría
+- **Hooks**: Logging automático de link/unlink para auditoría
 
-### Relaciones de Entidades
+---
+
+## Relaciones entre Entidades
 
 ```mermaid
 erDiagram
@@ -234,16 +283,39 @@ erDiagram
         datetime deletionDate
     }
 
-    ITEM {
+    STATE {
         int id PK
         string name UK
-        int quantity
-        enum unit
         datetime creationDate
         datetime updatedOn
         datetime deletionDate
-        int categoryId FK
-        int departmentId FK
+    }
+
+    MUNICIPALITY {
+        int id PK
+        string name UK
+        int stateId FK
+        datetime creationDate
+        datetime updatedOn
+        datetime deletionDate
+    }
+
+    PARISH {
+        int id PK
+        string name UK
+        int municipalityId FK
+        datetime creationDate
+        datetime updatedOn
+        datetime deletionDate
+    }
+
+    OFFICE {
+        int id PK
+        string name UK
+        int parishId FK
+        datetime creationDate
+        datetime updatedOn
+        datetime deletionDate
     }
 
     CATEGORY {
@@ -257,9 +329,23 @@ erDiagram
     DEPARTMENT {
         int id PK
         string name UK
+        int officeId FK
         datetime creationDate
         datetime updatedOn
         datetime deletionDate
+    }
+
+    ITEM {
+        int id PK
+        string name UK
+        int quantity
+        enum unit
+        datetime creationDate
+        datetime updatedOn
+        datetime deletionDate
+        int categoryId FK
+        int departmentId FK
+        int officeId FK
     }
 
     CHANGELOG {
@@ -296,25 +382,34 @@ erDiagram
         int permissionId FK
     }
 
-    %% Relaciones Muchos-a-Muchos
+    %% Relaciones Many-to-Many
     USER ||--o{ USERROLE : "tiene roles"
     ROLE ||--o{ USERROLE : "asignado a usuarios"
     ROLE ||--o{ ROLEPERMISSION : "tiene permisos"
-    PERMISSION ||--o{ ROLEPERMISSION : "otorgado a roles"
+    PERMISSION ||--o{ ROLEPERMISSION : "asignado a roles"
 
-    %% Relaciones Uno-a-Muchos
+    %% Relaciones One-to-Many (Jerarquía geográfica)
+    STATE ||--o{ MUNICIPALITY : "tiene municipalities"
+    MUNICIPALITY ||--o{ PARISH : "tiene parishes"
+    PARISH ||--o{ OFFICE : "tiene offices"
+    OFFICE ||--o{ DEPARTMENT : "tiene departments"
+    OFFICE ||--o{ ITEM : "tiene items"
+
+    %% Relaciones One-to-Many (Inventario)
     CATEGORY ||--o{ ITEM : "contiene"
-    DEPARTMENT ||--|| ITEM : "gestiona"
+    DEPARTMENT ||--o{ ITEM : "administra"
+
+    %% Relaciones ChangeLog
     USER ||--o{ CHANGELOG : "crea"
     CHANGELOG ||--o{ CHANGELOGDETAIL : "detalles"
 
     %% Relaciones Polimórficas (ChangeLog puede referenciar cualquier entidad)
-    USER ||--o{ CHANGELOG : "registra cambios en"
-    ITEM ||--o{ CHANGELOG : "registra cambios en"
-    CATEGORY ||--o{ CHANGELOG : "registra cambios en"
-    DEPARTMENT ||--o{ CHANGELOG : "registra cambios en"
-    ROLE ||--o{ CHANGELOG : "registra cambios en"
-    PERMISSION ||--o{ CHANGELOG : "registra cambios en"
+    USER ||--o{ CHANGELOG : "log de cambios"
+    ITEM ||--o{ CHANGELOG : "log de cambios"
+    CATEGORY ||--o{ CHANGELOG : "log de cambios"
+    DEPARTMENT ||--o{ CHANGELOG : "log de cambios"
+    ROLE ||--o{ CHANGELOG : "log de cambios"
+    PERMISSION ||--o{ CHANGELOG : "log de cambios"
 ```
 
 **Detalles de Relaciones:**

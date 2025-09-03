@@ -135,21 +135,50 @@ The server will start at `http://localhost:4000` (or your configured PORT).
 - `description`: string, required
 - `deletionDate`: datetime, nullable (soft delete)
 - **Relationships**: Many-to-many with Role via RolePermission
-- **Auto-Generated**: 32 permissions (create/get/edit/delete for each entity)
+- **Auto-Generated**: Using polulate script to create create/get/edit/delete for each entity and admin permission
 
-#### **Item**
+#### **State**
 
 - `id`: integer, PK, auto-increment
 - `name`: string, required, unique
-- `quantity`: integer, required, default 1, min 1
-- `unit`: enum (`und.`, `kg`, `l`, `m`), required, default `und.`
 - `creationDate`: datetime, auto
 - `updatedOn`: datetime, auto
 - `deletionDate`: datetime, nullable (soft delete)
-- `categoryId`: FK to Category, nullable
-- `departmentId`: FK to Department, required
-- **Relationships**: Belongs to Category (optional) and Department (required)
-- **Hooks**: Automatic change logging on all operations
+- **Relationships**: Has many Municipalities
+- **Hooks**: Prevents deletion if municipalities are assigned, automatic change logging
+
+#### **Municipality**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, required, unique
+- `stateId`: FK to State, required
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relationships**: Belongs to State, has many Parishes
+- **Hooks**: Prevents deletion if parishes are assigned, automatic change logging
+
+#### **Parish**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, required, unique
+- `municipalityId`: FK to Municipality, required
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relationships**: Belongs to Municipality, has many Quadrants and Communal Circuits
+- **Hooks**: Prevents deletion if offices are assigned, automatic change logging
+
+#### **Office**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, required, unique
+- `parishId`: FK to Parish, required
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- **Relationships**: Belongs to Parish, has many Items and Departments
+- **Hooks**: Prevents deletion if items or departments are assigned, automatic change logging
 
 #### **Category**
 
@@ -165,11 +194,27 @@ The server will start at `http://localhost:4000` (or your configured PORT).
 
 - `id`: integer, PK, auto-increment
 - `name`: string, required, unique
+- `officeId`: FK to Office, required
 - `creationDate`: datetime, auto
 - `updatedOn`: datetime, auto
 - `deletionDate`: datetime, nullable (soft delete)
-- **Relationships**: Has many Items
+- **Relationships**: Belongs to Office, has many Items
 - **Hooks**: Prevents deletion if items are assigned, automatic change logging
+
+#### **Item**
+
+- `id`: integer, PK, auto-increment
+- `name`: string, required, unique
+- `quantity`: integer, required, default 1, min 1
+- `unit`: enum (`und.`, `kg`, `l`, `m`), required, default `und.`
+- `creationDate`: datetime, auto
+- `updatedOn`: datetime, auto
+- `deletionDate`: datetime, nullable (soft delete)
+- `categoryId`: FK to Category, nullable
+- `departmentId`: FK to Department, required
+- `officeId`: FK to Office, required
+- **Relationships**: Belongs to Category (optional), Department (required) and Office (required)
+- **Hooks**: Automatic change logging on all operations
 
 #### **ChangeLog**
 
@@ -234,16 +279,39 @@ erDiagram
         datetime deletionDate
     }
 
-    ITEM {
+    STATE {
         int id PK
         string name UK
-        int quantity
-        enum unit
         datetime creationDate
         datetime updatedOn
         datetime deletionDate
-        int categoryId FK
-        int departmentId FK
+    }
+
+    MUNICIPALITY {
+        int id PK
+        string name UK
+        int stateId FK
+        datetime creationDate
+        datetime updatedOn
+        datetime deletionDate
+    }
+
+    PARISH {
+        int id PK
+        string name UK
+        int municipalityId FK
+        datetime creationDate
+        datetime updatedOn
+        datetime deletionDate
+    }
+
+    OFFICE {
+        int id PK
+        string name UK
+        int parishId FK
+        datetime creationDate
+        datetime updatedOn
+        datetime deletionDate
     }
 
     CATEGORY {
@@ -257,9 +325,23 @@ erDiagram
     DEPARTMENT {
         int id PK
         string name UK
+        int officeId FK
         datetime creationDate
         datetime updatedOn
         datetime deletionDate
+    }
+
+    ITEM {
+        int id PK
+        string name UK
+        int quantity
+        enum unit
+        datetime creationDate
+        datetime updatedOn
+        datetime deletionDate
+        int categoryId FK
+        int departmentId FK
+        int officeId FK
     }
 
     CHANGELOG {
@@ -302,9 +384,18 @@ erDiagram
     ROLE ||--o{ ROLEPERMISSION : "has permissions"
     PERMISSION ||--o{ ROLEPERMISSION : "granted to roles"
 
-    %% One-to-Many Relationships
+    %% One-to-Many Relationships (Geographic hierarchy)
+    STATE ||--o{ MUNICIPALITY : "has municipalities"
+    MUNICIPALITY ||--o{ PARISH : "has parishes"
+    PARISH ||--o{ OFFICE : "has offices"
+    OFFICE ||--o{ DEPARTMENT : "has departments"
+    OFFICE ||--o{ ITEM : "has items"
+
+    %% One-to-Many Relationships (Inventory)
     CATEGORY ||--o{ ITEM : "contains"
-    DEPARTMENT ||--|| ITEM : "manages"
+    DEPARTMENT ||--o{ ITEM : "manages"
+
+    %% ChangeLog Relationships
     USER ||--o{ CHANGELOG : "creates"
     CHANGELOG ||--o{ CHANGELOGDETAIL : "details"
 
