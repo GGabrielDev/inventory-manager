@@ -72,7 +72,7 @@ export default class Item extends Model {
       }
     },
   })
-  @Column(DataType.ENUM(UnitType.UND))
+  @Column(DataType.ENUM(...Object.values(UnitType)))
   unit!: UnitType
 
   @CreatedAt
