@@ -14,7 +14,6 @@ import {
   DeletedAt,
   ForeignKey,
   HasMany,
-  // HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -24,21 +23,15 @@ import {
 import { UserActionOptions } from '@/types/UserActionOptions'
 import { logEntityAction } from '@/utils/entity-hooks'
 
-import { ChangeLog, Parish, State } from '.'
-// import { Parish } from '.'
+import { ChangeLog, Municipality } from '.'
 
 const RELATIONS = {
   CHANGELOGS: 'changeLogs',
-  PARISHES: 'parishes',
-  STATE: 'state',
-} as const satisfies Record<string, keyof Municipality>
-
-const RELATIONS_SINGULAR = {
-  PARISH: 'parish',
-} as const satisfies Record<string, string>
+  MUNICIPALITY: 'municipality',
+} as const satisfies Record<string, keyof Parish>
 
 @Table
-export default class Municipality extends Model {
+export default class Parish extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -48,9 +41,9 @@ export default class Municipality extends Model {
   @Column
   name!: string
 
-  @ForeignKey(() => State)
+  @ForeignKey(() => Municipality)
   @Column(DataType.INTEGER)
-  stateId!: number
+  municipalityId!: number
 
   @CreatedAt
   createdAt!: Date
@@ -61,58 +54,53 @@ export default class Municipality extends Model {
   @DeletedAt
   deletionDate?: Date
 
-  @BelongsTo(() => State)
-  state!: State
-
-  @HasMany(() => Parish)
-  parishes!: Parish[]
+  @BelongsTo(() => Municipality)
+  municipality!: Municipality
 
   @HasMany(() => ChangeLog)
   changeLogs!: ChangeLog[]
 
   static readonly RELATIONS = RELATIONS
 
-  static readonly RELATIONS_SINGULAR = RELATIONS_SINGULAR
-
   @AfterCreate
   @AfterBulkCreate
   static async logCreate(
-    instance: Municipality | Municipality[],
+    instance: Parish | Parish[],
     options: UserActionOptions
   ) {
     await logEntityAction(
       'create',
       instance,
       options,
-      ChangeLog.RELATIONS.MUNICIPALITY
+      ChangeLog.RELATIONS.PARISH
     )
   }
 
   @AfterUpdate
   @AfterBulkUpdate
   static async logUpdate(
-    instance: Municipality | Municipality[],
+    instance: Parish | Parish[],
     options: UserActionOptions
   ) {
     await logEntityAction(
       'update',
       instance,
       options,
-      ChangeLog.RELATIONS.MUNICIPALITY
+      ChangeLog.RELATIONS.PARISH
     )
   }
 
   @AfterDestroy
   @AfterBulkDestroy
   static async logDestroy(
-    instance: Municipality | Municipality[],
+    instance: Parish | Parish[],
     options: UserActionOptions
   ) {
     await logEntityAction(
       'delete',
       instance,
       options,
-      ChangeLog.RELATIONS.MUNICIPALITY
+      ChangeLog.RELATIONS.PARISH
     )
   }
 }

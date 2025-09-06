@@ -1,4 +1,4 @@
-import { ChangeLog, Municipality, State, User } from '@/models'
+import { ChangeLog, Municipality, Parish, State, User } from '@/models'
 import * as changeLogger from '@/utils/change-logger'
 
 describe('Municipality model', () => {
@@ -129,43 +129,69 @@ describe('Municipality associations', () => {
     if (logHookSpy) logHookSpy.mockRestore()
   })
 
-  it('should belong to a state', async () => {
+  it('should associate parishes to municipality and log the actions', async () => {
     const state = await State.create(
-      { name: 'Nueva Esparta' },
+      { name: 'Carabobo' },
       { userId: systemUser.id }
     )
     const municipality = await Municipality.create(
-      { name: 'Margarita', stateId: state.id },
+      { name: 'Valencia', stateId: state.id },
       { userId: systemUser.id }
     )
-    const foundMunicipality = await Municipality.findByPk(municipality.id, {
-      include: [Municipality.RELATIONS.STATE],
+    // Create parish via Parish model and associate
+    const parish1 = await Parish.create(
+      { name: 'Candelaria', municipalityId: municipality.id },
+      { userId: systemUser.id }
+    )
+    municipality.$add(Municipality.RELATIONS.PARISHES, parish1, {
+      userId: systemUser.id,
     })
-    expect(foundMunicipality).toBeDefined()
-    expect(foundMunicipality?.state).toBeDefined()
-    expect(foundMunicipality?.state.name).toBe('Nueva Esparta')
+
+    // Create and associate a directly
+    const parish2 = (await municipality.$create(
+      Municipality.RELATIONS_SINGULAR.PARISH,
+      { name: 'San José' },
+      { userId: systemUser.id }
+    )) as Parish
+
+    expect(parish1).toBeDefined()
+    expect(parish1.name).toBe('Candelaria')
+    expect(parish1.municipalityId).toBe(municipality.id)
+
+    expect(parish2).toBeDefined()
+    expect(parish2.name).toBe('San José')
+    expect(parish2.municipalityId).toBe(municipality.id)
+
+    // 4 calls: state, municipality, parish1, parish2
+    expect(logHookSpy).toHaveBeenCalledTimes(4)
   })
 
-  it('should allow same names if in different states', async () => {
-    const state1 = await State.create(
-      { name: 'Nueva Esparta' },
+  it('should fetch municipality with its parishes', async () => {
+    const state = await State.create(
+      { name: 'Lara' },
       { userId: systemUser.id }
     )
-    const state2 = await State.create(
-      { name: 'Miranda' },
+    const municipality = await Municipality.create(
+      { name: 'Barquisimeto', stateId: state.id },
       { userId: systemUser.id }
     )
-    const mun1 = await Municipality.create(
-      { name: 'Margarita', stateId: state1.id },
+    await Parish.create(
+      { name: 'Santa Rosa', municipalityId: municipality.id },
       { userId: systemUser.id }
     )
-    const mun2 = await Municipality.create(
-      { name: 'Margarita', stateId: state2.id },
+    await Parish.create(
+      { name: 'Juárez', municipalityId: municipality.id },
       { userId: systemUser.id }
     )
-    expect(mun1).toBeDefined()
-    expect(mun2).toBeDefined()
-    expect(mun1.name).toBe(mun2.name)
-    expect(mun1.stateId).not.toBe(mun2.stateId)
+
+    const foundMunicipality = await Municipality.findByPk(municipality.id, {
+      include: [Municipality.RELATIONS.PARISHES],
+    })
+    expect(foundMunicipality).toBeDefined()
+    expect(foundMunicipality?.parishes).toBeDefined()
+    expect(foundMunicipality?.parishes.length).toBe(2)
+    const parishNames = foundMunicipality?.parishes.map((p) => p.name)
+    expect(parishNames).toContain('Santa Rosa')
+    expect(parishNames).toContain('Juárez')
   })
 })
