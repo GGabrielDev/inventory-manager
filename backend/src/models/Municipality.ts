@@ -7,11 +7,14 @@ import {
   AfterUpdate,
   AllowNull,
   AutoIncrement,
+  BelongsTo,
   Column,
   CreatedAt,
   DataType,
   DeletedAt,
+  ForeignKey,
   HasMany,
+  // HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -22,47 +25,48 @@ import {
 import { UserActionOptions } from '@/types/UserActionOptions'
 import { logEntityAction } from '@/utils/entity-hooks'
 
-import { ChangeLog, Municipality } from '.'
+import { ChangeLog, State } from '.'
+// import { Parish } from '.'
 
 const RELATIONS = {
   CHANGELOGS: 'changeLogs',
-  MUNICIPALITIES: 'municipalities',
-} as const satisfies Record<string, keyof State>
-
-// para $create (singular)
-const RELATIONS_SINGULAR = {
-  MUNICIPALITY: 'municipality',
-} as const satisfies Record<string, string>
+  STATE: 'state',
+} as const satisfies Record<string, keyof Municipality>
 
 @Table
-export default class State extends Model {
+export default class Municipality extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
   id!: number
 
   @AllowNull(false)
-  @Unique
   @Column
   name!: string
 
+  @ForeignKey(() => State)
+  @Column(DataType.INTEGER)
+  stateId!: number
+
   @CreatedAt
-  creationDate!: Date
+  createdAt!: Date
 
   @UpdatedAt
-  updatedOn!: Date
+  updatedAt!: Date
 
   @DeletedAt
   deletionDate?: Date
 
-  @HasMany(() => Municipality)
-  municipalities: Municipality[]
+  @BelongsTo(() => State)
+  state!: State
+
+  // @HasMany(() => Parish)
+  // parishes!: Parish[]
 
   @HasMany(() => ChangeLog)
   changeLogs!: ChangeLog[]
 
   static readonly RELATIONS = RELATIONS
-  static readonly RELATIONS_SINGULAR = RELATIONS_SINGULAR
 
   @AfterCreate
   @AfterBulkCreate
@@ -74,7 +78,7 @@ export default class State extends Model {
       'create',
       instance,
       options,
-      ChangeLog.RELATIONS.STATE
+      ChangeLog.RELATIONS.MUNICIPALITY
     )
   }
 
@@ -88,7 +92,7 @@ export default class State extends Model {
       'update',
       instance,
       options,
-      ChangeLog.RELATIONS.STATE
+      ChangeLog.RELATIONS.MUNICIPALITY
     )
   }
 
@@ -102,7 +106,7 @@ export default class State extends Model {
       'delete',
       instance,
       options,
-      ChangeLog.RELATIONS.STATE
+      ChangeLog.RELATIONS.MUNICIPALITY
     )
   }
 }

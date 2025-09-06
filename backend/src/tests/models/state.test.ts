@@ -1,4 +1,4 @@
-import { ChangeLog, State, User } from '@/models'
+import { ChangeLog, Municipality, State, User } from '@/models'
 import * as changeLogger from '@/utils/change-logger'
 
 describe('State model', () => {
@@ -96,5 +96,103 @@ describe('State model', () => {
         modelId: state.id,
       })
     )
+  })
+})
+
+describe('State associations', () => {
+  let systemUser: User
+  let logHookSpy: jest.SpyInstance
+
+  beforeEach(async () => {
+    systemUser = await User.create(
+      { username: 'TestUser', passwordHash: 'pw' },
+      { userId: 0 }
+    )
+    logHookSpy = jest
+      .spyOn(changeLogger, 'logHook')
+      .mockResolvedValue(undefined)
+  })
+
+  afterEach(() => {
+    if (logHookSpy) logHookSpy.mockRestore()
+  })
+
+  it('should associate municipalities to state and log the actions', async () => {
+    const state = await State.create(
+      { name: 'Carabobo' },
+      { userId: systemUser.id }
+    )
+    // Create municipality via Municipality model and associate
+    const municipality1 = await Municipality.create(
+      { name: 'Valencia', stateId: state.id },
+      { userId: systemUser.id }
+    )
+    state.$add(State.RELATIONS.MUNICIPALITIES, municipality1, {
+      userId: systemUser.id,
+    })
+
+    // Create and associate a directly
+    const municipality2 = (await state.$create(
+      State.RELATIONS_SINGULAR.MUNICIPALITY,
+      { name: 'Naguanagua' },
+      { userId: systemUser.id }
+    )) as Municipality
+
+    expect(municipality1).toBeDefined()
+    expect(municipality1.name).toBe('Valencia')
+    expect(municipality1.stateId).toBe(state.id)
+
+    expect(municipality2).toBeDefined()
+    expect(municipality2.name).toBe('Naguanagua')
+    expect(municipality2.stateId).toBe(state.id)
+
+    expect(logHookSpy).toHaveBeenCalledTimes(3)
+    // First call for state creation
+    expect(logHookSpy).toHaveBeenNthCalledWith(
+      2,
+      'create',
+      expect.any(Municipality),
+      expect.objectContaining({
+        userId: systemUser.id,
+        modelName: ChangeLog.RELATIONS.MUNICIPALITY,
+        modelId: municipality1.id,
+      })
+    )
+    expect(logHookSpy).toHaveBeenNthCalledWith(
+      3,
+      'create',
+      expect.any(Municipality),
+      expect.objectContaining({
+        userId: systemUser.id,
+        modelName: ChangeLog.RELATIONS.MUNICIPALITY,
+        modelId: municipality2.id,
+      })
+    )
+  })
+
+  it('should fetch state with its municipalities', async () => {
+    const state = await State.create(
+      { name: 'Lara' },
+      { userId: systemUser.id }
+    )
+    await state.$create(
+      State.RELATIONS_SINGULAR.MUNICIPALITY,
+      { name: 'Barquisimeto' },
+      { userId: systemUser.id }
+    )
+    await state.$create(
+      State.RELATIONS_SINGULAR.MUNICIPALITY,
+      { name: 'Cabudare' },
+      { userId: systemUser.id }
+    )
+
+    const fetchedState = await State.findByPk(state.id, {
+      include: [State.RELATIONS.MUNICIPALITIES],
+    })
+    expect(fetchedState).toBeDefined()
+    expect(fetchedState?.municipalities.length).toBe(2)
+    const names = fetchedState?.municipalities.map((m) => m.name)
+    expect(names).toContain('Barquisimeto')
+    expect(names).toContain('Cabudare')
   })
 })

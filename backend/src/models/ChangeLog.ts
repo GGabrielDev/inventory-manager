@@ -18,6 +18,7 @@ import {
   ChangeLogDetail,
   Department,
   Item,
+  Municipality,
   Permission,
   Role,
   State,
@@ -29,6 +30,7 @@ const RELATIONS = {
   CATEGORY: 'category',
   DEPARTMENT: 'department',
   ITEM: 'item',
+  MUNICIPALITY: 'municipality',
   PERMISSION: 'permission',
   ROLE: 'role',
   USER: 'user',
@@ -39,6 +41,7 @@ const RELATIONS_ID = {
   CATEGORY: 'categoryId',
   DEPARTMENT: 'departmentId',
   ITEM: 'itemId',
+  MUNICIPALITY: 'municipalityId',
   PERMISSION: 'permissionId',
   ROLE: 'roleId',
   USER: 'userId',
@@ -134,6 +137,13 @@ export default class ChangeLog extends Model {
 
   @BelongsTo(() => State)
   state?: State
+
+  @ForeignKey(() => Municipality)
+  @Column(DataType.INTEGER)
+  municipalityId?: Municipality['id']
+
+  @BelongsTo(() => Municipality)
+  municipality?: Municipality
 
   @ForeignKey(() => Department)
   @Column(DataType.INTEGER)
