@@ -4,9 +4,31 @@
   "delete": "Delete",
   "edit": "Edit",
   "create": "Create",
+  "update": "Update",
   "loading": "Loading...",
+  "saving": "Saving...",
   "error": "Error",
   "success": "Success",
   "close": "Close",
-  "backToDashboard": "Back to Dashboard"
+  "backToDashboard": "Back to Dashboard",
+  "noPermission": "You don't have permission to access this section",
+  "confirmDelete": "Are you sure you want to delete this item?",
+  "noDataFound": "No data found",
+  "actions": "Actions",
+  "id": "ID",
+  "name": "Name",
+  "createdAt": "Created At",
+  "updatedAt": "Updated At",
+  "department": "Department",
+  "category": "Category",
+  "item": "Item",
+  "quantity": "Quantity",
+  "unit": "Unit",
+  "none": "None",
+  "units": {
+    "und": "Units",
+    "kg": "Kilograms",
+    "l": "Liters",
+    "m": "Meters"
+  }
 }

@@ -4,9 +4,31 @@
   "delete": "Eliminar",
   "edit": "Editar",
   "create": "Crear",
+  "update": "Actualizar",
   "loading": "Cargando...",
+  "saving": "Guardando...",
   "error": "Error",
   "success": "Éxito",
   "close": "Cerrar",
-  "backToDashboard": "Volver al Dashboard"
+  "backToDashboard": "Volver al Dashboard",
+  "noPermission": "No tienes permisos para acceder a esta sección",
+  "confirmDelete": "¿Estás seguro de que quieres eliminar este elemento?",
+  "noDataFound": "No se encontraron datos",
+  "actions": "Acciones",
+  "id": "ID",
+  "name": "Nombre",
+  "createdAt": "Creado en",
+  "updatedAt": "Actualizado en",
+  "department": "Departamento",
+  "category": "Categoría",
+  "item": "Artículo",
+  "quantity": "Cantidad",
+  "unit": "Unidad",
+  "none": "Ninguno",
+  "units": {
+    "und": "Unidades",
+    "kg": "Kilogramos",
+    "l": "Litros",
+    "m": "Metros"
+  }
 }
