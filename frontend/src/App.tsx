@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
+import ManageCategories from './pages/ManageCategories';
 import ManageRoles from './pages/ManageRoles';
 import ManageUsers from './pages/ManageUsers';
 
@@ -34,7 +35,14 @@ const App: React.FC = () => {
           </ProtectedRoute>
         }
       />
-      {/* Add additional routes for Departments, Categories as needed later */}
+      <Route 
+        path="/categories" 
+        element={
+          <ProtectedRoute>
+            <ManageCategories />
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   );
