@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import ManageCategories from './pages/ManageCategories';
 import ManageDepartments from './pages/ManageDepartments';
+import ManageItems from './pages/ManageItems';
 import ManageRoles from './pages/ManageRoles';
 import ManageUsers from './pages/ManageUsers';
 
@@ -37,6 +38,14 @@ const App: React.FC = () => {
         }
       />
       <Route 
+        path="/departments" 
+        element={
+          <ProtectedRoute>
+            <ManageDepartments />
+          </ProtectedRoute>
+        }
+      />
+      <Route 
         path="/categories" 
         element={
           <ProtectedRoute>
@@ -45,10 +54,10 @@ const App: React.FC = () => {
         }
       />
       <Route 
-        path="/departments" 
+        path="/items" 
         element={
           <ProtectedRoute>
-            <ManageDepartments />
+            <ManageItems />
           </ProtectedRoute>
         }
       />
