@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import ManageCategories from './pages/ManageCategories';
+import ManageDepartments from './pages/ManageDepartments';
 import ManageRoles from './pages/ManageRoles';
 import ManageUsers from './pages/ManageUsers';
 
@@ -40,6 +41,14 @@ const App: React.FC = () => {
         element={
           <ProtectedRoute>
             <ManageCategories />
+          </ProtectedRoute>
+        }
+      />
+      <Route 
+        path="/departments" 
+        element={
+          <ProtectedRoute>
+            <ManageDepartments />
           </ProtectedRoute>
         }
       />
