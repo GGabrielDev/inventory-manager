@@ -72,8 +72,7 @@ const Dashboard: React.FC = () => {
       description: t('dashboard:manageItemsDesc'), 
       route: '/items',
       color: 'warning' as const,
-    }] : []),
-  ];
+    }] : []), ];
 
   const accessibleSections = managementSections;
 
