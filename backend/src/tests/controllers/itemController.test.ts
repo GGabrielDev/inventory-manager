@@ -32,12 +32,61 @@ describe('ItemController', () => {
       systemUser.id,
       10,
       UnitType.M,
-      category.id
+      category.id,
+      'This is a pen',
+      { color: 'blue' }
     )
     expect(item.id).toBeDefined()
     expect(item.name).toBe('Pen')
     expect(item.quantity).toBe(10)
     expect(item.unit).toBe(UnitType.M)
+    expect(item.observations).toBe('This is a pen')
+    expect(item.characteristics).toEqual({ color: 'blue' })
+  })
+
+  it('should throw an error if characteristics is not an object', async () => {
+    await expect(
+      ItemController.createItem(
+        'InvalidItem',
+        department.id,
+        systemUser.id,
+        1,
+        UnitType.UND,
+        category.id,
+        'This is a pen',
+        'invalid' as any
+      )
+    ).rejects.toThrow('Validation error: Characteristics must be an object')
+  })
+
+  it('should throw an error if characteristics has an invalid key', async () => {
+    await expect(
+      ItemController.createItem(
+        'InvalidItem',
+        department.id,
+        systemUser.id,
+        1,
+        UnitType.UND,
+        category.id,
+        'This is a pen',
+        { invalidKey: 'value' }
+      )
+    ).rejects.toThrow('Invalid characteristic key: invalidKey')
+  })
+
+  it('should throw an error if characteristics has an invalid key when updating', async () => {
+    const item = await ItemController.createItem(
+      'InvalidItem',
+      department.id,
+      systemUser.id
+    )
+    await expect(
+      ItemController.updateItem(
+        item.id,
+        { characteristics: { invalidKey: 'value' } },
+        systemUser.id
+      )
+    ).rejects.toThrow('Invalid characteristic key: invalidKey')
   })
 
   it('should get an item by ID', async () => {
@@ -69,11 +118,32 @@ describe('ItemController', () => {
     )
     const updatedItem = await ItemController.updateItem(
       item.id,
-      { name: 'Rubber' },
+      {
+        name: 'Rubber',
+        observations: 'This is a rubber',
+        characteristics: { color: 'red' },
+      },
       systemUser.id
     )
     expect(updatedItem).toBeDefined()
     expect(updatedItem?.name).toBe('Rubber')
+    expect(updatedItem?.observations).toBe('This is a rubber')
+    expect(updatedItem?.characteristics).toEqual({ color: 'red' })
+  })
+
+  it('should throw an error if characteristics is not an object when updating', async () => {
+    const item = await ItemController.createItem(
+      'InvalidItem',
+      department.id,
+      systemUser.id
+    )
+    await expect(
+      ItemController.updateItem(
+        item.id,
+        { characteristics: 'invalid' as any },
+        systemUser.id
+      )
+    ).rejects.toThrow('Validation error: Characteristics must be an object')
   })
 
   it('should delete an item', async () => {

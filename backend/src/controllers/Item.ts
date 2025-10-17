@@ -32,7 +32,24 @@ interface PaginatedResult<T> {
   currentPage: number
 }
 
+const allowedCharacteristics = [
+  'color',
+  'brand',
+  'model',
+  'serialNumber',
+  'productNumber',
+]
+
 export class ItemController {
+  private static validateCharacteristics(characteristics: object) {
+    if (characteristics && typeof characteristics === 'object') {
+      for (const key in characteristics) {
+        if (!allowedCharacteristics.includes(key)) {
+          throw new Error(`Invalid characteristic key: ${key}`)
+        }
+      }
+    }
+  }
   // Create a new item
   static async createItem(
     name: Item['name'],
@@ -40,7 +57,9 @@ export class ItemController {
     userId: User['id'],
     quantity: Item['quantity'] = 1,
     unit: Item['unit'] = UnitType.UND,
-    categoryId?: Item['categoryId']
+    categoryId?: Item['categoryId'],
+    observations?: Item['observations'],
+    characteristics?: Item['characteristics']
   ): Promise<Item> {
     if (!name) {
       throw new Error('Validation error: Item name is required')
@@ -57,9 +76,21 @@ export class ItemController {
     if (!Object.values(UnitType).includes(unit)) {
       throw new Error(`Invalid unit: ${unit}`)
     }
+    if (characteristics && typeof characteristics !== 'object') {
+      throw new Error('Validation error: Characteristics must be an object')
+    }
+    this.validateCharacteristics(characteristics || {})
 
     return Item.create(
-      { name, departmentId, quantity, unit, categoryId },
+      {
+        name,
+        departmentId,
+        quantity,
+        unit,
+        categoryId,
+        observations,
+        characteristics,
+      },
       { userId }
     )
   }
@@ -194,6 +225,10 @@ export class ItemController {
       throw new Error('Invalid itemId')
     }
 
+    if (updates.characteristics && typeof updates.characteristics !== 'object') {
+      throw new Error('Validation error: Characteristics must be an object')
+    }
+    this.validateCharacteristics(updates.characteristics || {})
     const item = await Item.findByPk(itemId)
     if (!item) return null
 
