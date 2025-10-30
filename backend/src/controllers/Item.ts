@@ -32,24 +32,7 @@ interface PaginatedResult<T> {
   currentPage: number
 }
 
-const allowedCharacteristics = [
-  'color',
-  'brand',
-  'model',
-  'serialNumber',
-  'productNumber',
-]
-
 export class ItemController {
-  private static validateCharacteristics(characteristics: object) {
-    if (characteristics && typeof characteristics === 'object') {
-      for (const key in characteristics) {
-        if (!allowedCharacteristics.includes(key)) {
-          throw new Error(`Invalid characteristic key: ${key}`)
-        }
-      }
-    }
-  }
   // Create a new item
   static async createItem(
     name: Item['name'],
@@ -57,9 +40,7 @@ export class ItemController {
     userId: User['id'],
     quantity: Item['quantity'] = 1,
     unit: Item['unit'] = UnitType.UND,
-    categoryId?: Item['categoryId'],
-    observations?: Item['observations'],
-    characteristics?: Item['characteristics']
+    categoryId?: Item['categoryId']
   ): Promise<Item> {
     if (!name) {
       throw new Error('Validation error: Item name is required')
@@ -76,21 +57,9 @@ export class ItemController {
     if (!Object.values(UnitType).includes(unit)) {
       throw new Error(`Invalid unit: ${unit}`)
     }
-    if (characteristics && typeof characteristics !== 'object') {
-      throw new Error('Validation error: Characteristics must be an object')
-    }
-    this.validateCharacteristics(characteristics || {})
 
     return Item.create(
-      {
-        name,
-        departmentId,
-        quantity,
-        unit,
-        categoryId,
-        observations,
-        characteristics,
-      },
+      { name, departmentId, quantity, unit, categoryId },
       { userId }
     )
   }
@@ -143,29 +112,21 @@ export class ItemController {
       })
     }
 
-    // Asegura incluir Department si se filtra o se ordena por él
-    if (department || sortBy === 'department') {
-      includeConditions.push({
-        model: Department,
-        as: Item.RELATIONS.DEPARTMENT,
-        ...(department && {
-          where: { name: { [Op.like]: `%${department}%` } },
-        }),
-        required: !!department, // solo forzamos el join si hay filtro
-      })
+    const includeDepartment = {
+      model: Department,
+      as: Item.RELATIONS.DEPARTMENT,
+      where: department ? { name: { [Op.like]: `%${department}%` } } : undefined,
+      required: !!department,
     }
 
-    // Asegura incluir Category si se filtra o se ordena por ella
-    if (category || sortBy === 'category') {
-      includeConditions.push({
-        model: Category,
-        as: Item.RELATIONS.CATEGORY,
-        ...(category && {
-          where: { name: { [Op.like]: `%${category}%` } },
-        }),
-        required: !!category,
-      })
+    const includeCategory = {
+      model: Category,
+      as: Item.RELATIONS.CATEGORY,
+      where: category ? { name: { [Op.like]: `%${category}%` } } : undefined,
+      required: !!category,
     }
+
+    includeConditions.push(includeDepartment, includeCategory)
 
     const where = andConditions.length ? { [Op.and]: andConditions } : undefined
 
@@ -225,10 +186,6 @@ export class ItemController {
       throw new Error('Invalid itemId')
     }
 
-    if (updates.characteristics && typeof updates.characteristics !== 'object') {
-      throw new Error('Validation error: Characteristics must be an object')
-    }
-    this.validateCharacteristics(updates.characteristics || {})
     const item = await Item.findByPk(itemId)
     if (!item) return null
 

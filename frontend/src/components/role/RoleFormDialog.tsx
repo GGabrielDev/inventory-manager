@@ -153,7 +153,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [canPerformAction, formData, role, token, onSuccess, t]);
+  }, [canPerformAction, formData, role, token, onSuccess]);
 
   // Memoize permission checkboxes to prevent unnecessary re-renders
   const permissionCheckboxes = useMemo(() => {
