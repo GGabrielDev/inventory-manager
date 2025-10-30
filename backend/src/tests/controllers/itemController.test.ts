@@ -32,61 +32,12 @@ describe('ItemController', () => {
       systemUser.id,
       10,
       UnitType.M,
-      category.id,
-      'This is a pen',
-      { color: 'blue' }
+      category.id
     )
     expect(item.id).toBeDefined()
     expect(item.name).toBe('Pen')
     expect(item.quantity).toBe(10)
     expect(item.unit).toBe(UnitType.M)
-    expect(item.observations).toBe('This is a pen')
-    expect(item.characteristics).toEqual({ color: 'blue' })
-  })
-
-  it('should throw an error if characteristics is not an object', async () => {
-    await expect(
-      ItemController.createItem(
-        'InvalidItem',
-        department.id,
-        systemUser.id,
-        1,
-        UnitType.UND,
-        category.id,
-        'This is a pen',
-        'invalid' as any
-      )
-    ).rejects.toThrow('Validation error: Characteristics must be an object')
-  })
-
-  it('should throw an error if characteristics has an invalid key', async () => {
-    await expect(
-      ItemController.createItem(
-        'InvalidItem',
-        department.id,
-        systemUser.id,
-        1,
-        UnitType.UND,
-        category.id,
-        'This is a pen',
-        { invalidKey: 'value' }
-      )
-    ).rejects.toThrow('Invalid characteristic key: invalidKey')
-  })
-
-  it('should throw an error if characteristics has an invalid key when updating', async () => {
-    const item = await ItemController.createItem(
-      'InvalidItem',
-      department.id,
-      systemUser.id
-    )
-    await expect(
-      ItemController.updateItem(
-        item.id,
-        { characteristics: { invalidKey: 'value' } },
-        systemUser.id
-      )
-    ).rejects.toThrow('Invalid characteristic key: invalidKey')
   })
 
   it('should get an item by ID', async () => {
@@ -100,14 +51,30 @@ describe('ItemController', () => {
     expect(item?.name).toBe('Notebook')
   })
 
-  it('should get all items with pagination', async () => {
-    await ItemController.createItem('Item1', department.id, systemUser.id)
-    await ItemController.createItem('Item2', department.id, systemUser.id)
+  it('should get all items with pagination and associations', async () => {
+    await ItemController.createItem(
+      'Item1',
+      department.id,
+      systemUser.id,
+      1,
+      UnitType.UND,
+      category.id
+    )
+    await ItemController.createItem(
+      'Item2',
+      department.id,
+      systemUser.id,
+      1,
+      UnitType.UND,
+      category.id
+    )
 
-    const result = await ItemController.getAllItems({ page: 1, pageSize: 1 })
-    expect(result.data.length).toBe(1)
-    expect(result.total).toBeGreaterThanOrEqual(2)
-    expect(result.totalPages).toBeGreaterThanOrEqual(2)
+    const result = await ItemController.getAllItems({ page: 1, pageSize: 2 })
+    expect(result.data.length).toBe(2)
+    expect(result.data[0].category).toBeDefined()
+    expect(result.data[0].department).toBeDefined()
+    expect(result.data[1].category).toBeDefined()
+    expect(result.data[1].department).toBeDefined()
   })
 
   it('should update an item', async () => {
@@ -118,32 +85,11 @@ describe('ItemController', () => {
     )
     const updatedItem = await ItemController.updateItem(
       item.id,
-      {
-        name: 'Rubber',
-        observations: 'This is a rubber',
-        characteristics: { color: 'red' },
-      },
+      { name: 'Rubber' },
       systemUser.id
     )
     expect(updatedItem).toBeDefined()
     expect(updatedItem?.name).toBe('Rubber')
-    expect(updatedItem?.observations).toBe('This is a rubber')
-    expect(updatedItem?.characteristics).toEqual({ color: 'red' })
-  })
-
-  it('should throw an error if characteristics is not an object when updating', async () => {
-    const item = await ItemController.createItem(
-      'InvalidItem',
-      department.id,
-      systemUser.id
-    )
-    await expect(
-      ItemController.updateItem(
-        item.id,
-        { characteristics: 'invalid' as any },
-        systemUser.id
-      )
-    ).rejects.toThrow('Validation error: Characteristics must be an object')
   })
 
   it('should delete an item', async () => {

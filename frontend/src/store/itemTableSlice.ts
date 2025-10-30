@@ -10,8 +10,6 @@ export const initialState: ColumnVisibilityState = {
   unit: true,
   category: true,
   department: true,
-  observations: false,
-  characteristics: false,
   creationDate: true,
   updatedOn: true,
 }

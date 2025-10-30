@@ -39,9 +39,6 @@ export enum UnitType {
   KG = 'kg',
   L = 'l',
   M = 'm',
-  PAIR = 'pair',
-  BULK = 'bulk',
-  BOX = 'box',
 }
 
 @Table
@@ -77,15 +74,6 @@ export default class Item extends Model {
   })
   @Column(DataType.ENUM(...Object.values(UnitType)))
   unit!: UnitType
-
-  @AllowNull(true)
-  @Column(DataType.TEXT)
-  observations?: string
-
-  @AllowNull(false)
-  @Default({})
-  @Column(DataType.JSON)
-  characteristics!: object
 
   @CreatedAt
   creationDate!: Date

@@ -12,15 +12,7 @@ itemRouter.post(
   requirePermission('create_item'),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const {
-        name,
-        quantity,
-        unit,
-        categoryId,
-        departmentId,
-        observations,
-        characteristics,
-      } = req.body
+      const { name, quantity, unit, categoryId, departmentId } = req.body
       const userId = req.userId // Assume userId is set by authentication middleware
 
       if (typeof userId !== 'number' || userId < 0) {
@@ -34,9 +26,7 @@ itemRouter.post(
         userId,
         quantity,
         unit,
-        categoryId,
-        observations,
-        characteristics
+        categoryId
       )
       res.status(201).json(item)
     } catch (error) {
@@ -143,15 +133,7 @@ itemRouter.put(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const itemId = parseInt(req.params.id, 10)
-      const {
-        name,
-        quantity,
-        unit,
-        categoryId,
-        departmentId,
-        observations,
-        characteristics,
-      } = req.body
+      const { name, quantity, unit, categoryId, departmentId } = req.body
       const userId = req.userId
 
       if (typeof userId !== 'number' || userId < 0) {
@@ -161,15 +143,7 @@ itemRouter.put(
 
       const updatedItem = await ItemController.updateItem(
         itemId,
-        {
-          name,
-          quantity,
-          unit,
-          categoryId,
-          departmentId,
-          observations,
-          characteristics,
-        },
+        { name, quantity, unit, categoryId, departmentId },
         userId
       )
 

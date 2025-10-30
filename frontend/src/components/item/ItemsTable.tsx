@@ -54,12 +54,6 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
             {columnVisibility.department && (
               <TableCell>{t('common:department')}</TableCell>
             )}
-            {columnVisibility.observations && (
-              <TableCell>{t('common:observations')}</TableCell>
-            )}
-            {columnVisibility.characteristics && (
-              <TableCell>{t('common:characteristics')}</TableCell>
-            )}
             {columnVisibility.creationDate && (
               <TableCell>{t('common:createdAt')}</TableCell>
             )}
@@ -92,16 +86,6 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
               {columnVisibility.department && (
                 <TableCell>
                   {item.department ? item.department.name : t('common:none')}
-                </TableCell>
-              )}
-              {columnVisibility.observations && (
-                <TableCell>{item.observations}</TableCell>
-              )}
-              {columnVisibility.characteristics && (
-                <TableCell>
-                  {Object.entries(item.characteristics)
-                    .map(([key, value]) => `${key}: ${value}`)
-                    .join(', ')}
                 </TableCell>
               )}
               {columnVisibility.creationDate && (
