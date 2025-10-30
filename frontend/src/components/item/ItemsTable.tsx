@@ -9,11 +9,13 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@mui/material';
-import { format } from 'date-fns';
-import { useTranslation } from 'react-i18next';
+} from '@mui/material'
+import { format } from 'date-fns'
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
-import type { ItemsTableProps } from '@/types';
+import { RootState } from '@/store'
+import type { ItemsTableProps } from '@/types'
 
 const ItemsTable: React.FC<ItemsTableProps> = ({
   items,
@@ -22,7 +24,8 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
+  const columnVisibility = useSelector((state: RootState) => state.itemTable)
 
   if (items.length === 0) {
     return (
@@ -31,7 +34,7 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
           {t('common:noDataFound')}
         </Typography>
       </Paper>
-    );
+    )
   }
 
   return (
@@ -39,14 +42,24 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>{t('common:id')}</TableCell>
+            {columnVisibility.id && <TableCell>{t('common:id')}</TableCell>}
             <TableCell>{t('common:name')}</TableCell>
-            <TableCell>{t('common:quantity')}</TableCell>
-            <TableCell>{t('common:unit')}</TableCell>
-            <TableCell>{t('common:category')}</TableCell>
-            <TableCell>{t('common:department')}</TableCell>
-            <TableCell>{t('common:createdAt')}</TableCell>
-            <TableCell>{t('common:updatedAt')}</TableCell>
+            {columnVisibility.quantity && (
+              <TableCell>{t('common:quantity')}</TableCell>
+            )}
+            {columnVisibility.unit && <TableCell>{t('common:unit')}</TableCell>}
+            {columnVisibility.category && (
+              <TableCell>{t('common:category')}</TableCell>
+            )}
+            {columnVisibility.department && (
+              <TableCell>{t('common:department')}</TableCell>
+            )}
+            {columnVisibility.creationDate && (
+              <TableCell>{t('common:createdAt')}</TableCell>
+            )}
+            {columnVisibility.updatedOn && (
+              <TableCell>{t('common:updatedAt')}</TableCell>
+            )}
             {(canEditItem || canDeleteItem) && (
               <TableCell>{t('common:actions')}</TableCell>
             )}
@@ -55,24 +68,36 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
         <TableBody>
           {items.map((item) => (
             <TableRow key={item.id}>
-              <TableCell>{item.id}</TableCell>
+              {columnVisibility.id && <TableCell>{item.id}</TableCell>}
               <TableCell>{item.name}</TableCell>
-              <TableCell>{item.quantity}</TableCell>
-              <TableCell>
-                <Chip label={item.unit} size="small" />
-              </TableCell>
-              <TableCell>
-                {item.category ? item.category.name : t('common:none')}
-              </TableCell>
-              <TableCell>
-                {item.department ? item.department.name : t('common:none')}
-              </TableCell>
-              <TableCell>
-                {format(new Date(item.creationDate), 'PPp')}
-              </TableCell>
-              <TableCell>
-                {format(new Date(item.updatedOn), 'PPp')}
-              </TableCell>
+              {columnVisibility.quantity && (
+                <TableCell>{item.quantity}</TableCell>
+              )}
+              {columnVisibility.unit && (
+                <TableCell>
+                  <Chip label={item.unit} size="small" />
+                </TableCell>
+              )}
+              {columnVisibility.category && (
+                <TableCell>
+                  {item.category ? item.category.name : t('common:none')}
+                </TableCell>
+              )}
+              {columnVisibility.department && (
+                <TableCell>
+                  {item.department ? item.department.name : t('common:none')}
+                </TableCell>
+              )}
+              {columnVisibility.creationDate && (
+                <TableCell>
+                  {format(new Date(item.creationDate), 'PPp')}
+                </TableCell>
+              )}
+              {columnVisibility.updatedOn && (
+                <TableCell>
+                  {format(new Date(item.updatedOn), 'PPp')}
+                </TableCell>
+              )}
               {(canEditItem || canDeleteItem) && (
                 <TableCell>
                   <div style={{ display: 'flex', gap: '8px' }}>
@@ -103,7 +128,7 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
         </TableBody>
       </Table>
     </TableContainer>
-  );
-};
+  )
+}
 
-export default ItemsTable;
+export default ItemsTable

@@ -51,14 +51,30 @@ describe('ItemController', () => {
     expect(item?.name).toBe('Notebook')
   })
 
-  it('should get all items with pagination', async () => {
-    await ItemController.createItem('Item1', department.id, systemUser.id)
-    await ItemController.createItem('Item2', department.id, systemUser.id)
+  it('should get all items with pagination and associations', async () => {
+    await ItemController.createItem(
+      'Item1',
+      department.id,
+      systemUser.id,
+      1,
+      UnitType.UND,
+      category.id
+    )
+    await ItemController.createItem(
+      'Item2',
+      department.id,
+      systemUser.id,
+      1,
+      UnitType.UND,
+      category.id
+    )
 
-    const result = await ItemController.getAllItems({ page: 1, pageSize: 1 })
-    expect(result.data.length).toBe(1)
-    expect(result.total).toBeGreaterThanOrEqual(2)
-    expect(result.totalPages).toBeGreaterThanOrEqual(2)
+    const result = await ItemController.getAllItems({ page: 1, pageSize: 2 })
+    expect(result.data.length).toBe(2)
+    expect(result.data[0].category).toBeDefined()
+    expect(result.data[0].department).toBeDefined()
+    expect(result.data[1].category).toBeDefined()
+    expect(result.data[1].department).toBeDefined()
   })
 
   it('should update an item', async () => {
