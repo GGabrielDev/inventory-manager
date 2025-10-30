@@ -26,11 +26,8 @@ const itemTableSlice = createSlice({
     ) {
       state[action.payload.column] = action.payload.visible
     },
-    loadState(state, action: PayloadAction<ColumnVisibilityState>) {
-      return { ...state, ...action.payload }
-    },
   },
 })
 
-export const { setColumnVisibility, loadState } = itemTableSlice.actions
+export const { setColumnVisibility } = itemTableSlice.actions
 export default itemTableSlice.reducer

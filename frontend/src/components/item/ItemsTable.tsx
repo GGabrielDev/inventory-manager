@@ -43,7 +43,7 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
         <TableHead>
           <TableRow>
             {columnVisibility.id && <TableCell>{t('common:id')}</TableCell>}
-            {columnVisibility.name && <TableCell>{t('common:name')}</TableCell>}
+            <TableCell>{t('common:name')}</TableCell>
             {columnVisibility.quantity && (
               <TableCell>{t('common:quantity')}</TableCell>
             )}
@@ -75,7 +75,7 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
           {items.map((item) => (
             <TableRow key={item.id}>
               {columnVisibility.id && <TableCell>{item.id}</TableCell>}
-              {columnVisibility.name && <TableCell>{item.name}</TableCell>}
+              <TableCell>{item.name}</TableCell>
               {columnVisibility.quantity && (
                 <TableCell>{item.quantity}</TableCell>
               )}

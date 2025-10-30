@@ -56,6 +56,7 @@ const ColumnVisibilityControl: React.FC = () => {
                 <Checkbox
                   checked={columnVisibility[column]}
                   onChange={() => handleColumnToggle(column)}
+                  disabled={column === 'name'}
                 />
               }
               label={t(`common:${column}`)}

@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import authReducer from './authSlice.ts'
-import itemTableReducer, {
-  loadState as loadItemTableState,
-} from './itemTableSlice.ts'
+import itemTableReducer from './itemTableSlice.ts'
 import themeReducer from './themeSlice.ts'
 
 const itemTableState = localStorage.getItem('itemTableState')
-const preloadedItemTableState = itemTableState ? JSON.parse(itemTableState) : {}
+const preloadedItemTableState = itemTableState
+  ? JSON.parse(itemTableState)
+  : undefined
 
 export const store = configureStore({
   reducer: {
@@ -19,8 +19,6 @@ export const store = configureStore({
     itemTable: preloadedItemTableState,
   },
 })
-
-store.dispatch(loadItemTableState(preloadedItemTableState))
 
 store.subscribe(() => {
   localStorage.setItem(
