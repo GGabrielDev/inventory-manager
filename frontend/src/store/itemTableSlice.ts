@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 type ColumnVisibilityState = Record<string, boolean>;
 
-const initialState: ColumnVisibilityState = {
+export const initialState: ColumnVisibilityState = {
   id: true,
   name: true,
   quantity: true,
