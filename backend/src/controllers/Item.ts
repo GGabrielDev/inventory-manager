@@ -40,7 +40,9 @@ export class ItemController {
     userId: User['id'],
     quantity: Item['quantity'] = 1,
     unit: Item['unit'] = UnitType.UND,
-    categoryId?: Item['categoryId']
+    categoryId?: Item['categoryId'],
+    observations?: Item['observations'],
+    characteristics?: Item['characteristics']
   ): Promise<Item> {
     if (!name) {
       throw new Error('Validation error: Item name is required')
@@ -59,7 +61,15 @@ export class ItemController {
     }
 
     return Item.create(
-      { name, departmentId, quantity, unit, categoryId },
+      {
+        name,
+        departmentId,
+        quantity,
+        unit,
+        categoryId,
+        observations,
+        characteristics,
+      },
       { userId }
     )
   }
@@ -112,29 +122,21 @@ export class ItemController {
       })
     }
 
-    // Asegura incluir Department si se filtra o se ordena por él
-    if (department || sortBy === 'department') {
-      includeConditions.push({
-        model: Department,
-        as: Item.RELATIONS.DEPARTMENT,
-        ...(department && {
-          where: { name: { [Op.like]: `%${department}%` } },
-        }),
-        required: !!department, // solo forzamos el join si hay filtro
-      })
+    const includeDepartment = {
+      model: Department,
+      as: Item.RELATIONS.DEPARTMENT,
+      where: department ? { name: { [Op.like]: `%${department}%` } } : undefined,
+      required: !!department,
     }
 
-    // Asegura incluir Category si se filtra o se ordena por ella
-    if (category || sortBy === 'category') {
-      includeConditions.push({
-        model: Category,
-        as: Item.RELATIONS.CATEGORY,
-        ...(category && {
-          where: { name: { [Op.like]: `%${category}%` } },
-        }),
-        required: !!category,
-      })
+    const includeCategory = {
+      model: Category,
+      as: Item.RELATIONS.CATEGORY,
+      where: category ? { name: { [Op.like]: `%${category}%` } } : undefined,
+      required: !!category,
     }
+
+    includeConditions.push(includeDepartment, includeCategory)
 
     const where = andConditions.length ? { [Op.and]: andConditions } : undefined
 
@@ -198,7 +200,7 @@ export class ItemController {
     if (!item) return null
 
     await item.update(updates, { userId: actionUserId })
-    return item
+    return item.reload()
   }
 
   // Delete an item

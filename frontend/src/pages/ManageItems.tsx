@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import ColumnVisibilityControl from '@/components/item/ColumnVisibilityControl';
 import ItemFormDialog from '@/components/item/ItemFormDialog';
 import ItemsTable from '@/components/item/ItemsTable';
 import { useItemManagement, usePermissions } from '@/hooks';
@@ -85,6 +86,7 @@ const ManageItems: React.FC = () => {
           {t('dashboard:manageItems')}
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
+          <ColumnVisibilityControl />
           {canCreateItem && (
             <Button variant="contained" onClick={handleCreate}>
               {t('common:create')}
