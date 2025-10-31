@@ -32,12 +32,16 @@ describe('ItemController', () => {
       systemUser.id,
       10,
       UnitType.M,
-      category.id
+      category.id,
+      'This is a pen',
+      { color: 'blue' }
     )
     expect(item.id).toBeDefined()
     expect(item.name).toBe('Pen')
     expect(item.quantity).toBe(10)
     expect(item.unit).toBe(UnitType.M)
+    expect(item.observations).toBe('This is a pen')
+    expect(item.characteristics).toEqual({ color: 'blue' })
   })
 
   it('should get an item by ID', async () => {
@@ -91,11 +95,17 @@ describe('ItemController', () => {
     )
     const updatedItem = await ItemController.updateItem(
       item.id,
-      { name: 'Rubber' },
+      {
+        name: 'Rubber',
+        observations: 'This is a rubber',
+        characteristics: { color: 'red' },
+      },
       systemUser.id
     )
     expect(updatedItem).toBeDefined()
     expect(updatedItem?.name).toBe('Rubber')
+    expect(updatedItem?.observations).toBe('This is a rubber')
+    expect(updatedItem?.characteristics).toEqual({ color: 'red' })
   })
 
   it('should delete an item', async () => {

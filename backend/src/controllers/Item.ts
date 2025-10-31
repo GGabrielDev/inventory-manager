@@ -40,7 +40,9 @@ export class ItemController {
     userId: User['id'],
     quantity: Item['quantity'] = 1,
     unit: Item['unit'] = UnitType.UND,
-    categoryId?: Item['categoryId']
+    categoryId?: Item['categoryId'],
+    observations?: Item['observations'],
+    characteristics?: Item['characteristics']
   ): Promise<Item> {
     if (!name) {
       throw new Error('Validation error: Item name is required')
@@ -59,7 +61,15 @@ export class ItemController {
     }
 
     return Item.create(
-      { name, departmentId, quantity, unit, categoryId },
+      {
+        name,
+        departmentId,
+        quantity,
+        unit,
+        categoryId,
+        observations,
+        characteristics,
+      },
       { userId }
     )
   }
@@ -190,7 +200,7 @@ export class ItemController {
     if (!item) return null
 
     await item.update(updates, { userId: actionUserId })
-    return item
+    return item.reload()
   }
 
   // Delete an item
