@@ -112,29 +112,21 @@ export class ItemController {
       })
     }
 
-    // Asegura incluir Department si se filtra o se ordena por él
-    if (department || sortBy === 'department') {
-      includeConditions.push({
-        model: Department,
-        as: Item.RELATIONS.DEPARTMENT,
-        ...(department && {
-          where: { name: { [Op.like]: `%${department}%` } },
-        }),
-        required: !!department, // solo forzamos el join si hay filtro
-      })
+    const includeDepartment = {
+      model: Department,
+      as: Item.RELATIONS.DEPARTMENT,
+      where: department ? { name: { [Op.like]: `%${department}%` } } : undefined,
+      required: !!department,
     }
 
-    // Asegura incluir Category si se filtra o se ordena por ella
-    if (category || sortBy === 'category') {
-      includeConditions.push({
-        model: Category,
-        as: Item.RELATIONS.CATEGORY,
-        ...(category && {
-          where: { name: { [Op.like]: `%${category}%` } },
-        }),
-        required: !!category,
-      })
+    const includeCategory = {
+      model: Category,
+      as: Item.RELATIONS.CATEGORY,
+      where: category ? { name: { [Op.like]: `%${category}%` } } : undefined,
+      required: !!category,
     }
+
+    includeConditions.push(includeDepartment, includeCategory)
 
     const where = andConditions.length ? { [Op.and]: andConditions } : undefined
 
