@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+   "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts",
     "start": "ts-node -r tsconfig-paths/register src/server.ts",
     "db:populate": "ts-node -r tsconfig-paths/register src/scripts/populate.ts",
     "db:clear": "ts-node -r tsconfig-paths/register src/scripts/clear.ts",
@@ -23,8 +23,7 @@
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.2.2",
     "sequelize": "^6.37.7",
-    "sequelize-typescript": "^2.1.6",
-    "tsconfig-paths": "^4.2.0"
+    "sequelize-typescript": "^2.1.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
@@ -51,6 +50,7 @@
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
   }
 }

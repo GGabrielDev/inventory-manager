@@ -1,51 +1,54 @@
-import i18n from 'i18next'; // Import i18next as default
-import LanguageDetector from 'i18next-browser-languagedetector';
-import { initReactI18next } from 'react-i18next';
+import i18n, { type InitOptions } from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import HttpBackend from 'i18next-http-backend'
+import { initReactI18next } from 'react-i18next'
 
-import enAuth from './locales/en/auth.json';
-import enCommon from './locales/en/common.json';
-import enDashboard from './locales/en/dashboard.json';
-import enRoles from './locales/en/roles.json';
-import enUsers from './locales/en/users.json';
-import esAuth from './locales/es/auth.json';
-import esCommon from './locales/es/common.json';
-import esDashboard from './locales/es/dashboard.json';
-import esRoles from './locales/es/roles.json';
-import esUsers from './locales/es/users.json';
-
+// ⚙️ Configuración avanzada de i18next
 i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
+  .use(HttpBackend) // Carga los archivos JSON dinámicamente desde /public/locales
+  .use(LanguageDetector) // Detecta idioma desde navegador, localStorage, URL, etc.
+  .use(initReactI18next) // Integra con React
   .init({
-    resources: {
-      en: {
-        auth: enAuth,
-        common: enCommon,
-        dashboard: enDashboard,
-        users: enUsers,
-        roles: enRoles,
-      },
-      es: {
-        auth: esAuth,
-        common: esCommon,
-        dashboard: esDashboard,
-        users: esUsers,
-        roles: esRoles,
-      },
-    },
-    defaultNS: 'common',
-    fallbackLng: 'en',
-    debug: false,
-    interpolation: {
-      escapeValue: false, // React already escapes
-    },
-    detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage'],
-    },
-    react: {
-      useSuspense: false,
-    },
-  });
+    // 🌍 Idiomas soportados
+    supportedLngs: ['en', 'es'],
+    fallbackLng: 'es',
 
-export default i18n;
+    // 🔠 Namespaces — separa traducciones por contexto
+    ns: ['common', 'auth', 'dashboard', 'users', 'roles'],
+    defaultNS: 'common',
+
+    // 📦 Ruta pública de los archivos JSON
+    backend: {
+      // ✅ Asegúrate de tener /public/locales/{lng}/{ns}.json
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
+      crossDomain: false,
+    },
+
+    // 🧭 Detección automática del idioma
+    detection: {
+      order: ['localStorage', 'querystring', 'cookie', 'navigator'],
+      caches: ['localStorage'],
+      lookupLocalStorage: 'language',
+      lookupQuerystring: 'lang',
+      lookupCookie: 'i18next',
+      checkWhitelist: true,
+      ignoreCase: true,
+    },
+
+    // 🧩 Interpolación segura (React ya maneja escape)
+    interpolation: {
+      escapeValue: false,
+    },
+
+    // ⚡️ Integración con React
+    react: {
+      useSuspense: true,
+      bindI18n: 'languageChanged loaded',
+      bindI18nStore: 'added removed',
+    },
+
+    // 🧪 Solo muestra logs si estás en modo desarrollo
+    debug: import.meta.env.MODE === 'development',
+  } as InitOptions)
+
+export default i18n
