@@ -1,0 +1,12 @@
+* dev                                  63ce7b6 Merge pull request #1 from GGabrielDev/feature/add-item-fields
+  feature/docs                         ca6fda6 chore: reorganize i18n structure and update frontend packages
+  master                               b72d4d4 Item page done
+  remotes/origin/HEAD                  -> origin/master
+  remotes/origin/dev                   63ce7b6 Merge pull request #1 from GGabrielDev/feature/add-item-fields
+  remotes/origin/feature-item-frontend 1e7f1bd fix: Persist observations and characteristics
+  remotes/origin/feature/docs          ca6fda6 chore: reorganize i18n structure and update frontend packages
+  remotes/origin/feature/item-frontend d020be0 Merge pull request #7 from GGabrielDev/feature-item-frontend
+  remotes/origin/fix/i18n-frontend     ca6fda6 chore: reorganize i18n structure and update frontend packages
+  remotes/origin/fix/refactor-frontend ca6fda6 chore: reorganize i18n structure and update frontend packages
+  remotes/origin/main                  ca6fda6 chore: reorganize i18n structure and update frontend packages
+  remotes/origin/master                b72d4d4 Item page done
