@@ -1,6 +1,6 @@
-# 🧱 Frontend Architecture & i18n Guide
+# Frontend Architecture & i18n Guide
 
-## 📌 Propósito
+## Propósito
 
 Este documento técnico describe la **arquitectura del frontend** del proyecto *Inventory Manager*,  
 incluyendo su estructura de carpetas, la configuración de **internacionalización (i18n)**,  
@@ -10,7 +10,7 @@ Sirve como guía de referencia para desarrolladores actuales y futuros, y debe m
 
 ---
 
-## 🗂 Estructura general del proyecto
+## Estructura general del proyecto
 
 frontend/
 ├── public/
@@ -44,9 +44,9 @@ frontend/
 
 ---
 
-## 🌍 Internacionalización (i18n)
+## Internacionalización (i18n)
 
-### 📁 Archivos de traducción
+###  Archivos de traducción
 
 - Ubicación: `public/locales/{en,es}/{ns}.json`  
 - Cada namespace (`ns`) representa un módulo funcional:
@@ -55,7 +55,7 @@ frontend/
   - `dashboard` → Panel principal  
   - `roles` y `users` → Gestión de roles y usuarios  
 
-### ⚙️ Configuración principal (`src/i18n/index.ts`)
+### Configuración principal (`src/i18n/index.ts`)
 
 - Usa `i18next-http-backend` para cargar dinámicamente los JSON desde `/public/locales`.
 - Usa `i18next-browser-languagedetector` para detectar el idioma automáticamente:
@@ -77,7 +77,7 @@ react.useSuspense: true (para carga perezosa de traducciones)
 
 debug: activo solo en modo desarrollo.
 
-🧩 API de cambio de idioma
+ API de cambio de idioma
 
 Centralizada en LanguageSelector.tsx con la función:
 
