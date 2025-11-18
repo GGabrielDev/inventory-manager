@@ -1,0 +1,22 @@
+{
+  "page": {
+    "title": "Gestionar Departamentos",
+    "subtitle": "Organiza y administra los departamentos"
+  },
+
+  "components": {
+    "table": {
+      "name": "Nombre del Departamento",
+      "createdAt": "Creado",
+      "updatedAt": "Actualizado",
+      "actions": "Acciones"
+    },
+
+    "form": {
+      "createDepartment": "Crear Departamento",
+      "editDepartment": "Editar Departamento",
+      "updateDepartment": "Actualizar Departamento",
+      "nameRequired": "El nombre del departamento es obligatorio"
+    }
+  }
+}

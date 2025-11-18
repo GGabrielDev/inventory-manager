@@ -1,0 +1,34 @@
+{
+  "page": {
+    "title": "Gestionar Ítems",
+    "subtitle": "Crea y administra los ítems del inventario"
+  },
+
+  "components": {
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "quantity": "Cantidad",
+      "unit": "Unidad",
+      "category": "Categoría",
+      "department": "Departamento",
+      "createdAt": "Creado",
+      "updatedAt": "Actualizado",
+      "actions": "Acciones",
+      "noDataFound": "No se encontraron ítems."
+    },
+
+    "form": {
+      "createItem": "Crear Ítem",
+      "editItem": "Editar Ítem",
+      "updateItem": "Actualizar Ítem",
+      "name": "Nombre del Ítem",
+      "quantity": "Cantidad",
+      "unit": "Unidad",
+      "department": "Departamento",
+      "category": "Categoría",
+      "none": "Ninguno",
+      "saving": "Guardando..."
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "page": {
+    "title": "Manage Categories",
+    "subtitle": "Organize and categorize your inventory"
+  },
+
+  "components": {
+    "table": {
+      "name": "Category Name",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "actions": "Actions",
+      "noDataFound": "No categories found."
+    },
+
+    "form": {
+      "createCategory": "Create Category",
+      "editCategory": "Edit Category",
+      "updateCategory": "Update Category",
+      "nameRequired": "Category name is required"
+    }
+  }
+}
