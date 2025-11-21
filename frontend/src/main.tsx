@@ -1,4 +1,4 @@
-// 🧩 Inicializa i18n antes que cualquier otro import React
+// Inicializa i18n antes que cualquier otro import React
 import '@/i18n'
 
 import React, { StrictMode, Suspense } from 'react'
@@ -12,7 +12,7 @@ import { AuthProvider } from './context/auth'
 import { store } from './store'
 import ThemeWrapper from './theme/ThemeWrapper'
 
-// 🌀 Loader simple mientras i18n carga (evita pantalla blanca)
+// Loader simple mientras i18n carga (evita pantalla blanca)
 export const LoadingScreen = () => (
   <div
     style={{
@@ -48,3 +48,4 @@ if (root) {
     </StrictMode>
   )
 }
+
