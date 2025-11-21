@@ -81,7 +81,6 @@ frontend/
 Los textos traducibles están ubicados en:
 
 cpp
-Copiar código
 public/locales/{en,es}/{namespace}.json
 Donde cada namespace representa un módulo funcional:
 
@@ -100,8 +99,7 @@ Usa i18next-http-backend para cargar JSON dinámicamente.
 
 Usa i18next-browser-languagedetector para detectar idioma:
 
-ts
-Copiar código
+
 detection: {
   order: ["localStorage", "querystring", "cookie", "navigator"],
   caches: ["localStorage"],
@@ -109,8 +107,7 @@ detection: {
 }
 Soporta idiomas:
 
-ts
-Copiar código
+
 supportedLngs: ["en", "es"]
 fallbackLng: "es"
 Carga perezosa de traducciones con react.useSuspense = true.
@@ -118,8 +115,7 @@ Carga perezosa de traducciones con react.useSuspense = true.
  Autenticación y Rutas Protegidas
 La protección de rutas se maneja con el componente ProtectedRoute:
 
-tsx
-Copiar código
+
 <ProtectedRoute>
   <DashboardLayout />
 </ProtectedRoute>
@@ -143,15 +139,14 @@ Implementación con ThemeProvider y CssBaseline
 Ejemplo:
 
 tsx
-Copiar código
 <ThemeProvider theme={customTheme}>
   <CssBaseline />
   <AppRouter />
 </ThemeProvider>
  Configuración y scripts
-Instalación
-bash
-Copiar código
+
+---Instalación----
+
 cd frontend
 yarn install
 Variables de entorno
@@ -198,8 +193,7 @@ Renovar sesión o redirigir al login en caso de error de autenticación.
 src/routes/AppRouter.tsx
 Contiene la definición principal de rutas:
 
-tsx
-Copiar código
+
 <BrowserRouter>
   <Routes>
     <Route path="/login" element={<LoginPage />} />
@@ -229,18 +223,14 @@ Asegúrate de estar en la rama dev.
 
 Crea una nueva rama:
 
-bash
-Copiar código
 git checkout -b feature/nueva-pagina
 Realiza tus cambios y haz commit con convención semántica:
 
-scss
-Copiar código
+
 feat(frontend): agregar página de reportes
 Publica y crea un Pull Request:
 
-bash
-Copiar código
+
 git push -u origin feature/nueva-pagina
 En GitHub:
 base = dev
