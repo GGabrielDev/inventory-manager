@@ -1,0 +1,610 @@
+frontend/src/theme/index.ts:1:import type { Theme } from '@mui/material/styles';
+frontend/src/theme/index.ts:2:import { createTheme } from '@mui/material/styles';
+frontend/src/theme/index.ts:4:export type ThemeMode = 'light' | 'dark';
+frontend/src/theme/index.ts:7:const THEME_CACHE_KEY = 'inventory-app-theme-mode';
+frontend/src/theme/index.ts:13:    return (cached === 'dark' || cached === 'light') ? cached : 'light';
+frontend/src/theme/index.ts:15:    return 'light';
+frontend/src/theme/index.ts:34:        main: mode === 'light' ? '#1976d2' : '#90caf9' 
+frontend/src/theme/index.ts:37:        main: mode === 'light' ? '#dc004e' : '#f48fb1' 
+frontend/src/theme/index.ts:40:        default: mode === 'light' ? '#fafafa' : '#121212',
+frontend/src/theme/index.ts:41:        paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
+frontend/src/theme/index.ts:45:      fontFamily: 'Roboto, sans-serif',
+frontend/src/theme/index.ts:51:            transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+frontend/src/theme/index.ts:58:            textTransform: 'none',
+frontend/src/store/themeSlice.ts:1:import type { PayloadAction } from '@reduxjs/toolkit';
+frontend/src/store/themeSlice.ts:2:import { createSlice } from '@reduxjs/toolkit';
+frontend/src/store/themeSlice.ts:4:import type { ThemeMode } from '@/theme';
+frontend/src/store/themeSlice.ts:5:import { getCachedThemeMode, setCachedThemeMode } from '@/theme';
+frontend/src/store/themeSlice.ts:16:  name: 'theme',
+frontend/src/store/themeSlice.ts:20:      state.mode = state.mode === 'light' ? 'dark' : 'light';
+frontend/src/store/authSlice.ts:1:import { createAsyncThunk,createSlice } from '@reduxjs/toolkit';
+frontend/src/store/authSlice.ts:3:import type { AuthState, LoginCredentials,User } from '@/types';
+frontend/src/store/authSlice.ts:8:const TOKEN_CACHE_KEY = 'inventory-app-auth-token';
+frontend/src/store/authSlice.ts:35:  status: 'idle',
+frontend/src/store/authSlice.ts:41:  'auth/login',
+frontend/src/store/authSlice.ts:44:      const response = await fetch(import.meta.env.VITE_API_URL + '/auth/login', {
+frontend/src/store/authSlice.ts:45:        method: 'POST',
+frontend/src/store/authSlice.ts:46:        headers: { 'Content-Type': 'application/json' },
+frontend/src/store/authSlice.ts:67:  'auth/fetchUser',
+frontend/src/store/authSlice.ts:74:          method: 'GET',
+frontend/src/store/authSlice.ts:76:            'Content-Type': 'application/json',
+frontend/src/store/authSlice.ts:89:      return rejectWithValue('An unknown error occurred');
+frontend/src/store/authSlice.ts:100:  'auth/validateToken',
+frontend/src/store/authSlice.ts:105:        return rejectWithValue('No token available');
+frontend/src/store/authSlice.ts:113:          return rejectWithValue('Token expired');
+frontend/src/store/authSlice.ts:116:        return rejectWithValue('Invalid token format');
+frontend/src/store/authSlice.ts:123:          method: 'GET',
+frontend/src/store/authSlice.ts:125:            'Content-Type': 'application/json',
+frontend/src/store/authSlice.ts:139:      return rejectWithValue('Token validation failed');
+frontend/src/store/authSlice.ts:145:  name: 'auth',
+frontend/src/store/authSlice.ts:158:        state.status = 'loading';
+frontend/src/store/authSlice.ts:162:        state.status = 'idle';
+frontend/src/store/authSlice.ts:167:        state.status = 'failed';
+frontend/src/store/authSlice.ts:172:        state.status = 'loading';
+frontend/src/store/authSlice.ts:176:        state.status = 'idle';
+frontend/src/store/authSlice.ts:181:        state.status = 'failed';
+frontend/src/store/authSlice.ts:186:          errorMessage.includes('Invalid token') || 
+frontend/src/store/authSlice.ts:187:          errorMessage.includes('Token') || 
+frontend/src/store/authSlice.ts:188:          errorMessage.includes('401') || 
+frontend/src/store/authSlice.ts:189:          errorMessage.includes('403') ||
+frontend/src/store/authSlice.ts:190:          errorMessage.includes('Unauthorized')
+frontend/src/store/authSlice.ts:199:        state.status = 'loading';
+frontend/src/store/authSlice.ts:202:        state.status = 'idle';
+frontend/src/store/authSlice.ts:206:        state.status = 'failed';
+frontend/src/store/index.ts:1:import { configureStore } from '@reduxjs/toolkit';
+frontend/src/store/index.ts:3:import authReducer from './authSlice.ts';
+frontend/src/store/index.ts:4:import themeReducer from './themeSlice.ts';
+frontend/src/i18n/index.ts:1:import i18n from 'i18next'; // Import i18next as default
+frontend/src/i18n/index.ts:2:import LanguageDetector from 'i18next-browser-languagedetector';
+frontend/src/i18n/index.ts:3:import { initReactI18next } from 'react-i18next';
+frontend/src/i18n/index.ts:5:import enAuth from './locales/en/auth.json';
+frontend/src/i18n/index.ts:6:import enCommon from './locales/en/common.json';
+frontend/src/i18n/index.ts:7:import enDashboard from './locales/en/dashboard.json';
+frontend/src/i18n/index.ts:8:import enRoles from './locales/en/roles.json';
+frontend/src/i18n/index.ts:9:import enUsers from './locales/en/users.json';
+frontend/src/i18n/index.ts:10:import esAuth from './locales/es/auth.json';
+frontend/src/i18n/index.ts:11:import esCommon from './locales/es/common.json';
+frontend/src/i18n/index.ts:12:import esDashboard from './locales/es/dashboard.json';
+frontend/src/i18n/index.ts:13:import esRoles from './locales/es/roles.json';
+frontend/src/i18n/index.ts:14:import esUsers from './locales/es/users.json';
+frontend/src/i18n/index.ts:36:    defaultNS: 'common',
+frontend/src/i18n/index.ts:43:      order: ['localStorage', 'navigator'],
+frontend/src/i18n/index.ts:44:      caches: ['localStorage'],
+frontend/src/types/user.ts:1:import type { Role } from './role';
+frontend/src/types/category.ts:1:import type { Item } from './item';
+frontend/src/types/auth.ts:1:import type { User } from './user';
+frontend/src/types/auth.ts:6:  status: 'idle' | 'loading' | 'failed';
+frontend/src/types/common.ts:4:  UND: 'und.',
+frontend/src/types/item.ts:1:import type { Category } from './category';
+frontend/src/types/item.ts:2:import type { UnitType } from './common';
+frontend/src/types/item.ts:3:import type { Department } from './department';
+frontend/src/types/api.ts:3:import type { UnitType } from './common';
+frontend/src/types/api.ts:9:  sortBy?: 'username' | 'creationDate' | 'updatedOn';
+frontend/src/types/api.ts:10:  sortOrder?: 'ASC' | 'DESC';
+frontend/src/types/api.ts:17:  sortBy?: 'name' | 'creationDate' | 'updatedOn';
+frontend/src/types/api.ts:18:  sortOrder?: 'ASC' | 'DESC';
+frontend/src/types/api.ts:25:  sortBy?: 'name' | 'creationDate' | 'updatedOn';
+frontend/src/types/api.ts:26:  sortOrder?: 'ASC' | 'DESC';
+frontend/src/types/api.ts:36:  sortBy?: 'name' | 'quantity' | 'creationDate' | 'updatedOn';
+frontend/src/types/api.ts:37:  sortOrder?: 'ASC' | 'DESC';
+frontend/src/types/role.ts:1:import type { Permission } from './permission';
+frontend/src/types/index.ts:1:export * from './api';
+frontend/src/types/index.ts:2:export * from './auth';
+frontend/src/types/index.ts:3:export * from './category';
+frontend/src/types/index.ts:4:export * from './common';
+frontend/src/types/index.ts:5:export * from './department';
+frontend/src/types/index.ts:6:export * from './item';
+frontend/src/types/index.ts:7:export * from './permission';
+frontend/src/types/index.ts:8:export * from './role';
+frontend/src/types/index.ts:9:export * from './user';
+frontend/src/types/department.ts:1:import type { Item } from './item';
+frontend/src/components/LanguageSelector.tsx:1:import { Button, ButtonGroup } from '@mui/material';
+frontend/src/components/LanguageSelector.tsx:2:import { useTranslation } from 'react-i18next';
+frontend/src/components/LanguageSelector.tsx:9:    localStorage.setItem('user-language', lng);
+frontend/src/components/LanguageSelector.tsx:16:        variant={i18n.language === 'en' ? 'contained' : 'outlined'}
+frontend/src/components/LanguageSelector.tsx:22:        variant={i18n.language === 'es' ? 'contained' : 'outlined'}
+frontend/src/components/item/ItemFormDialog.tsx:12:} from '@mui/material';
+frontend/src/components/item/ItemFormDialog.tsx:13:import { useEffect, useState } from 'react';
+frontend/src/components/item/ItemFormDialog.tsx:14:import { useTranslation } from 'react-i18next';
+frontend/src/components/item/ItemFormDialog.tsx:16:import { useCategoryManagement, useDepartmentManagement, useItemManagement } from '@/hooks';
+frontend/src/components/item/ItemFormDialog.tsx:17:import type { ItemFormData, ItemFormDialogProps, UnitType } from '@/types';
+frontend/src/components/item/ItemFormDialog.tsx:37:    unit: 'und.' as UnitType,
+frontend/src/components/item/ItemFormDialog.tsx:68:        unit: 'und.' as UnitType,
+frontend/src/components/item/ItemFormDialog.tsx:92:      console.error('Error submitting form:', err);
+frontend/src/components/item/ItemFormDialog.tsx:102:      unit: 'und.' as UnitType,
+frontend/src/components/item/ItemFormDialog.tsx:114:    { value: 'und.', label: t('common:units.und') },
+frontend/src/components/item/ItemFormDialog.tsx:115:    { value: 'kg', label: t('common:units.kg') },
+frontend/src/components/item/ItemFormDialog.tsx:116:    { value: 'l', label: t('common:units.l') },
+frontend/src/components/item/ItemFormDialog.tsx:117:    { value: 'm', label: t('common:units.m') },
+frontend/src/components/item/ItemFormDialog.tsx:124:          {isEditing ? t('common:edit') : t('common:create')} {t('common:item')}
+frontend/src/components/item/ItemFormDialog.tsx:130:            label={t('common:name')}
+frontend/src/components/item/ItemFormDialog.tsx:143:            label={t('common:quantity')}
+frontend/src/components/item/ItemFormDialog.tsx:156:            <InputLabel>{t('common:unit')}</InputLabel>
+frontend/src/components/item/ItemFormDialog.tsx:160:              label={t('common:unit')}
+frontend/src/components/item/ItemFormDialog.tsx:172:            <InputLabel>{t('common:department')}</InputLabel>
+frontend/src/components/item/ItemFormDialog.tsx:176:              label={t('common:department')}
+frontend/src/components/item/ItemFormDialog.tsx:189:            <InputLabel>{t('common:category')}</InputLabel>
+frontend/src/components/item/ItemFormDialog.tsx:196:              label={t('common:category')}
+frontend/src/components/item/ItemFormDialog.tsx:200:                <em>{t('common:none')}</em>
+frontend/src/components/item/ItemFormDialog.tsx:211:            <div style={{ color: 'red', marginTop: '8px' }}>
+frontend/src/components/item/ItemFormDialog.tsx:218:            {t('common:cancel')}
+frontend/src/components/item/ItemFormDialog.tsx:225:            {loading ? t('common:saving') : (isEditing ? t('common:update') : t('common:create'))}
+frontend/src/components/item/ItemsTable.tsx:12:} from '@mui/material';
+frontend/src/components/item/ItemsTable.tsx:13:import { format } from 'date-fns';
+frontend/src/components/item/ItemsTable.tsx:14:import { useTranslation } from 'react-i18next';
+frontend/src/components/item/ItemsTable.tsx:16:import type { ItemsTableProps } from '@/types';
+frontend/src/components/item/ItemsTable.tsx:29:      <Paper sx={{ p: 3, textAlign: 'center' }}>
+frontend/src/components/item/ItemsTable.tsx:31:          {t('common:noDataFound')}
+frontend/src/components/item/ItemsTable.tsx:42:            <TableCell>{t('common:id')}</TableCell>
+frontend/src/components/item/ItemsTable.tsx:43:            <TableCell>{t('common:name')}</TableCell>
+frontend/src/components/item/ItemsTable.tsx:44:            <TableCell>{t('common:quantity')}</TableCell>
+frontend/src/components/item/ItemsTable.tsx:45:            <TableCell>{t('common:unit')}</TableCell>
+frontend/src/components/item/ItemsTable.tsx:46:            <TableCell>{t('common:category')}</TableCell>
+frontend/src/components/item/ItemsTable.tsx:47:            <TableCell>{t('common:department')}</TableCell>
+frontend/src/components/item/ItemsTable.tsx:48:            <TableCell>{t('common:createdAt')}</TableCell>
+frontend/src/components/item/ItemsTable.tsx:49:            <TableCell>{t('common:updatedAt')}</TableCell>
+frontend/src/components/item/ItemsTable.tsx:51:              <TableCell>{t('common:actions')}</TableCell>
+frontend/src/components/item/ItemsTable.tsx:65:                {item.category ? item.category.name : t('common:none')}
+frontend/src/components/item/ItemsTable.tsx:68:                {item.department ? item.department.name : t('common:none')}
+frontend/src/components/item/ItemsTable.tsx:71:                {format(new Date(item.creationDate), 'PPp')}
+frontend/src/components/item/ItemsTable.tsx:74:                {format(new Date(item.updatedOn), 'PPp')}
+frontend/src/components/item/ItemsTable.tsx:78:                  <div style={{ display: 'flex', gap: '8px' }}>
+frontend/src/components/item/ItemsTable.tsx:85:                        {t('common:edit')}
+frontend/src/components/item/ItemsTable.tsx:95:                        {t('common:delete')}
+frontend/src/components/ProtectedRoute.tsx:1:import { Box, CircularProgress, Typography } from '@mui/material';
+frontend/src/components/ProtectedRoute.tsx:2:import { useTranslation } from 'react-i18next';
+frontend/src/components/ProtectedRoute.tsx:3:import { Navigate } from 'react-router-dom';
+frontend/src/components/ProtectedRoute.tsx:5:import useAuth from '@/context/auth/useAuth';
+frontend/src/components/ProtectedRoute.tsx:12:  const { t } = useTranslation(['common']);
+frontend/src/components/ProtectedRoute.tsx:30:          display: 'flex', 
+frontend/src/components/ProtectedRoute.tsx:31:          flexDirection: 'column',
+frontend/src/components/ProtectedRoute.tsx:32:          justifyContent: 'center', 
+frontend/src/components/ProtectedRoute.tsx:33:          alignItems: 'center', 
+frontend/src/components/ProtectedRoute.tsx:34:          height: '100vh',
+frontend/src/components/ProtectedRoute.tsx:35:          bgcolor: 'background.default',
+frontend/src/components/ProtectedRoute.tsx:41:          {t('common:loading', 'Loading...')}
+frontend/src/components/category/CategoriesTable.tsx:11:} from '@mui/material';
+frontend/src/components/category/CategoriesTable.tsx:12:import { format } from 'date-fns';
+frontend/src/components/category/CategoriesTable.tsx:13:import { useTranslation } from 'react-i18next';
+frontend/src/components/category/CategoriesTable.tsx:15:import type { CategoriesTableProps } from '@/types';
+frontend/src/components/category/CategoriesTable.tsx:28:      <Paper sx={{ p: 3, textAlign: 'center' }}>
+frontend/src/components/category/CategoriesTable.tsx:30:          {t('common:noDataFound')}
+frontend/src/components/category/CategoriesTable.tsx:41:            <TableCell>{t('common:id')}</TableCell>
+frontend/src/components/category/CategoriesTable.tsx:42:            <TableCell>{t('common:name')}</TableCell>
+frontend/src/components/category/CategoriesTable.tsx:43:            <TableCell>{t('common:createdAt')}</TableCell>
+frontend/src/components/category/CategoriesTable.tsx:44:            <TableCell>{t('common:updatedAt')}</TableCell>
+frontend/src/components/category/CategoriesTable.tsx:46:              <TableCell>{t('common:actions')}</TableCell>
+frontend/src/components/category/CategoriesTable.tsx:56:                {format(new Date(category.creationDate), 'PPp')}
+frontend/src/components/category/CategoriesTable.tsx:59:                {format(new Date(category.updatedOn), 'PPp')}
+frontend/src/components/category/CategoriesTable.tsx:63:                  <div style={{ display: 'flex', gap: '8px' }}>
+frontend/src/components/category/CategoriesTable.tsx:70:                        {t('common:edit')}
+frontend/src/components/category/CategoriesTable.tsx:80:                        {t('common:delete')}
+frontend/src/components/category/CategoryFormDialog.tsx:8:} from '@mui/material';
+frontend/src/components/category/CategoryFormDialog.tsx:9:import { useEffect, useState } from 'react';
+frontend/src/components/category/CategoryFormDialog.tsx:10:import { useTranslation } from 'react-i18next';
+frontend/src/components/category/CategoryFormDialog.tsx:12:import { useCategoryManagement } from '@/hooks';
+frontend/src/components/category/CategoryFormDialog.tsx:13:import type { CategoryFormData,CategoryFormDialogProps } from '@/types';
+frontend/src/components/category/CategoryFormDialog.tsx:61:      console.error('Error submitting form:', err);
+frontend/src/components/category/CategoryFormDialog.tsx:80:          {isEditing ? t('common:edit') : t('common:create')} {t('common:category')}
+frontend/src/components/category/CategoryFormDialog.tsx:86:            label={t('common:name')}
+frontend/src/components/category/CategoryFormDialog.tsx:96:            <div style={{ color: 'red', marginTop: '8px' }}>
+frontend/src/components/category/CategoryFormDialog.tsx:103:            {t('common:cancel')}
+frontend/src/components/category/CategoryFormDialog.tsx:110:            {loading ? t('common:saving') : (isEditing ? t('common:update') : t('common:create'))}
+frontend/src/components/user/UsersTable.tsx:12:  Typography} from '@mui/material';
+frontend/src/components/user/UsersTable.tsx:14:import type { UsersTableProps } from '@/types';
+frontend/src/components/user/UsersTable.tsx:24:    if (window.confirm('Are you sure you want to delete this user?')) {
+frontend/src/components/user/UsersTable.tsx:46:                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+frontend/src/components/user/UsersTable.tsx:51:                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+frontend/src/components/user/UsersTable.tsx:72:                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+frontend/src/components/user/UserFormDialog.tsx:17:} from '@mui/material';
+frontend/src/components/user/UserFormDialog.tsx:18:import { useCallback, useEffect, useMemo,useState } from 'react';
+frontend/src/components/user/UserFormDialog.tsx:19:import { useSelector } from 'react-redux';
+frontend/src/components/user/UserFormDialog.tsx:21:import type { RootState } from '@/store';
+frontend/src/components/user/UserFormDialog.tsx:22:import type { Role, UserFormData,UserFormDialogProps } from '@/types';
+frontend/src/components/user/UserFormDialog.tsx:67:            'Content-Type': 'application/json',
+frontend/src/components/user/UserFormDialog.tsx:77:      console.error('Error fetching roles:', err);
+frontend/src/components/user/UserFormDialog.tsx:109:      setError('You do not have permission to perform this action');
+frontend/src/components/user/UserFormDialog.tsx:114:      setError('Username is required');
+frontend/src/components/user/UserFormDialog.tsx:119:      setError('Password is required for new users');
+frontend/src/components/user/UserFormDialog.tsx:131:      const method = user ? 'PUT' : 'POST';
+frontend/src/components/user/UserFormDialog.tsx:142:      // Only include password if it's provided (for updates) or if it's a new user
+frontend/src/components/user/UserFormDialog.tsx:150:          'Content-Type': 'application/json',
+frontend/src/components/user/UserFormDialog.tsx:159:        throw new Error(data.error || 'Failed to save user');
+frontend/src/components/user/UserFormDialog.tsx:185:            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+frontend/src/components/user/UserFormDialog.tsx:205:            You do not have permission to {user ? 'edit' : 'create'} users.
+frontend/src/components/user/UserFormDialog.tsx:219:          {user ? 'Edit User' : 'Create New User'}
+frontend/src/components/user/UserFormDialog.tsx:243:            label={user ? 'New Password (leave empty to keep current)' : 'Password'}
+frontend/src/components/user/UserFormDialog.tsx:259:                <Box sx={{ maxHeight: 300, overflowY: 'auto', mt: 1 }}>
+frontend/src/components/user/UserFormDialog.tsx:275:            {loading ? <CircularProgress size={20} /> : (user ? 'Update User' : 'Create User')}
+frontend/src/components/role/RoleFormDialog.tsx:17:} from '@mui/material';
+frontend/src/components/role/RoleFormDialog.tsx:18:import { useCallback, useEffect, useMemo,useState } from 'react';
+frontend/src/components/role/RoleFormDialog.tsx:19:import { useTranslation } from 'react-i18next';
+frontend/src/components/role/RoleFormDialog.tsx:20:import { useSelector } from 'react-redux';
+frontend/src/components/role/RoleFormDialog.tsx:22:import type { RootState } from '@/store';
+frontend/src/components/role/RoleFormDialog.tsx:23:import type { Permission, RoleFormDialogProps } from '@/types';
+frontend/src/components/role/RoleFormDialog.tsx:69:            'Content-Type': 'application/json',
+frontend/src/components/role/RoleFormDialog.tsx:79:      console.error('Error fetching permissions:', err);
+frontend/src/components/role/RoleFormDialog.tsx:111:      setError(t('roles:components.form.accessDenied'));
+frontend/src/components/role/RoleFormDialog.tsx:116:      setError(t('roles:components.form.nameRequired'));
+frontend/src/components/role/RoleFormDialog.tsx:128:      const method = role ? 'PUT' : 'POST';
+frontend/src/components/role/RoleFormDialog.tsx:133:          'Content-Type': 'application/json',
+frontend/src/components/role/RoleFormDialog.tsx:146:        throw new Error(data.error || t('roles:components.form.failedToCreateRole'));
+frontend/src/components/role/RoleFormDialog.tsx:172:            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+frontend/src/components/role/RoleFormDialog.tsx:187:        <DialogTitle>{t('roles:components.form.accessDenied')}</DialogTitle>
+frontend/src/components/role/RoleFormDialog.tsx:190:            {t('roles:components.form.accessDeniedRole', { action: role ? 'edit' : 'create' })}
+frontend/src/components/role/RoleFormDialog.tsx:194:          <Button onClick={onClose}>{t('close')}</Button>
+frontend/src/components/role/RoleFormDialog.tsx:204:          {role ? t('roles:components.form.editRole') : t('roles:components.form.createNewRole')}
+frontend/src/components/role/RoleFormDialog.tsx:216:            label={t('roles:components.form.roleName')}
+frontend/src/components/role/RoleFormDialog.tsx:228:            label={t('roles:components.form.description')}
+frontend/src/components/role/RoleFormDialog.tsx:244:                <Box sx={{ maxHeight: 300, overflowY: 'auto', mt: 1 }}>
+frontend/src/components/role/RoleFormDialog.tsx:253:            {t('cancel')}
+frontend/src/components/role/RoleFormDialog.tsx:260:            {loading ? <CircularProgress size={20} /> : (role ? t('roles:components.form.updateRole') : t('roles:components.form.createRole'))}
+frontend/src/components/role/RolesTable.tsx:11:  Typography} from '@mui/material';
+frontend/src/components/role/RolesTable.tsx:12:import { useTranslation } from 'react-i18next';
+frontend/src/components/role/RolesTable.tsx:14:import type { RolesTableProps } from '@/types';
+frontend/src/components/role/RolesTable.tsx:26:    if (window.confirm('Are you sure you want to delete this role?')) {
+frontend/src/components/role/RolesTable.tsx:36:            <TableCell>{t('roles:components.table.roleName')}</TableCell>
+frontend/src/components/role/RolesTable.tsx:37:            <TableCell>{t('roles:components.table.description')}</TableCell>
+frontend/src/components/role/RolesTable.tsx:40:              <TableCell align="center">{t('roles:components.table.actions')}</TableCell>
+frontend/src/components/role/RolesTable.tsx:48:                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+frontend/src/components/role/RolesTable.tsx:54:                  {role.description || 'No description'}
+frontend/src/components/role/RolesTable.tsx:60:                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+frontend/src/components/role/RolesTable.tsx:69:                        {t('edit')}
+frontend/src/components/role/RolesTable.tsx:80:                        {t('delete')}
+frontend/src/components/department/DepartmentFormDialog.tsx:8:} from '@mui/material';
+frontend/src/components/department/DepartmentFormDialog.tsx:9:import { useEffect, useState } from 'react';
+frontend/src/components/department/DepartmentFormDialog.tsx:10:import { useTranslation } from 'react-i18next';
+frontend/src/components/department/DepartmentFormDialog.tsx:12:import { useDepartmentManagement } from '@/hooks';
+frontend/src/components/department/DepartmentFormDialog.tsx:13:import type { DepartmentFormData,DepartmentFormDialogProps } from '@/types';
+frontend/src/components/department/DepartmentFormDialog.tsx:61:      console.error('Error submitting form:', err);
+frontend/src/components/department/DepartmentFormDialog.tsx:80:          {isEditing ? t('common:edit') : t('common:create')} {t('common:department')}
+frontend/src/components/department/DepartmentFormDialog.tsx:86:            label={t('common:name')}
+frontend/src/components/department/DepartmentFormDialog.tsx:96:            <div style={{ color: 'red', marginTop: '8px' }}>
+frontend/src/components/department/DepartmentFormDialog.tsx:103:            {t('common:cancel')}
+frontend/src/components/department/DepartmentFormDialog.tsx:110:            {loading ? t('common:saving') : (isEditing ? t('common:update') : t('common:create'))}
+frontend/src/components/department/DepartmentsTable.tsx:11:} from '@mui/material';
+frontend/src/components/department/DepartmentsTable.tsx:12:import { format } from 'date-fns';
+frontend/src/components/department/DepartmentsTable.tsx:13:import { useTranslation } from 'react-i18next';
+frontend/src/components/department/DepartmentsTable.tsx:15:import type { DepartmentsTableProps } from '@/types';
+frontend/src/components/department/DepartmentsTable.tsx:28:      <Paper sx={{ p: 3, textAlign: 'center' }}>
+frontend/src/components/department/DepartmentsTable.tsx:30:          {t('common:noDataFound')}
+frontend/src/components/department/DepartmentsTable.tsx:41:            <TableCell>{t('common:id')}</TableCell>
+frontend/src/components/department/DepartmentsTable.tsx:42:            <TableCell>{t('common:name')}</TableCell>
+frontend/src/components/department/DepartmentsTable.tsx:43:            <TableCell>{t('common:createdAt')}</TableCell>
+frontend/src/components/department/DepartmentsTable.tsx:44:            <TableCell>{t('common:updatedAt')}</TableCell>
+frontend/src/components/department/DepartmentsTable.tsx:46:              <TableCell>{t('common:actions')}</TableCell>
+frontend/src/components/department/DepartmentsTable.tsx:56:                {format(new Date(department.creationDate), 'PPp')}
+frontend/src/components/department/DepartmentsTable.tsx:59:                {format(new Date(department.updatedOn), 'PPp')}
+frontend/src/components/department/DepartmentsTable.tsx:63:                  <div style={{ display: 'flex', gap: '8px' }}>
+frontend/src/components/department/DepartmentsTable.tsx:70:                        {t('common:edit')}
+frontend/src/components/department/DepartmentsTable.tsx:80:                        {t('common:delete')}
+frontend/src/hooks/usePermissions.tsx:1:import { useSelector } from 'react-redux';
+frontend/src/hooks/usePermissions.tsx:3:import type { RootState } from '@/store';
+frontend/src/hooks/usePermissions.tsx:4:import type { Permission, Role } from '@/types'
+frontend/src/hooks/usePermissions.tsx:25:  const canCreateUser = hasPermission('create_user');
+frontend/src/hooks/usePermissions.tsx:26:  const canGetUser = hasPermission('get_user');
+frontend/src/hooks/usePermissions.tsx:27:  const canEditUser = hasPermission('edit_user');
+frontend/src/hooks/usePermissions.tsx:28:  const canDeleteUser = hasPermission('delete_user');
+frontend/src/hooks/usePermissions.tsx:31:  const canCreateRole = hasPermission('create_role');
+frontend/src/hooks/usePermissions.tsx:32:  const canGetRole = hasPermission('get_role');
+frontend/src/hooks/usePermissions.tsx:33:  const canEditRole = hasPermission('edit_role');
+frontend/src/hooks/usePermissions.tsx:34:  const canDeleteRole = hasPermission('delete_role');
+frontend/src/hooks/usePermissions.tsx:37:  const canCreateDepartment = hasPermission('create_department');
+frontend/src/hooks/usePermissions.tsx:38:  const canGetDepartment = hasPermission('get_department');
+frontend/src/hooks/usePermissions.tsx:39:  const canEditDepartment = hasPermission('edit_department');
+frontend/src/hooks/usePermissions.tsx:40:  const canDeleteDepartment = hasPermission('delete_department');
+frontend/src/hooks/usePermissions.tsx:43:  const canCreateCategory = hasPermission('create_category');
+frontend/src/hooks/usePermissions.tsx:44:  const canGetCategory = hasPermission('get_category');
+frontend/src/hooks/usePermissions.tsx:45:  const canEditCategory = hasPermission('edit_category');
+frontend/src/hooks/usePermissions.tsx:46:  const canDeleteCategory = hasPermission('delete_category');
+frontend/src/hooks/usePermissions.tsx:49:  const canCreateItem = hasPermission('create_item');
+frontend/src/hooks/usePermissions.tsx:50:  const canGetItem = hasPermission('get_item');
+frontend/src/hooks/usePermissions.tsx:51:  const canEditItem = hasPermission('edit_item');
+frontend/src/hooks/usePermissions.tsx:52:  const canDeleteItem = hasPermission('delete_item');
+frontend/src/hooks/usePermissions.tsx:55:  const canGetPermission = hasPermission('get_permission');
+frontend/src/hooks/useRoleManagement.tsx:1:import { useCallback,useState } from 'react';
+frontend/src/hooks/useRoleManagement.tsx:2:import { useSelector } from 'react-redux';
+frontend/src/hooks/useRoleManagement.tsx:4:import type { RootState } from '@/store';
+frontend/src/hooks/useRoleManagement.tsx:5:import type { Role } from '@/types'
+frontend/src/hooks/useRoleManagement.tsx:25:            'Content-Type': 'application/json',
+frontend/src/hooks/useRoleManagement.tsx:34:        throw new Error(data.error || 'Failed to fetch roles');
+frontend/src/hooks/useRoleManagement.tsx:60:            'Content-Type': 'application/json',
+frontend/src/hooks/useRoleManagement.tsx:69:        throw new Error(data.error || 'Failed to fetch role details');
+frontend/src/hooks/useRoleManagement.tsx:86:          method: 'DELETE',
+frontend/src/hooks/useRoleManagement.tsx:88:            'Content-Type': 'application/json',
+frontend/src/hooks/useRoleManagement.tsx:96:        throw new Error(data.error || 'Failed to delete role');
+frontend/src/hooks/useItemManagement.tsx:1:import { useCallback, useState } from 'react';
+frontend/src/hooks/useItemManagement.tsx:2:import { useSelector } from 'react-redux';
+frontend/src/hooks/useItemManagement.tsx:4:import type { RootState } from '@/store';
+frontend/src/hooks/useItemManagement.tsx:5:import type { Item, ItemFilterOptions, ItemFormData, PaginatedResponse } from '@/types';
+frontend/src/hooks/useItemManagement.tsx:26:      params.append('name', options.name);
+frontend/src/hooks/useItemManagement.tsx:29:      params.append('categoryId', options.categoryId.toString());
+frontend/src/hooks/useItemManagement.tsx:32:      params.append('departmentId', options.departmentId.toString());
+frontend/src/hooks/useItemManagement.tsx:35:      params.append('unit', options.unit);
+frontend/src/hooks/useItemManagement.tsx:38:      params.append('sortBy', options.sortBy);
+frontend/src/hooks/useItemManagement.tsx:41:      params.append('sortOrder', options.sortOrder);
+frontend/src/hooks/useItemManagement.tsx:49:            'Content-Type': 'application/json',
+frontend/src/hooks/useItemManagement.tsx:57:        throw new Error(errorData.error || 'Failed to fetch items');
+frontend/src/hooks/useItemManagement.tsx:83:            'Content-Type': 'application/json',
+frontend/src/hooks/useItemManagement.tsx:92:        throw new Error(data.error || 'Failed to fetch item details');
+frontend/src/hooks/useItemManagement.tsx:109:          method: 'POST',
+frontend/src/hooks/useItemManagement.tsx:111:            'Content-Type': 'application/json',
+frontend/src/hooks/useItemManagement.tsx:120:        throw new Error(data.error || 'Failed to create item');
+frontend/src/hooks/useItemManagement.tsx:137:          method: 'PUT',
+frontend/src/hooks/useItemManagement.tsx:139:            'Content-Type': 'application/json',
+frontend/src/hooks/useItemManagement.tsx:148:        throw new Error(data.error || 'Failed to update item');
+frontend/src/hooks/useItemManagement.tsx:165:          method: 'DELETE',
+frontend/src/hooks/useItemManagement.tsx:167:            'Content-Type': 'application/json',
+frontend/src/hooks/useItemManagement.tsx:175:        throw new Error(data.error || 'Failed to delete item');
+frontend/src/hooks/index.tsx:1:export { useCategoryManagement } from './useCategoryManagement';
+frontend/src/hooks/index.tsx:2:export { useDepartmentManagement } from './useDepartmentManagement';
+frontend/src/hooks/index.tsx:3:export { useItemManagement } from './useItemManagement';
+frontend/src/hooks/index.tsx:4:export { usePermissions } from './usePermissions';
+frontend/src/hooks/index.tsx:5:export { useRoleManagement } from './useRoleManagement';
+frontend/src/hooks/index.tsx:6:export { useUserManagement } from './useUserManagement';
+frontend/src/hooks/useCategoryManagement.tsx:1:import { useCallback, useState } from 'react';
+frontend/src/hooks/useCategoryManagement.tsx:2:import { useSelector } from 'react-redux';
+frontend/src/hooks/useCategoryManagement.tsx:4:import type { RootState } from '@/store';
+frontend/src/hooks/useCategoryManagement.tsx:5:import type { Category, CategoryFilterOptions, PaginatedResponse } from '@/types';
+frontend/src/hooks/useCategoryManagement.tsx:26:      params.append('name', options.name);
+frontend/src/hooks/useCategoryManagement.tsx:29:      params.append('sortBy', options.sortBy);
+frontend/src/hooks/useCategoryManagement.tsx:32:      params.append('sortOrder', options.sortOrder);
+frontend/src/hooks/useCategoryManagement.tsx:40:            'Content-Type': 'application/json',
+frontend/src/hooks/useCategoryManagement.tsx:48:        throw new Error(errorData.error || 'Failed to fetch categories');
+frontend/src/hooks/useCategoryManagement.tsx:74:            'Content-Type': 'application/json',
+frontend/src/hooks/useCategoryManagement.tsx:83:        throw new Error(data.error || 'Failed to fetch category details');
+frontend/src/hooks/useCategoryManagement.tsx:100:          method: 'POST',
+frontend/src/hooks/useCategoryManagement.tsx:102:            'Content-Type': 'application/json',
+frontend/src/hooks/useCategoryManagement.tsx:111:        throw new Error(data.error || 'Failed to create category');
+frontend/src/hooks/useCategoryManagement.tsx:128:          method: 'PUT',
+frontend/src/hooks/useCategoryManagement.tsx:130:            'Content-Type': 'application/json',
+frontend/src/hooks/useCategoryManagement.tsx:139:        throw new Error(data.error || 'Failed to update category');
+frontend/src/hooks/useCategoryManagement.tsx:156:          method: 'DELETE',
+frontend/src/hooks/useCategoryManagement.tsx:158:            'Content-Type': 'application/json',
+frontend/src/hooks/useCategoryManagement.tsx:166:        throw new Error(data.error || 'Failed to delete category');
+frontend/src/hooks/useDepartmentManagement.tsx:1:import { useCallback, useState } from 'react';
+frontend/src/hooks/useDepartmentManagement.tsx:2:import { useSelector } from 'react-redux';
+frontend/src/hooks/useDepartmentManagement.tsx:4:import type { RootState } from '@/store';
+frontend/src/hooks/useDepartmentManagement.tsx:5:import type { Department, DepartmentFilterOptions, PaginatedResponse } from '@/types';
+frontend/src/hooks/useDepartmentManagement.tsx:26:      params.append('name', options.name);
+frontend/src/hooks/useDepartmentManagement.tsx:29:      params.append('sortBy', options.sortBy);
+frontend/src/hooks/useDepartmentManagement.tsx:32:      params.append('sortOrder', options.sortOrder);
+frontend/src/hooks/useDepartmentManagement.tsx:40:            'Content-Type': 'application/json',
+frontend/src/hooks/useDepartmentManagement.tsx:48:        throw new Error(errorData.error || 'Failed to fetch departments');
+frontend/src/hooks/useDepartmentManagement.tsx:74:            'Content-Type': 'application/json',
+frontend/src/hooks/useDepartmentManagement.tsx:83:        throw new Error(data.error || 'Failed to fetch department details');
+frontend/src/hooks/useDepartmentManagement.tsx:100:          method: 'POST',
+frontend/src/hooks/useDepartmentManagement.tsx:102:            'Content-Type': 'application/json',
+frontend/src/hooks/useDepartmentManagement.tsx:111:        throw new Error(data.error || 'Failed to create department');
+frontend/src/hooks/useDepartmentManagement.tsx:128:          method: 'PUT',
+frontend/src/hooks/useDepartmentManagement.tsx:130:            'Content-Type': 'application/json',
+frontend/src/hooks/useDepartmentManagement.tsx:139:        throw new Error(data.error || 'Failed to update department');
+frontend/src/hooks/useDepartmentManagement.tsx:156:          method: 'DELETE',
+frontend/src/hooks/useDepartmentManagement.tsx:158:            'Content-Type': 'application/json',
+frontend/src/hooks/useDepartmentManagement.tsx:166:        throw new Error(data.error || 'Failed to delete department');
+frontend/src/hooks/useUserManagement.tsx:1:import { useCallback,useState } from 'react';
+frontend/src/hooks/useUserManagement.tsx:2:import { useSelector } from 'react-redux';
+frontend/src/hooks/useUserManagement.tsx:4:import type { RootState } from '@/store';
+frontend/src/hooks/useUserManagement.tsx:5:import type { PaginatedResponse, User, UserFilterOptions } from '@/types';
+frontend/src/hooks/useUserManagement.tsx:26:      params.append('username', options.username);
+frontend/src/hooks/useUserManagement.tsx:29:      params.append('sortBy', options.sortBy);
+frontend/src/hooks/useUserManagement.tsx:32:      params.append('sortOrder', options.sortOrder);
+frontend/src/hooks/useUserManagement.tsx:40:            'Content-Type': 'application/json',
+frontend/src/hooks/useUserManagement.tsx:48:        throw new Error(errorData.error || 'Failed to fetch users');
+frontend/src/hooks/useUserManagement.tsx:76:            'Content-Type': 'application/json',
+frontend/src/hooks/useUserManagement.tsx:85:        throw new Error(data.error || 'Failed to fetch user details');
+frontend/src/hooks/useUserManagement.tsx:102:          method: 'DELETE',
+frontend/src/hooks/useUserManagement.tsx:104:            'Content-Type': 'application/json',
+frontend/src/hooks/useUserManagement.tsx:112:        throw new Error(data.error || 'Failed to delete user');
+frontend/src/theme/ThemeWrapper.tsx:1:import CssBaseline from '@mui/material/CssBaseline';
+frontend/src/theme/ThemeWrapper.tsx:2:import { ThemeProvider } from '@mui/material/styles';
+frontend/src/theme/ThemeWrapper.tsx:3:import {useSelector} from 'react-redux';
+frontend/src/theme/ThemeWrapper.tsx:5:import type { RootState } from '@/store';
+frontend/src/theme/ThemeWrapper.tsx:6:import { createAppTheme } from '@/theme';
+frontend/src/context/auth/index.tsx:1:import { useEffect } from 'react';
+frontend/src/context/auth/index.tsx:2:import { useDispatch, useSelector } from 'react-redux';
+frontend/src/context/auth/index.tsx:4:import type { AppDispatch,RootState } from '@/store';
+frontend/src/context/auth/index.tsx:5:import { fetchUser, logout } from '@/store/authSlice';
+frontend/src/context/auth/index.tsx:9:export { AuthContext } from './useAuth';
+frontend/src/context/auth/index.tsx:17:    if (token && !user && status !== 'loading') {
+frontend/src/context/auth/index.tsx:24:          console.warn('Token expired, logging out');
+frontend/src/context/auth/index.tsx:31:        console.error('Token decoding failure in AuthProvider:', err);
+frontend/src/context/auth/index.tsx:47:            console.warn('Token expiring soon, logging out');
+frontend/src/context/auth/index.tsx:55:          console.error('Token validation error during periodic check:', err);
+frontend/src/context/auth/index.tsx:66:    if (status === 'failed' && error && token) {
+frontend/src/context/auth/index.tsx:68:      if (error.includes('Invalid token') || error.includes('Token') || error.includes('401') || error.includes('403')) {
+frontend/src/context/auth/index.tsx:69:        console.warn('Authentication failed, logging out:', error);
+frontend/src/context/auth/index.tsx:76:  const loading = status === 'loading' || (!!token && !user && status !== 'failed');
+frontend/src/context/auth/useAuth.tsx:1:import { createContext, useContext } from 'react';
+frontend/src/context/auth/useAuth.tsx:3:import type { AuthContextType } from '@/types';
+frontend/src/context/auth/useAuth.tsx:15:    throw new Error('useAuth must be used within an AuthProvider');
+frontend/src/App.tsx:1:import { Navigate, Route, Routes } from 'react-router-dom';
+frontend/src/App.tsx:3:import ProtectedRoute from './components/ProtectedRoute';
+frontend/src/App.tsx:4:import Dashboard from './pages/Dashboard';
+frontend/src/App.tsx:5:import LoginPage from './pages/LoginPage';
+frontend/src/App.tsx:6:import ManageCategories from './pages/ManageCategories';
+frontend/src/App.tsx:7:import ManageDepartments from './pages/ManageDepartments';
+frontend/src/App.tsx:8:import ManageItems from './pages/ManageItems';
+frontend/src/App.tsx:9:import ManageRoles from './pages/ManageRoles';
+frontend/src/App.tsx:10:import ManageUsers from './pages/ManageUsers';
+frontend/src/main.tsx:1:import './i18n';
+frontend/src/main.tsx:3:import { StrictMode } from 'react'
+frontend/src/main.tsx:4:import { createRoot } from 'react-dom/client'
+frontend/src/main.tsx:5:import { Provider} from 'react-redux';
+frontend/src/main.tsx:6:import { BrowserRouter } from 'react-router-dom';
+frontend/src/main.tsx:8:import App from './App.tsx'
+frontend/src/main.tsx:9:import { AuthProvider } from './context/auth';
+frontend/src/main.tsx:10:import { store } from './store'
+frontend/src/main.tsx:11:import ThemeWrapper from './theme/ThemeWrapper';
+frontend/src/main.tsx:13:const root = document.getElementById('root');
+frontend/src/pages/Dashboard.tsx:1:import { Box, Button, Card, CardContent, Container, IconButton, Tooltip, Typography } from '@mui/material';
+frontend/src/pages/Dashboard.tsx:2:import { useTranslation } from 'react-i18next'; // Import useTranslation
+frontend/src/pages/Dashboard.tsx:3:import { useDispatch, useSelector } from 'react-redux';
+frontend/src/pages/Dashboard.tsx:4:import { useNavigate } from 'react-router-dom';
+frontend/src/pages/Dashboard.tsx:6:import LanguageSelector from '@/components/LanguageSelector';
+frontend/src/pages/Dashboard.tsx:7:import { usePermissions } from '@/hooks';
+frontend/src/pages/Dashboard.tsx:8:import type { AppDispatch, RootState } from '@/store';
+frontend/src/pages/Dashboard.tsx:9:import { logout } from '@/store/authSlice';
+frontend/src/pages/Dashboard.tsx:10:import { toggleTheme } from '@/store/themeSlice';
+frontend/src/pages/Dashboard.tsx:29:    navigate('/login');
+frontend/src/pages/Dashboard.tsx:41:    color: 'primary' | 'secondary' | 'success' | 'info' | 'warning';
+frontend/src/pages/Dashboard.tsx:47:      title: t('dashboard:manageUsers'), 
+frontend/src/pages/Dashboard.tsx:48:      description: t('dashboard:manageUsersDesc'), 
+frontend/src/pages/Dashboard.tsx:49:      route: '/users',
+frontend/src/pages/Dashboard.tsx:50:      color: 'primary' as const,
+frontend/src/pages/Dashboard.tsx:53:      title: t('dashboard:manageRoles'), 
+frontend/src/pages/Dashboard.tsx:54:      description: t('dashboard:manageRolesDesc'), 
+frontend/src/pages/Dashboard.tsx:55:      route: '/roles',
+frontend/src/pages/Dashboard.tsx:56:      color: 'secondary' as const,
+frontend/src/pages/Dashboard.tsx:59:      title: t('dashboard:manageDepartments'), 
+frontend/src/pages/Dashboard.tsx:60:      description: t('dashboard:manageDepartmentsDesc'), 
+frontend/src/pages/Dashboard.tsx:61:      route: '/departments',
+frontend/src/pages/Dashboard.tsx:62:      color: 'success' as const,
+frontend/src/pages/Dashboard.tsx:65:      title: t('dashboard:manageCategories'), 
+frontend/src/pages/Dashboard.tsx:66:      description: t('dashboard:manageCategoriesDesc'), 
+frontend/src/pages/Dashboard.tsx:67:      route: '/categories',
+frontend/src/pages/Dashboard.tsx:68:      color: 'info' as const,
+frontend/src/pages/Dashboard.tsx:71:      title: t('dashboard:manageItems'), 
+frontend/src/pages/Dashboard.tsx:72:      description: t('dashboard:manageItemsDesc'), 
+frontend/src/pages/Dashboard.tsx:73:      route: '/items',
+frontend/src/pages/Dashboard.tsx:74:      color: 'warning' as const,
+frontend/src/pages/Dashboard.tsx:82:      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+frontend/src/pages/Dashboard.tsx:85:            {t('dashboard:title')} 
+frontend/src/pages/Dashboard.tsx:88:            {t('dashboard:welcome', { username: user?.username || 'User ' })} 
+frontend/src/pages/Dashboard.tsx:91:        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+frontend/src/pages/Dashboard.tsx:92:          <Tooltip title={t('dashboard:switchToDark')}>
+frontend/src/pages/Dashboard.tsx:94:              {themeMode === 'light' ? '🌙' : '☀️'}
+frontend/src/pages/Dashboard.tsx:99:            {t('dashboard:logout')} 
+frontend/src/pages/Dashboard.tsx:106:        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+frontend/src/pages/Dashboard.tsx:111:                height: '100%', 
+frontend/src/pages/Dashboard.tsx:112:                display: 'flex', 
+frontend/src/pages/Dashboard.tsx:113:                flexDirection: 'column',
+frontend/src/pages/Dashboard.tsx:114:                cursor: 'pointer',
+frontend/src/pages/Dashboard.tsx:115:                transition: 'transform 0.2s, box-shadow 0.2s',
+frontend/src/pages/Dashboard.tsx:116:                '&:hover': {
+frontend/src/pages/Dashboard.tsx:117:                  transform: 'translateY(-4px)',
+frontend/src/pages/Dashboard.tsx:123:              <CardContent sx={{ flexGrow: 1, textAlign: 'center', p: 3 }}>
+frontend/src/pages/Dashboard.tsx:139:                  {t('dashboard:access')} 
+frontend/src/pages/Dashboard.tsx:146:        <Box sx={{ textAlign: 'center', mt: 8 }}>
+frontend/src/pages/Dashboard.tsx:148:            {t('dashboard:noSectionsAvailable')} 
+frontend/src/pages/Dashboard.tsx:151:            {t('dashboard:noPermissionsMessage')} 
+frontend/src/pages/Dashboard.tsx:160:        bgcolor: themeMode === 'light' ? 'grey.50' : 'grey.900', 
+frontend/src/pages/Dashboard.tsx:164:          {t('dashboard:yourPermissions')} 
+frontend/src/pages/Dashboard.tsx:170:                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+frontend/src/pages/Dashboard.tsx:185:            {t('dashboard:noRolesAssigned')} 
+frontend/src/pages/LoginPage.tsx:1:import { Alert,Box, Button, Container, TextField, Typography } from '@mui/material';
+frontend/src/pages/LoginPage.tsx:2:import { useState } from 'react';
+frontend/src/pages/LoginPage.tsx:3:import { useTranslation } from 'react-i18next';
+frontend/src/pages/LoginPage.tsx:4:import { useDispatch, useSelector } from 'react-redux';
+frontend/src/pages/LoginPage.tsx:5:import { useNavigate } from 'react-router-dom';
+frontend/src/pages/LoginPage.tsx:7:import type { AppDispatch, RootState } from '@/store';
+frontend/src/pages/LoginPage.tsx:8:import { fetchUser,login } from '@/store/authSlice';
+frontend/src/pages/LoginPage.tsx:30:          navigate('/dashboard');
+frontend/src/pages/LoginPage.tsx:32:          console.error('Error decoding token:', decodeError);
+frontend/src/pages/LoginPage.tsx:35:          navigate('/dashboard');
+frontend/src/pages/LoginPage.tsx:40:      console.error('Login error:', err);
+frontend/src/pages/LoginPage.tsx:46:      <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+frontend/src/pages/LoginPage.tsx:48:          {t('auth:title')}
+frontend/src/pages/LoginPage.tsx:51:          {t('auth:login')}
+frontend/src/pages/LoginPage.tsx:54:          <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+frontend/src/pages/LoginPage.tsx:58:        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, width: '100%' }}>
+frontend/src/pages/LoginPage.tsx:60:            label={t('auth:username')}
+frontend/src/pages/LoginPage.tsx:67:            disabled={authState.status === 'loading'}
+frontend/src/pages/LoginPage.tsx:70:            label={t('auth:password')}
+frontend/src/pages/LoginPage.tsx:78:            disabled={authState.status === 'loading'}
+frontend/src/pages/LoginPage.tsx:85:            disabled={authState.status === 'loading'}
+frontend/src/pages/LoginPage.tsx:87:            {authState.status === 'loading' ? t('auth:loggingIn') : t('auth:login')}
+frontend/src/pages/ManageItems.tsx:1:import { Box, Button, Container, Typography } from '@mui/material';
+frontend/src/pages/ManageItems.tsx:2:import { useEffect, useState } from 'react';
+frontend/src/pages/ManageItems.tsx:3:import { useTranslation } from 'react-i18next';
+frontend/src/pages/ManageItems.tsx:4:import { useNavigate } from 'react-router-dom';
+frontend/src/pages/ManageItems.tsx:6:import ItemFormDialog from '@/components/item/ItemFormDialog';
+frontend/src/pages/ManageItems.tsx:7:import ItemsTable from '@/components/item/ItemsTable';
+frontend/src/pages/ManageItems.tsx:8:import { useItemManagement, usePermissions } from '@/hooks';
+frontend/src/pages/ManageItems.tsx:9:import type { Item } from '@/types';
+frontend/src/pages/ManageItems.tsx:45:    if (window.confirm(t('common:confirmDelete'))) {
+frontend/src/pages/ManageItems.tsx:72:          {t('common:noPermission')}
+frontend/src/pages/ManageItems.tsx:74:        <Button onClick={() => navigate('/dashboard')} sx={{ mt: 2 }}>
+frontend/src/pages/ManageItems.tsx:75:          {t('common:backToDashboard')}
+frontend/src/pages/ManageItems.tsx:83:      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+frontend/src/pages/ManageItems.tsx:85:          {t('dashboard:manageItems')}
+frontend/src/pages/ManageItems.tsx:87:        <Box sx={{ display: 'flex', gap: 2 }}>
+frontend/src/pages/ManageItems.tsx:90:              {t('common:create')}
+frontend/src/pages/ManageItems.tsx:93:          <Button variant="outlined" onClick={() => navigate('/dashboard')}>
+frontend/src/pages/ManageItems.tsx:94:            {t('common:backToDashboard')}
+frontend/src/pages/ManageUsers.tsx:10:  Typography} from '@mui/material';
+frontend/src/pages/ManageUsers.tsx:11:import { useEffect, useState } from 'react';
+frontend/src/pages/ManageUsers.tsx:12:import { useNavigate } from 'react-router-dom';
+frontend/src/pages/ManageUsers.tsx:14:import UserFormDialog from '@/components/user/UserFormDialog';
+frontend/src/pages/ManageUsers.tsx:15:import UsersTable from '@/components/user/UsersTable';
+frontend/src/pages/ManageUsers.tsx:16:import { usePermissions, useUserManagement } from '@/hooks';
+frontend/src/pages/ManageUsers.tsx:17:import type { User } from '@/types';
+frontend/src/pages/ManageUsers.tsx:48:      navigate('/dashboard');
+frontend/src/pages/ManageUsers.tsx:96:  // Don't render anything if user doesn't have basic permissions
+frontend/src/pages/ManageUsers.tsx:104:      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+frontend/src/pages/ManageUsers.tsx:113:        <Box sx={{ display: 'flex', gap: 1 }}>
+frontend/src/pages/ManageUsers.tsx:116:            onClick={() => navigate('/dashboard')}
+frontend/src/pages/ManageUsers.tsx:141:        <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+frontend/src/pages/ManageUsers.tsx:146:          <CardContent sx={{ textAlign: 'center', p: 4 }}>
+frontend/src/pages/ManageUsers.tsx:152:                ? 'Get started by creating your first user.' 
+frontend/src/pages/ManageUsers.tsx:153:                : 'No users are currently configured.'
+frontend/src/pages/ManageUsers.tsx:170:        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+frontend/src/pages/ManageCategories.tsx:1:import { Box, Button, Container, Typography } from '@mui/material';
+frontend/src/pages/ManageCategories.tsx:2:import { useEffect, useState } from 'react';
+frontend/src/pages/ManageCategories.tsx:3:import { useTranslation } from 'react-i18next';
+frontend/src/pages/ManageCategories.tsx:4:import { useNavigate } from 'react-router-dom';
+frontend/src/pages/ManageCategories.tsx:6:import CategoriesTable from '@/components/category/CategoriesTable';
+frontend/src/pages/ManageCategories.tsx:7:import CategoryFormDialog from '@/components/category/CategoryFormDialog';
+frontend/src/pages/ManageCategories.tsx:8:import { useCategoryManagement, usePermissions } from '@/hooks';
+frontend/src/pages/ManageCategories.tsx:9:import type { Category } from '@/types';
+frontend/src/pages/ManageCategories.tsx:43:    if (window.confirm(t('common:confirmDelete'))) {
+frontend/src/pages/ManageCategories.tsx:70:          {t('common:noPermission')}
+frontend/src/pages/ManageCategories.tsx:72:        <Button onClick={() => navigate('/dashboard')} sx={{ mt: 2 }}>
+frontend/src/pages/ManageCategories.tsx:73:          {t('common:backToDashboard')}
+frontend/src/pages/ManageCategories.tsx:81:      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+frontend/src/pages/ManageCategories.tsx:83:          {t('dashboard:manageCategories')}
+frontend/src/pages/ManageCategories.tsx:85:        <Box sx={{ display: 'flex', gap: 2 }}>
+frontend/src/pages/ManageCategories.tsx:88:              {t('common:create')}
+frontend/src/pages/ManageCategories.tsx:91:          <Button variant="outlined" onClick={() => navigate('/dashboard')}>
+frontend/src/pages/ManageCategories.tsx:92:            {t('common:backToDashboard')}
+frontend/src/pages/ManageDepartments.tsx:1:import { Box, Button, Container, Typography } from '@mui/material';
+frontend/src/pages/ManageDepartments.tsx:2:import { useEffect, useState } from 'react';
+frontend/src/pages/ManageDepartments.tsx:3:import { useTranslation } from 'react-i18next';
+frontend/src/pages/ManageDepartments.tsx:4:import { useNavigate } from 'react-router-dom';
+frontend/src/pages/ManageDepartments.tsx:6:import DepartmentFormDialog from '@/components/department/DepartmentFormDialog';
+frontend/src/pages/ManageDepartments.tsx:7:import DepartmentsTable from '@/components/department/DepartmentsTable';
+frontend/src/pages/ManageDepartments.tsx:8:import { useDepartmentManagement, usePermissions } from '@/hooks';
+frontend/src/pages/ManageDepartments.tsx:9:import type { Department } from '@/types';
+frontend/src/pages/ManageDepartments.tsx:43:    if (window.confirm(t('common:confirmDelete'))) {
+frontend/src/pages/ManageDepartments.tsx:70:          {t('common:noPermission')}
+frontend/src/pages/ManageDepartments.tsx:72:        <Button onClick={() => navigate('/dashboard')} sx={{ mt: 2 }}>
+frontend/src/pages/ManageDepartments.tsx:73:          {t('common:backToDashboard')}
+frontend/src/pages/ManageDepartments.tsx:81:      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+frontend/src/pages/ManageDepartments.tsx:83:          {t('dashboard:manageDepartments')}
+frontend/src/pages/ManageDepartments.tsx:85:        <Box sx={{ display: 'flex', gap: 2 }}>
+frontend/src/pages/ManageDepartments.tsx:88:              {t('common:create')}
+frontend/src/pages/ManageDepartments.tsx:91:          <Button variant="outlined" onClick={() => navigate('/dashboard')}>
+frontend/src/pages/ManageDepartments.tsx:92:            {t('common:backToDashboard')}
+frontend/src/pages/ManageRoles.tsx:10:  Typography} from '@mui/material';
+frontend/src/pages/ManageRoles.tsx:11:import React, { useEffect, useState } from 'react';
+frontend/src/pages/ManageRoles.tsx:12:import { useTranslation } from 'react-i18next';
+frontend/src/pages/ManageRoles.tsx:13:import { useNavigate } from 'react-router-dom';
+frontend/src/pages/ManageRoles.tsx:15:import RoleFormDialog from '@/components/role/RoleFormDialog';
+frontend/src/pages/ManageRoles.tsx:16:import RolesTable from '@/components/role/RolesTable';
+frontend/src/pages/ManageRoles.tsx:17:import { usePermissions, useRoleManagement } from '@/hooks';
+frontend/src/pages/ManageRoles.tsx:18:import type { Role } from '@/types'
+frontend/src/pages/ManageRoles.tsx:50:      navigate('/dashboard');
+frontend/src/pages/ManageRoles.tsx:98:  // Don't render anything if user doesn't have basic permissions
+frontend/src/pages/ManageRoles.tsx:106:      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+frontend/src/pages/ManageRoles.tsx:109:            {t('roles:page.title')}
+frontend/src/pages/ManageRoles.tsx:112:            {t('roles:page.subtitle')}
+frontend/src/pages/ManageRoles.tsx:115:        <Box sx={{ display: 'flex', gap: 1 }}>
+frontend/src/pages/ManageRoles.tsx:118:            onClick={() => navigate('/dashboard')}
+frontend/src/pages/ManageRoles.tsx:120:            {t('backToDashboard')}
+frontend/src/pages/ManageRoles.tsx:128:              {t('roles:page.createNewRole')}
+frontend/src/pages/ManageRoles.tsx:143:        <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+frontend/src/pages/ManageRoles.tsx:148:          <CardContent sx={{ textAlign: 'center', p: 4 }}>
+frontend/src/pages/ManageRoles.tsx:150:              {t('roles:page.noRolesFound')}
+frontend/src/pages/ManageRoles.tsx:154:                ? t('roles:page.getStarted')
+frontend/src/pages/ManageRoles.tsx:155:                : t('roles:page.noRolesConfigured')
+frontend/src/pages/ManageRoles.tsx:172:        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
