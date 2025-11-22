@@ -1,0 +1,23 @@
+{
+  "page": {
+    "title": "Gestionar Categorías",
+    "subtitle": "Organiza y clasifica tu inventario"
+  },
+
+  "components": {
+    "table": {
+      "name": "Nombre de la Categoría",
+      "createdAt": "Creado",
+      "updatedAt": "Actualizado",
+      "actions": "Acciones",
+      "noDataFound": "No se encontraron categorías."
+    },
+
+    "form": {
+      "createCategory": "Crear Categoría",
+      "editCategory": "Editar Categoría",
+      "updateCategory": "Actualizar Categoría",
+      "nameRequired": "El nombre de la categoría es obligatorio"
+    }
+  }
+}

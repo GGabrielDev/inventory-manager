@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "create_user": "Crear Usuario",
+    "get_user": "Ver Usuarios",
+    "edit_user": "Editar Usuario",
+    "delete_user": "Eliminar Usuario",
+
+    "create_role": "Crear Rol",
+    "get_role": "Ver Roles",
+    "edit_role": "Editar Rol",
+    "delete_role": "Eliminar Rol",
+
+    "create_category": "Crear Categoría",
+    "get_category": "Ver Categorías",
+    "edit_category": "Editar Categoría",
+    "delete_category": "Eliminar Categoría",
+
+    "create_department": "Crear Departamento",
+    "get_department": "Ver Departamentos",
+    "edit_department": "Editar Departamento",
+    "delete_department": "Eliminar Departamento",
+
+    "create_item": "Crear Ítem",
+    "get_item": "Ver Ítems",
+    "edit_item": "Editar Ítem",
+    "delete_item": "Eliminar Ítem",
+
+    "get_permission": "Ver Permisos"
+  }
+}

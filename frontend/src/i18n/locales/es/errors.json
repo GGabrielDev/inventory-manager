@@ -1,0 +1,15 @@
+{
+  "generic": {
+    "unknown": "Ocurrió un error desconocido.",
+    "forbidden": "No tienes permiso para realizar esta acción.",
+    "notFound": "No se encontró el recurso solicitado.",
+    "network": "Error de red. Por favor intenta nuevamente.",
+    "server": "Error del servidor. Contacta al soporte."
+  },
+
+  "auth": {
+    "tokenExpired": "Tu sesión ha expirado.",
+    "invalidToken": "Token de autenticación inválido.",
+    "noToken": "No hay token de autenticación disponible."
+  }
+}
