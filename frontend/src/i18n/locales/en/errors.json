@@ -1,0 +1,15 @@
+{
+  "generic": {
+    "unknown": "An unknown error occurred.",
+    "forbidden": "You do not have permission to perform this action.",
+    "notFound": "The requested resource could not be found.",
+    "network": "Network error. Please try again.",
+    "server": "Server error. Please contact support."
+  },
+
+  "auth": {
+    "tokenExpired": "Your session has expired.",
+    "invalidToken": "Invalid authentication token.",
+    "noToken": "No authentication token available."
+  }
+}

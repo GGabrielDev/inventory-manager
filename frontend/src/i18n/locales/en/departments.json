@@ -1,0 +1,22 @@
+{
+  "page": {
+    "title": "Manage Departments",
+    "subtitle": "Organize and manage departments"
+  },
+
+  "components": {
+    "table": {
+      "name": "Department Name",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "actions": "Actions"
+    },
+
+    "form": {
+      "createDepartment": "Create Department",
+      "editDepartment": "Edit Department",
+      "updateDepartment": "Update Department",
+      "nameRequired": "Department name is required"
+    }
+  }
+}
