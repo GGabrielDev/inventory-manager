@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import ColumnVisibilityControl from '@/components/item/ColumnVisibilityControl';
+import ItemDetailModal from '@/components/item/ItemDetailModal';
 import ItemFormDialog from '@/components/item/ItemFormDialog';
 import ItemsTable from '@/components/item/ItemsTable';
 import { useItemManagement, usePermissions } from '@/hooks';
@@ -30,6 +31,8 @@ const ManageItems: React.FC = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedDetailItem, setSelectedDetailItem] = useState<Item | null>(null);
 
   useEffect(() => {
     if (canGetItem) {
@@ -49,6 +52,16 @@ const ManageItems: React.FC = () => {
         fetchItems();
       }
     }
+  };
+
+  const handleRowClick = (item: Item) => {
+    setSelectedDetailItem(item);
+    setDetailModalOpen(true);
+  };
+
+  const handleDetailClose = () => {
+    setDetailModalOpen(false);
+    setSelectedDetailItem(null);
   };
 
   const handleDialogClose = () => {
@@ -110,6 +123,7 @@ const ManageItems: React.FC = () => {
         canDeleteItem={canDeleteItem}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onRowClick={handleRowClick}
       />
 
       <ItemFormDialog
@@ -121,6 +135,16 @@ const ManageItems: React.FC = () => {
         canCreate={canCreateItem}
         canGetCategory={canGetCategory}
         canGetDepartment={canGetDepartment}
+      />
+
+      <ItemDetailModal
+        open={detailModalOpen}
+        item={selectedDetailItem}
+        onClose={handleDetailClose}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        canEdit={canEditItem}
+        canDelete={canDeleteItem}
       />
     </Container>
   );

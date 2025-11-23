@@ -14,6 +14,8 @@ export interface Item {
   departmentId: number;
   category?: Category;
   department?: Department;
+  observations?: string;
+  characteristics: Record<string, any>;
 }
 
 export interface ItemFormData {
@@ -41,4 +43,5 @@ export interface ItemsTableProps {
   canDeleteItem: boolean;
   onEdit: (item: Item) => void;
   onDelete: (itemId: number) => void;
+  onRowClick?: (item: Item) => void;
 }

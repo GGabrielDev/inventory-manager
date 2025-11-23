@@ -14,7 +14,7 @@ import { format } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 
-import { RootState } from '@/store'
+import type { RootState } from '@/store'
 import type { ItemsTableProps } from '@/types'
 
 const ItemsTable: React.FC<ItemsTableProps> = ({
@@ -23,6 +23,7 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
   canDeleteItem,
   onEdit,
   onDelete,
+  onRowClick,
 }) => {
   const { t } = useTranslation()
   const columnVisibility = useSelector((state: RootState) => state.itemTable)
@@ -67,7 +68,16 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
         </TableHead>
         <TableBody>
           {items.map((item) => (
-            <TableRow key={item.id}>
+            <TableRow
+              key={item.id}
+              onClick={() => onRowClick && onRowClick(item)}
+              sx={{
+                cursor: onRowClick ? 'pointer' : 'default',
+                '&:hover': {
+                  backgroundColor: onRowClick ? 'action.hover' : 'inherit',
+                },
+              }}
+            >
               {columnVisibility.id && <TableCell>{item.id}</TableCell>}
               <TableCell>{item.name}</TableCell>
               {columnVisibility.quantity && (
@@ -105,7 +115,10 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
                       <Button
                         variant="outlined"
                         size="small"
-                        onClick={() => onEdit(item)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onEdit(item)
+                        }}
                       >
                         {t('common:edit')}
                       </Button>
@@ -115,7 +128,10 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
                         variant="outlined"
                         color="error"
                         size="small"
-                        onClick={() => onDelete(item.id)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onDelete(item.id)
+                        }}
                       >
                         {t('common:delete')}
                       </Button>
