@@ -9,7 +9,7 @@ import { useCategoryManagement, usePermissions } from '@/hooks';
 import type { Category } from '@/types';
 
 const ManageCategories: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common'); // ✅ Fixed: added 'common' namespace
   const navigate = useNavigate();
   const {
     categories,
@@ -40,7 +40,7 @@ const ManageCategories: React.FC = () => {
   };
 
   const handleDelete = async (categoryId: number) => {
-    if (window.confirm(t('common:confirmDelete'))) {
+    if (window.confirm(t('confirm_delete'))) { // ✅ Fixed: removed 'common:' prefix
       const success = await deleteCategory(categoryId);
       if (success) {
         fetchCategories();
@@ -67,10 +67,10 @@ const ManageCategories: React.FC = () => {
     return (
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Typography variant="h6" color="error">
-          {t('common:noPermission')}
+          {t('no_permission')} {/* ✅ Fixed: removed 'common:' prefix */}
         </Typography>
         <Button onClick={() => navigate('/dashboard')} sx={{ mt: 2 }}>
-          {t('common:backToDashboard')}
+          {t('back_to_dashboard')} {/* ✅ Fixed: removed 'common:' prefix */}
         </Button>
       </Container>
     );
@@ -80,16 +80,16 @@ const ManageCategories: React.FC = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Typography variant="h4" component="h1">
-          {t('dashboard:manageCategories')}
+          {t('manage_categories')} {/* ✅ Fixed: removed 'dashboard:' prefix */}
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
           {canCreateCategory && (
             <Button variant="contained" onClick={handleCreate}>
-              {t('common:create')}
+              {t('create')} {/* ✅ Fixed: removed 'common:' prefix */}
             </Button>
           )}
           <Button variant="outlined" onClick={() => navigate('/dashboard')}>
-            {t('common:backToDashboard')}
+            {t('back_to_dashboard')} {/* ✅ Fixed: removed 'common:' prefix */}
           </Button>
         </Box>
       </Box>

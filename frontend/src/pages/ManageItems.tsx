@@ -9,7 +9,7 @@ import { useItemManagement, usePermissions } from '@/hooks';
 import type { Item } from '@/types';
 
 const ManageItems: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common'); // ✅ Fixed: added 'common' namespace
   const navigate = useNavigate();
   const {
     items,
@@ -42,7 +42,7 @@ const ManageItems: React.FC = () => {
   };
 
   const handleDelete = async (itemId: number) => {
-    if (window.confirm(t('common:confirmDelete'))) {
+    if (window.confirm(t('confirm_delete'))) { // ✅ Fixed: removed 'common:' prefix
       const success = await deleteItem(itemId);
       if (success) {
         fetchItems();
@@ -69,10 +69,10 @@ const ManageItems: React.FC = () => {
     return (
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Typography variant="h6" color="error">
-          {t('common:noPermission')}
+          {t('no_permission')} {/* ✅ Fixed: removed 'common:' prefix */}
         </Typography>
         <Button onClick={() => navigate('/dashboard')} sx={{ mt: 2 }}>
-          {t('common:backToDashboard')}
+          {t('back_to_dashboard')} {/* ✅ Fixed: removed 'common:' prefix */}
         </Button>
       </Container>
     );
@@ -82,16 +82,16 @@ const ManageItems: React.FC = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Typography variant="h4" component="h1">
-          {t('dashboard:manageItems')}
+          {t('manage_items')} {/* ✅ Fixed: removed 'dashboard:' prefix */}
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
           {canCreateItem && (
             <Button variant="contained" onClick={handleCreate}>
-              {t('common:create')}
+              {t('create')} {/* ✅ Fixed: removed 'common:' prefix */}
             </Button>
           )}
           <Button variant="outlined" onClick={() => navigate('/dashboard')}>
-            {t('common:backToDashboard')}
+            {t('back_to_dashboard')} {/* ✅ Fixed: removed 'common:' prefix */}
           </Button>
         </Box>
       </Box>

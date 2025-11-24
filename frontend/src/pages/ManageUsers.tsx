@@ -1,14 +1,16 @@
-import { 
-  Alert, 
-  Box, 
-  Button, 
-  Card, 
-  CardContent, 
-  CircularProgress, 
-  Container, 
-  Pagination, 
-  Typography} from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Container,
+  Pagination,
+  Typography
+} from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next'; // ✅ Added: import useTranslation
 import { useNavigate } from 'react-router-dom';
 
 import UserFormDialog from '@/components/user/UserFormDialog';
@@ -17,10 +19,11 @@ import { usePermissions, useUserManagement } from '@/hooks';
 import type { User } from '@/types';
 
 const ManageUsers: React.FC = () => {
+  const { t } = useTranslation('common'); // ✅ Added: translation hook
   const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  
+
   const {
     canCreateUser,
     canEditUser,
@@ -58,7 +61,7 @@ const ManageUsers: React.FC = () => {
 
   const handleDelete = async (userId: number) => {
     if (!canDeleteUser) return;
-    
+
     const success = await deleteUser(userId);
     if (success) {
       // Refresh the list
@@ -68,7 +71,7 @@ const ManageUsers: React.FC = () => {
 
   const handleEdit = async (user: User) => {
     if (!canEditUser) return;
-    
+
     const fullUser = await fetchUserById(user.id);
     if (fullUser) {
       setEditingUser(fullUser);
@@ -104,10 +107,10 @@ const ManageUsers: React.FC = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Box>
           <Typography variant="h4" component="h1" gutterBottom>
-            Manage Users
+            {t('manage_users')} {/* ✅ Fixed: replaced hardcoded text */}
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            Create and manage user accounts
+            {t('manage_users_subtitle')} {/* ✅ Fixed: replaced hardcoded text */}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', gap: 1 }}>
@@ -115,7 +118,7 @@ const ManageUsers: React.FC = () => {
             variant="outlined"
             onClick={() => navigate('/dashboard')}
           >
-            Back to Dashboard
+            {t('back_to_dashboard')} {/* ✅ Fixed: replaced hardcoded text */}
           </Button>
           {/* Only show Create button if user has create permission */}
           {canCreateUser && (
@@ -123,7 +126,7 @@ const ManageUsers: React.FC = () => {
               variant="contained"
               onClick={handleCreate}
             >
-              Create New User
+              {t('create_new_user')} {/* ✅ Fixed: replaced hardcoded text */}
             </Button>
           )}
         </Box>
@@ -145,12 +148,12 @@ const ManageUsers: React.FC = () => {
         <Card>
           <CardContent sx={{ textAlign: 'center', p: 4 }}>
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              No Users Found
+              {t('no_users_found')} {/* ✅ Fixed: replaced hardcoded text */}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              {canCreateUser 
-                ? 'Get started by creating your first user.' 
-                : 'No users are currently configured.'
+              {canCreateUser
+                ? t('get_started_with_users')
+                : t('no_users_configured')
               }
             </Typography>
           </CardContent>

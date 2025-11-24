@@ -1,6 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import ProtectedRoute from './components/ProtectedRoute';
+
+// Pages
 import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import ManageCategories from './pages/ManageCategories';
@@ -12,56 +14,68 @@ import ManageUsers from './pages/ManageUsers';
 const App: React.FC = () => {
   return (
     <Routes>
+      
+      {/* Public Routes */}
       <Route path="/login" element={<LoginPage />} />
-      <Route 
-        path="/dashboard" 
+
+      {/* Protected Routes */}
+      <Route
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
         }
       />
-      <Route 
-        path="/roles" 
+
+      <Route
+        path="/roles"
         element={
           <ProtectedRoute>
             <ManageRoles />
           </ProtectedRoute>
         }
       />
-      <Route 
-        path="/users" 
+
+      <Route
+        path="/users"
         element={
           <ProtectedRoute>
             <ManageUsers />
           </ProtectedRoute>
         }
       />
-      <Route 
-        path="/departments" 
+
+      <Route
+        path="/departments"
         element={
           <ProtectedRoute>
             <ManageDepartments />
           </ProtectedRoute>
         }
       />
-      <Route 
-        path="/categories" 
+
+      <Route
+        path="/categories"
         element={
           <ProtectedRoute>
             <ManageCategories />
           </ProtectedRoute>
         }
       />
-      <Route 
-        path="/items" 
+
+      <Route
+        path="/items"
         element={
           <ProtectedRoute>
             <ManageItems />
           </ProtectedRoute>
         }
       />
-      <Route path="*" element={<Navigate to="/dashboard" />} />
+
+      {/* Redirect all unknown routes */}
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+
     </Routes>
   );
 };
