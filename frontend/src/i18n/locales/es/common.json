@@ -33,6 +33,25 @@
   "create_new_user": "Crear Nuevo Usuario",
   "no_users_found": "No se encontraron usuarios",
   "get_started_with_users": "Comienza creando tu primer usuario",
-  "no_users_configured": "No hay usuarios configurados actualmente"
+  "no_users_configured": "No hay usuarios configurados actualmente",
+  "no_data_found": "No se encontraron datos",
+  "id": "ID",
+  "name": "Nombre",
+  "created_at": "Creado En",
+  "updated_at": "Actualizado En",
+  "actions": "Acciones",
+  "edit": "Editar",
+  "delete": "Eliminar",
+  "quantity": "Cantidad",
+  "unit": "Unidad",
+  "category": "Categoría",
+  "department": "Departamento",
+  "none": "Ninguno",
+  "role_name": "Nombre del Rol",
+  "description": "Descripción",
+  "no_description": "Sin descripción",
+  "username": "Nombre de usuario",
+  "roles": "Roles"
+  
 
 }

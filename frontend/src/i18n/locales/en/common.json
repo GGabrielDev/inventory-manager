@@ -29,11 +29,32 @@
   "no_roles_found": "No roles found",
   "get_started_with_roles": "Get started by creating your first role",
   "no_roles_configured": "No roles have been configured in the system",
- 
- 
   "manage_users_subtitle": "Create and manage user accounts", 
   "create_new_user": "Create New User",
   "no_users_found": "No Users Found",
   "get_started_with_users": "Get started by creating your first user",
-  "no_users_configured": "No users are currently configured"
+  "no_users_configured": "No users are currently configured",
+  "no_data_found": "No data found",
+  "id": "ID",
+  "name": "Name",
+  "created_at": "Created At",
+  "updated_at": "Updated At",
+  "actions": "Actions",
+  "edit": "Edit",
+  "delete": "Delete",
+  "quantity": "Quantity",
+  "unit": "Unit",
+  "category": "Category",
+  "department": "Department",
+  "none": "None",
+  "role_name": "Role Name",
+  "description": "Description",
+  "no_description": "No description",
+
+
+  "username": "Username",
+  "roles": "Roles"
+  
+
+
 }
