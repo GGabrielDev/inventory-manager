@@ -50,11 +50,51 @@
   "role_name": "Role Name",
   "description": "Description",
   "no_description": "No description",
-
-
   "username": "Username",
-  "roles": "Roles"
+  "roles": "Roles",
   
+  "cancel": "Cancel",
+  "saving": "Saving...",
+  "update": "Update",
 
+  
+  
+  "units_und": "Unit",
+  "units_kg": "Kilogram",
+  "units_l": "Liter",
+  "units_m": "Meter",
+
+  
+  "access_denied": "Access Denied",
+  "name_required": "Name is required",
+  "failed_to_create_role": "Failed to create role",
+  "access_denied_role": "You don't have permission to {{action}} roles",
+  "close": "Close",
+  "edit_role": "Edit Role",
+  "permissions": "Permissions",
+  "update_role": "Update Role",
+  "create_role": "Create Role",
+  "access_denied_action": "You do not have permission to perform this action",
+  "username_required": "Username is required",
+  "password_required": "Password is required for new users",
+  "failed_to_save_user": "Failed to save user",
+  "access_denied_user": "You do not have permission to {{action}} users",
+  "edit_user": "Edit User",
+  "new_password_placeholder": "New Password (leave empty to keep current)",
+  "password": "Password",
+  "update_user": "Update User",
+  "create_user": "Create User",
+
+
+  "login_title": "Inventory Manager",
+  "login": "Login",
+  "logging_in": "Logging in...",
+
+
+  "language_english": "English",
+  "language_spanish": "Spanish",
+
+  
+  "loading": "Loading..."
 
 }

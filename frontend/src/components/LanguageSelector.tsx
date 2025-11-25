@@ -1,4 +1,4 @@
-import { Button, ButtonGroup } from '@mui/material';
+import { Button, ButtonGroup, Tooltip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 const LanguageSelector: React.FC = () => {
@@ -11,18 +11,22 @@ const LanguageSelector: React.FC = () => {
 
   return (
     <ButtonGroup variant="outlined" size="medium" aria-label="language selector">
-      <Button
-        onClick={() => changeLanguage('en')}
-        variant={i18n.language === 'en' ? 'contained' : 'outlined'}
-      >
-        EN
-      </Button>
-      <Button
-        onClick={() => changeLanguage('es')}
-        variant={i18n.language === 'es' ? 'contained' : 'outlined'}
-      >
-        ES
-      </Button>
+      <Tooltip title={i18n.t('language_english')}>
+        <Button
+          onClick={() => changeLanguage('en')}
+          variant={i18n.language === 'en' ? 'contained' : 'outlined'}
+        >
+          EN
+        </Button>
+      </Tooltip>
+      <Tooltip title={i18n.t('language_spanish')}>
+        <Button
+          onClick={() => changeLanguage('es')}
+          variant={i18n.language === 'es' ? 'contained' : 'outlined'}
+        >
+          ES
+        </Button>
+      </Tooltip>
     </ButtonGroup>
   );
 };

@@ -51,7 +51,50 @@
   "description": "Descripción",
   "no_description": "Sin descripción",
   "username": "Nombre de usuario",
-  "roles": "Roles"
+  "roles": "Roles",
+  "cancel": "Cancelar",
+  "saving": "Guardando...",
+  "update": "Actualizar",
+
+  "units_und": "Unidad",
+  "units_kg": "Kilogramo",
+  "units_l": "Litro",
+  "units_m": "Metro",
+
+
+  "access_denied": "Acceso Denegado",
+  "name_required": "El nombre es requerido",
+  "failed_to_create_role": "Error al crear el rol",
+  "access_denied_role": "No tienes permiso para {{action}} roles",
+  "close": "Cerrar",
+  "edit_role": "Editar Rol",
+  "permissions": "Permisos",
+  "update_role": "Actualizar Rol",
+  "create_role": "Crear Rol",
+
   
+  "access_denied_action": "No tienes permiso para realizar esta acción",
+  "username_required": "El nombre de usuario es requerido",
+  "password_required": "La contraseña es requerida para nuevos usuarios",
+  "failed_to_save_user": "Error al guardar el usuario",
+  "access_denied_user": "No tienes permiso para {{action}} usuarios",
+  "edit_user": "Editar Usuario",
+  "new_password_placeholder": "Nueva Contraseña (dejar vacío para mantener la actual)",
+  "password": "Contraseña",
+  "update_user": "Actualizar Usuario",
+  "create_user": "Crear Usuario",
+
+  
+  "login_title": "Gestor de Inventario",
+  "login": "Iniciar Sesión",
+  "logging_in": "Iniciando sesión...",
+
+
+  "language_english": "Inglés",
+  "language_spanish": "Español",
+
+   "loading": "Cargando..."
+
+
 
 }

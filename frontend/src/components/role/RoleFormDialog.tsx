@@ -31,7 +31,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
   canCreate,
   canGetPermission
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common'); //  Fixed: added 'common' namespace
   const { token } = useSelector((state: RootState) => state.auth);
   const [formData, setFormData] = useState({
     name: '',
@@ -108,12 +108,12 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
     e.preventDefault();
     
     if (!canPerformAction) {
-      setError(t('roles:components.form.accessDenied'));
+      setError(t('access_denied')); //  Fixed: removed 'roles:components.form.accessDenied'
       return;
     }
 
     if (!formData.name.trim()) {
-      setError(t('roles:components.form.nameRequired'));
+      setError(t('name_required')); //  Fixed: removed 'roles:components.form.nameRequired'
       return;
     }
 
@@ -143,7 +143,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || t('roles:components.form.failedToCreateRole'));
+        throw new Error(data.error || t('failed_to_create_role')); //  Fixed: removed 'roles:components.form.failedToCreateRole'
       }
 
       onSuccess();
@@ -153,7 +153,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [canPerformAction, formData, role, token, onSuccess]);
+  }, [canPerformAction, formData, role, token, onSuccess, t]);
 
   // Memoize permission checkboxes to prevent unnecessary re-renders
   const permissionCheckboxes = useMemo(() => {
@@ -184,14 +184,14 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
   if (!canPerformAction) {
     return (
       <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-        <DialogTitle>{t('roles:components.form.accessDenied')}</DialogTitle>
+        <DialogTitle>{t('access_denied')}</DialogTitle> {/*  Fixed: removed 'roles:components.form.accessDenied' */}
         <DialogContent>
           <Typography color="error">
-            {t('roles:components.form.accessDeniedRole', { action: role ? 'edit' : 'create' })}
+            {t('access_denied_role', { action: role ? 'edit' : 'create' })} {/* ✅ Fixed: removed 'roles:components.form.accessDeniedRole' */}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>{t('close')}</Button>
+          <Button onClick={onClose}>{t('close')}</Button> {/*  Fixed: added translation */}
         </DialogActions>
       </Dialog>
     );
@@ -201,7 +201,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <form onSubmit={handleSubmit}>
         <DialogTitle>
-          {role ? t('roles:components.form.editRole') : t('roles:components.form.createNewRole')}
+          {role ? t('edit_role') : t('create_new_role')} {/*  Fixed: removed 'roles:components.form.editRole' and 'roles:components.form.createNewRole' */}
         </DialogTitle>
         <DialogContent>
           {error && (
@@ -213,7 +213,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
           <TextField
             autoFocus
             margin="dense"
-            label={t('roles:components.form.roleName')}
+            label={t('role_name')} 
             fullWidth
             variant="outlined"
             value={formData.name}
@@ -225,7 +225,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
 
           <TextField
             margin="dense"
-            label={t('roles:components.form.description')}
+            label={t('description')} 
             fullWidth
             variant="outlined"
             multiline
@@ -239,7 +239,7 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
           {/* Only show permissions if user can view them */}
           {canGetPermission && availablePermissions.length > 0 && (
             <FormControl component="fieldset" sx={{ mt: 2 }}>
-              <FormLabel component="legend">Permissions</FormLabel>
+              <FormLabel component="legend">{t('permissions')}</FormLabel> {/* Fixed: replaced hardcoded text */}
               <FormGroup>
                 <Box sx={{ maxHeight: 300, overflowY: 'auto', mt: 1 }}>
                   {permissionCheckboxes}
@@ -250,14 +250,14 @@ const RoleFormDialog: React.FC<RoleFormDialogProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} disabled={loading}>
-            {t('cancel')}
+            {t('cancel')} {/* ✅ Fixed: removed 'common:' prefix */}
           </Button>
           <Button 
             type="submit" 
             variant="contained" 
             disabled={loading}
           >
-            {loading ? <CircularProgress size={20} /> : (role ? t('roles:components.form.updateRole') : t('roles:components.form.createRole'))}
+            {loading ? <CircularProgress size={20} /> : (role ? t('update_role') : t('create_role'))} {/* ✅ Fixed: removed 'roles:components.form.updateRole' and 'roles:components.form.createRole' */}
           </Button>
         </DialogActions>
       </form>
