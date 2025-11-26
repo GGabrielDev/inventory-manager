@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { RootState } from '@/store'
+import type { RootState } from '@/store'
 import { setColumnVisibility } from '@/store/itemTableSlice'
 
 const ColumnVisibilityControl: React.FC = () => {
@@ -40,7 +40,7 @@ const ColumnVisibilityControl: React.FC = () => {
         onClick={handleClick}
         variant="outlined"
       >
-        {t('common:columns')}
+        {t('item:columns')}
       </Button>
       <Menu
         id="column-visibility-menu"
@@ -59,7 +59,7 @@ const ColumnVisibilityControl: React.FC = () => {
                   disabled={column === 'name'}
                 />
               }
-              label={t(`common:${column}`)}
+              label={t(`item:${column}`)}
             />
           </MenuItem>
         ))}

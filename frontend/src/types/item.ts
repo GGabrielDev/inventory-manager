@@ -24,6 +24,8 @@ export interface ItemFormData {
   unit: UnitType;
   categoryId?: number;
   departmentId: number;
+  observations?: string;
+  characteristics: Record<string, any>;
 }
 
 export interface ItemFormDialogProps {

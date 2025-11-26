@@ -154,24 +154,23 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
   const canSubmit = isEditing ? canEdit : canCreate
 
   const unitOptions = [
-    { value: 'und.', label: t('common:units.und') },
-    { value: 'kg', label: t('common:units.kg') },
-    { value: 'l', label: t('common:units.l') },
-    { value: 'm', label: t('common:units.m') },
+    { value: 'und.', label: t('item:units.und') },
+    { value: 'kg', label: t('item:units.kg') },
+    { value: 'l', label: t('item:units.l') },
+    { value: 'm', label: t('item:units.m') },
   ]
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <form onSubmit={handleSubmit}>
         <DialogTitle>
-          {isEditing ? t('common:edit') : t('common:create')}{' '}
-          {t('common:item')}
+          {isEditing ? t('item:editItem') : t('item:createItem')}
         </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label={t('common:name')}
+            label={t('item:name')}
             type="text"
             fullWidth
             variant="outlined"
@@ -184,7 +183,7 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
 
           <TextField
             margin="dense"
-            label={t('common:quantity')}
+            label={t('item:quantity')}
             type="number"
             fullWidth
             variant="outlined"
@@ -202,13 +201,13 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
           />
 
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
-            <InputLabel>{t('common:unit')}</InputLabel>
+            <InputLabel>{t('item:unit')}</InputLabel>
             <Select
               value={formData.unit}
               onChange={(e) =>
                 setFormData({ ...formData, unit: e.target.value as UnitType })
               }
-              label={t('common:unit')}
+              label={t('item:unit')}
               disabled={loading || !canSubmit}
             >
               {unitOptions.map((option) => (
@@ -220,7 +219,7 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
           </FormControl>
 
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
-            <InputLabel>{t('common:department')}</InputLabel>
+            <InputLabel>{t('item:department')}</InputLabel>
             <Select
               value={formData.departmentId}
               onChange={(e) =>
@@ -229,7 +228,7 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
                   departmentId: Number(e.target.value),
                 })
               }
-              label={t('common:department')}
+              label={t('item:department')}
               disabled={loading || !canSubmit || !canGetDepartment}
               required
             >
@@ -242,7 +241,7 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
           </FormControl>
 
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
-            <InputLabel>{t('common:category')}</InputLabel>
+            <InputLabel>{t('item:category')}</InputLabel>
             <Select
               value={formData.categoryId || ''}
               onChange={(e) =>
@@ -253,7 +252,7 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
                     : undefined,
                 })
               }
-              label={t('common:category')}
+              label={t('item:category')}
               disabled={loading || !canSubmit || !canGetCategory}
             >
               <MenuItem value="">
@@ -269,7 +268,7 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
 
           <TextField
             margin="dense"
-            label={t('common:observations')}
+            label={t('item:observations')}
             type="text"
             fullWidth
             variant="outlined"
@@ -284,11 +283,11 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
           />
 
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
-            <InputLabel>{t('common:characteristics')}</InputLabel>
+            <InputLabel>{t('item:characteristics')}</InputLabel>
             <Select
               value=""
               onChange={(e) => handleAddCharacteristic(e.target.value)}
-              label={t('common:characteristics')}
+              label={t('item:characteristics')}
               disabled={loading || !canSubmit}
             >
               {characteristicsOptions
@@ -301,7 +300,7 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
                 )
                 .map((key) => (
                   <MenuItem key={key} value={key}>
-                    {t(`common:${key}`)}
+                    {t(`item:characteristicFields.${key}`)}
                   </MenuItem>
                 ))}
             </Select>
@@ -311,7 +310,7 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
             <Box key={key} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <TextField
                 margin="dense"
-                label={t(`common:${key}`)}
+                label={t(`item:characteristicFields.${key}`)}
                 type="text"
                 fullWidth
                 variant="outlined"
@@ -351,8 +350,8 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
             {loading
               ? t('common:saving')
               : isEditing
-              ? t('common:update')
-              : t('common:create')}
+                ? t('common:update')
+                : t('common:create')}
           </Button>
         </DialogActions>
       </form>

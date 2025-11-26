@@ -1,0 +1,32 @@
+{
+    "manageItems": "Gestionar Artículos",
+    "createItem": "Crear Artículo",
+    "editItem": "Editar Artículo",
+    "itemDetails": "Detalles del Artículo",
+    "id": "ID",
+    "name": "Nombre",
+    "quantity": "Cantidad",
+    "unit": "Unidad",
+    "category": "Categoría",
+    "department": "Departamento",
+    "createdAt": "Fecha de Creación",
+    "updatedAt": "Última Actualización",
+    "observations": "Observaciones",
+    "characteristics": "Características",
+    "units": {
+        "und": "Unidades",
+        "kg": "Kilogramos",
+        "l": "Litros",
+        "m": "Metros"
+    },
+    "characteristicFields": {
+        "color": "Color",
+        "brand": "Marca",
+        "model": "Modelo",
+        "serialNumber": "Número de Serie",
+        "productNumber": "Número de Producto"
+    },
+    "confirmDelete": "¿Estás seguro de que deseas eliminar este artículo?",
+    "noDataFound": "No se encontraron artículos",
+    "columns": "Columnas"
+}

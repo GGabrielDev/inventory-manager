@@ -5,11 +5,13 @@ import { initReactI18next } from 'react-i18next';
 import enAuth from './locales/en/auth.json';
 import enCommon from './locales/en/common.json';
 import enDashboard from './locales/en/dashboard.json';
+import enItem from './locales/en/item.json';
 import enRoles from './locales/en/roles.json';
 import enUsers from './locales/en/users.json';
 import esAuth from './locales/es/auth.json';
 import esCommon from './locales/es/common.json';
 import esDashboard from './locales/es/dashboard.json';
+import esItem from './locales/es/item.json';
 import esRoles from './locales/es/roles.json';
 import esUsers from './locales/es/users.json';
 
@@ -22,6 +24,7 @@ i18n
         auth: enAuth,
         common: enCommon,
         dashboard: enDashboard,
+        item: enItem,
         users: enUsers,
         roles: enRoles,
       },
@@ -29,6 +32,7 @@ i18n
         auth: esAuth,
         common: esCommon,
         dashboard: esDashboard,
+        item: esItem,
         users: esUsers,
         roles: esRoles,
       },

@@ -32,7 +32,7 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
     return (
       <Paper sx={{ p: 3, textAlign: 'center' }}>
         <Typography variant="h6" color="text.secondary">
-          {t('common:noDataFound')}
+          {t('item:noDataFound')}
         </Typography>
       </Paper>
     )
@@ -43,23 +43,23 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            {columnVisibility.id && <TableCell>{t('common:id')}</TableCell>}
-            <TableCell>{t('common:name')}</TableCell>
+            {columnVisibility.id && <TableCell>{t('item:id')}</TableCell>}
+            <TableCell>{t('item:name')}</TableCell>
             {columnVisibility.quantity && (
-              <TableCell>{t('common:quantity')}</TableCell>
+              <TableCell>{t('item:quantity')}</TableCell>
             )}
-            {columnVisibility.unit && <TableCell>{t('common:unit')}</TableCell>}
+            {columnVisibility.unit && <TableCell>{t('item:unit')}</TableCell>}
             {columnVisibility.category && (
-              <TableCell>{t('common:category')}</TableCell>
+              <TableCell>{t('item:category')}</TableCell>
             )}
             {columnVisibility.department && (
-              <TableCell>{t('common:department')}</TableCell>
+              <TableCell>{t('item:department')}</TableCell>
             )}
             {columnVisibility.creationDate && (
-              <TableCell>{t('common:createdAt')}</TableCell>
+              <TableCell>{t('item:createdAt')}</TableCell>
             )}
             {columnVisibility.updatedOn && (
-              <TableCell>{t('common:updatedAt')}</TableCell>
+              <TableCell>{t('item:updatedAt')}</TableCell>
             )}
             {(canEditItem || canDeleteItem) && (
               <TableCell>{t('common:actions')}</TableCell>

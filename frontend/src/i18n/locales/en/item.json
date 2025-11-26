@@ -1,0 +1,32 @@
+{
+  "manageItems": "Manage Items",
+  "createItem": "Create Item",
+  "editItem": "Edit Item",
+  "itemDetails": "Item Details",
+  "id": "ID",
+  "name": "Name",
+  "quantity": "Quantity",
+  "unit": "Unit",
+  "category": "Category",
+  "department": "Department",
+  "createdAt": "Created At",
+  "updatedAt": "Updated At",
+  "observations": "Observations",
+  "characteristics": "Characteristics",
+  "units": {
+    "und": "Units",
+    "kg": "Kilograms",
+    "l": "Liters",
+    "m": "Meters"
+  },
+  "characteristicFields": {
+    "color": "Color",
+    "brand": "Brand",
+    "model": "Model",
+    "serialNumber": "Serial Number",
+    "productNumber": "Product Number"
+  },
+  "confirmDelete": "Are you sure you want to delete this item?",
+  "noDataFound": "No items found",
+  "columns": "Columns"
+}

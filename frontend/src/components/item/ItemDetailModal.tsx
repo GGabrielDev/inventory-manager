@@ -62,7 +62,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                 <Grid container spacing={2}>
                     <Grid size={{ xs: 12, sm: 6 }}>
                         <Typography variant="subtitle2" color="text.secondary">
-                            {t('common:quantity')}
+                            {t('item:quantity')}
                         </Typography>
                         <Typography variant="body1">
                             {item.quantity} <Chip label={item.unit} size="small" />
@@ -71,7 +71,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
                     <Grid size={{ xs: 12, sm: 6 }}>
                         <Typography variant="subtitle2" color="text.secondary">
-                            {t('common:category')}
+                            {t('item:category')}
                         </Typography>
                         <Typography variant="body1">
                             {item.category?.name || t('common:none')}
@@ -80,7 +80,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
                     <Grid size={{ xs: 12, sm: 6 }}>
                         <Typography variant="subtitle2" color="text.secondary">
-                            {t('common:department')}
+                            {t('item:department')}
                         </Typography>
                         <Typography variant="body1">
                             {item.department?.name || t('common:none')}
@@ -89,7 +89,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
                     <Grid size={{ xs: 12, sm: 6 }}>
                         <Typography variant="subtitle2" color="text.secondary">
-                            {t('common:createdAt')}
+                            {t('item:createdAt')}
                         </Typography>
                         <Typography variant="body1">
                             {format(new Date(item.creationDate), 'PPp')}
@@ -98,7 +98,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
                     <Grid size={{ xs: 12, sm: 6 }}>
                         <Typography variant="subtitle2" color="text.secondary">
-                            {t('common:updatedAt')}
+                            {t('item:updatedAt')}
                         </Typography>
                         <Typography variant="body1">
                             {format(new Date(item.updatedOn), 'PPp')}
@@ -108,7 +108,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                     {item.observations && (
                         <Grid size={{ xs: 12 }}>
                             <Typography variant="subtitle2" color="text.secondary">
-                                {t('common:observations')}
+                                {t('item:observations')}
                             </Typography>
                             <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
                                 {item.observations}
@@ -120,7 +120,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                         <Grid size={{ xs: 12 }}>
                             <Divider sx={{ my: 1 }} />
                             <Typography variant="h6" gutterBottom>
-                                {t('common:characteristics')}
+                                {t('item:characteristics')}
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                                 {Object.entries(item.characteristics).map(([key, value]) => (
