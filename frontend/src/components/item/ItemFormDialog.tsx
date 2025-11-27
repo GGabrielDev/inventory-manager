@@ -26,7 +26,7 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
   canGetCategory,
   canGetDepartment,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common'); //  Fixed: added 'common' namespace
   const { createItem, updateItem, error, setError } = useItemManagement();
   const { categories, fetchCategories } = useCategoryManagement();
   const { departments, fetchDepartments } = useDepartmentManagement();
@@ -111,23 +111,23 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
   const canSubmit = isEditing ? canEdit : canCreate;
 
   const unitOptions = [
-    { value: 'und.', label: t('common:units.und') },
-    { value: 'kg', label: t('common:units.kg') },
-    { value: 'l', label: t('common:units.l') },
-    { value: 'm', label: t('common:units.m') },
+    { value: 'und.', label: t('units_und') }, //  Fixed: removed 'common:units.und'
+    { value: 'kg', label: t('units_kg') }, //  Fixed: removed 'common:units.kg'
+    { value: 'l', label: t('units_l') }, //  Fixed: removed 'common:units.l'
+    { value: 'm', label: t('units_m') }, // Fixed: removed 'common:units.m'
   ];
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <form onSubmit={handleSubmit}>
         <DialogTitle>
-          {isEditing ? t('common:edit') : t('common:create')} {t('common:item')}
+          {isEditing ? t('edit') : t('create')} {t('item')} {/* Fixed: removed 'common:' prefix */}
         </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label={t('common:name')}
+            label={t('name')} 
             type="text"
             fullWidth
             variant="outlined"
@@ -140,7 +140,7 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
           
           <TextField
             margin="dense"
-            label={t('common:quantity')}
+            label={t('quantity')} 
             type="number"
             fullWidth
             variant="outlined"
@@ -153,11 +153,11 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
           />
 
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
-            <InputLabel>{t('common:unit')}</InputLabel>
+            <InputLabel>{t('unit')}</InputLabel> {/* Fixed: removed 'common:' prefix */}
             <Select
               value={formData.unit}
               onChange={(e) => setFormData({ ...formData, unit: e.target.value as UnitType })}
-              label={t('common:unit')}
+              label={t('unit')} 
               disabled={loading || !canSubmit}
             >
               {unitOptions.map((option) => (
@@ -169,11 +169,11 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
           </FormControl>
 
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
-            <InputLabel>{t('common:department')}</InputLabel>
+            <InputLabel>{t('department')}</InputLabel> {/* Fixed: removed 'common:' prefix */}
             <Select
               value={formData.departmentId}
               onChange={(e) => setFormData({ ...formData, departmentId: Number(e.target.value) })}
-              label={t('common:department')}
+              label={t('department')}
               disabled={loading || !canSubmit || !canGetDepartment}
               required
             >
@@ -186,18 +186,18 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
           </FormControl>
 
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
-            <InputLabel>{t('common:category')}</InputLabel>
+            <InputLabel>{t('category')}</InputLabel> {/* Fixed: removed 'common:' prefix */}
             <Select
               value={formData.categoryId || ''}
               onChange={(e) => setFormData({ 
                 ...formData, 
                 categoryId: e.target.value ? Number(e.target.value) : undefined 
               })}
-              label={t('common:category')}
+              label={t('category')} 
               disabled={loading || !canSubmit || !canGetCategory}
             >
               <MenuItem value="">
-                <em>{t('common:none')}</em>
+                <em>{t('none')}</em> {/*  Fixed: removed 'common:' prefix */}
               </MenuItem>
               {categories.map((category) => (
                 <MenuItem key={category.id} value={category.id}>
@@ -215,14 +215,14 @@ const ItemFormDialog: React.FC<ItemFormDialogProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} disabled={loading}>
-            {t('common:cancel')}
+            {t('cancel')} {/*  Fixed: removed 'common:' prefix */}
           </Button>
           <Button
             type="submit"
             variant="contained"
             disabled={loading || !canSubmit || !formData.name.trim() || !formData.departmentId}
           >
-            {loading ? t('common:saving') : (isEditing ? t('common:update') : t('common:create'))}
+            {loading ? t('saving') : (isEditing ? t('update') : t('create'))} {/*  Fixed: removed 'common:' prefix */}
           </Button>
         </DialogActions>
       </form>

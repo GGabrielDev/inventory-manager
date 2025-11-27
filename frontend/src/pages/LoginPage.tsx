@@ -8,7 +8,7 @@ import type { AppDispatch, RootState } from '@/store';
 import { fetchUser,login } from '@/store/authSlice';
 
 const LoginPage: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common'); // ✅ Fixed: added 'common' namespace
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const authState = useSelector((state: RootState) => state.auth);
@@ -45,10 +45,10 @@ const LoginPage: React.FC = () => {
     <Container maxWidth="sm">
       <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          {t('auth:title')}
+          {t('login_title')} {/* ✅ Fixed: removed 'auth:title' */}
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
-          {t('auth:login')}
+          {t('login')} {/* ✅ Fixed: removed 'auth:login' */}
         </Typography>
         {authState.error && (
           <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
@@ -57,7 +57,7 @@ const LoginPage: React.FC = () => {
         )}
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, width: '100%' }}>
           <TextField
-            label={t('auth:username')}
+            label={t('username')} 
             variant="outlined"
             margin="normal"
             fullWidth
@@ -67,7 +67,7 @@ const LoginPage: React.FC = () => {
             disabled={authState.status === 'loading'}
           />
           <TextField
-            label={t('auth:password')}
+            label={t('password')} 
             variant="outlined"
             margin="normal"
             fullWidth
@@ -84,7 +84,7 @@ const LoginPage: React.FC = () => {
             sx={{ mt: 3, mb: 2 }}
             disabled={authState.status === 'loading'}
           >
-            {authState.status === 'loading' ? t('auth:loggingIn') : t('auth:login')}
+            {authState.status === 'loading' ? t('logging_in') : t('login')} {/* ✅ Fixed: removed 'auth:loggingIn' and 'auth:login' */}
           </Button>
         </Box>
       </Box>

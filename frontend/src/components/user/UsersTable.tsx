@@ -10,6 +10,7 @@ import {
   TableHead,
   TableRow,
   Typography} from '@mui/material';
+import { useTranslation } from 'react-i18next'; //  Added: import useTranslation
 
 import type { UsersTableProps } from '@/types';
 
@@ -20,8 +21,10 @@ const UsersTable: React.FC<UsersTableProps> = ({
   onEdit,
   onDelete
 }) => {
+  const { t } = useTranslation('common'); //  Added: translation hook
+  
   const handleDelete = (userId: number) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+    if (window.confirm(t('confirm_delete'))) { //  Fixed: replaced hardcoded text
       onDelete(userId);
     }
   };
@@ -31,11 +34,11 @@ const UsersTable: React.FC<UsersTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Username</TableCell>
-            <TableCell>Roles</TableCell>
+            <TableCell>{t('username')}</TableCell> {/*  Fixed: replaced hardcoded text */}
+            <TableCell>{t('roles')}</TableCell> {/*  Fixed: replaced hardcoded text */}
             {/* Only show Actions column if user has edit or delete permissions */}
             {(canEditUser || canDeleteUser) && (
-              <TableCell align="center">Actions</TableCell>
+              <TableCell align="center">{t('actions')}</TableCell> 
             )}
           </TableRow>
         </TableHead>
@@ -61,7 +64,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                     ))
                   ) : (
                     <Typography variant="body2" color="text.secondary">
-                      No roles assigned
+                      {t('no_roles_assigned')} {/*  Fixed: replaced hardcoded text */}
                     </Typography>
                   )}
                 </Box>
@@ -78,7 +81,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                         color="primary"
                         onClick={() => onEdit(user)}
                       >
-                        Edit
+                        {t('edit')} {/*  Fixed: replaced hardcoded text */}
                       </Button>
                     )}
                     {/* Only show Delete button if user has delete permission */}
@@ -89,7 +92,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
                         color="error"
                         onClick={() => handleDelete(user.id)}
                       >
-                        Delete
+                        {t('delete')} {/*  Fixed: replaced hardcoded text */}
                       </Button>
                     )}
                   </Box>

@@ -21,13 +21,13 @@ const DepartmentsTable: React.FC<DepartmentsTableProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common'); // ✅ Fixed: added 'common' namespace
 
   if (departments.length === 0) {
     return (
       <Paper sx={{ p: 3, textAlign: 'center' }}>
         <Typography variant="h6" color="text.secondary">
-          {t('common:noDataFound')}
+          {t('no_data_found')} {/* ✅ Fixed: removed 'common:' prefix */}
         </Typography>
       </Paper>
     );
@@ -38,12 +38,12 @@ const DepartmentsTable: React.FC<DepartmentsTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>{t('common:id')}</TableCell>
-            <TableCell>{t('common:name')}</TableCell>
-            <TableCell>{t('common:createdAt')}</TableCell>
-            <TableCell>{t('common:updatedAt')}</TableCell>
+            <TableCell>{t('id')}</TableCell> {/* ✅ Fixed: removed 'common:' prefix */}
+            <TableCell>{t('name')}</TableCell> {/* ✅ Fixed: removed 'common:' prefix */}
+            <TableCell>{t('created_at')}</TableCell> {/* ✅ Fixed: removed 'common:' prefix */}
+            <TableCell>{t('updated_at')}</TableCell> {/* ✅ Fixed: removed 'common:' prefix */}
             {(canEditDepartment || canDeleteDepartment) && (
-              <TableCell>{t('common:actions')}</TableCell>
+              <TableCell>{t('actions')}</TableCell> 
             )}
           </TableRow>
         </TableHead>
@@ -67,7 +67,7 @@ const DepartmentsTable: React.FC<DepartmentsTableProps> = ({
                         size="small"
                         onClick={() => onEdit(department)}
                       >
-                        {t('common:edit')}
+                        {t('edit')} {/* ✅ Fixed: removed 'common:' prefix */}
                       </Button>
                     )}
                     {canDeleteDepartment && (
@@ -77,7 +77,7 @@ const DepartmentsTable: React.FC<DepartmentsTableProps> = ({
                         size="small"
                         onClick={() => onDelete(department.id)}
                       >
-                        {t('common:delete')}
+                        {t('delete')} {/* ✅ Fixed: removed 'common:' prefix */}
                       </Button>
                     )}
                   </div>

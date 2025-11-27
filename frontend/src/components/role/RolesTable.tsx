@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 
 import type { RolesTableProps } from '@/types';
 
-
 const RolesTable: React.FC<RolesTableProps> = ({
   roles,
   canEditRole,
@@ -21,9 +20,10 @@ const RolesTable: React.FC<RolesTableProps> = ({
   onEdit,
   onDelete
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common'); //  Fixed: added 'common' namespace
+  
   const handleDelete = (roleId: number) => {
-    if (window.confirm('Are you sure you want to delete this role?')) {
+    if (window.confirm(t('confirm_delete'))) { //  Fixed: replaced hardcoded text
       onDelete(roleId);
     }
   };
@@ -33,11 +33,11 @@ const RolesTable: React.FC<RolesTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>{t('roles:components.table.roleName')}</TableCell>
-            <TableCell>{t('roles:components.table.description')}</TableCell>
+            <TableCell>{t('role_name')}</TableCell> {/*  Fixed: removed 'roles:components.table.roleName' */}
+            <TableCell>{t('description')}</TableCell> {/*  Fixed: removed 'roles:components.table.description' */}
             {/* Only show Actions column if user has edit or delete permissions */}
             {(canEditRole || canDeleteRole) && (
-              <TableCell align="center">{t('roles:components.table.actions')}</TableCell>
+              <TableCell align="center">{t('actions')}</TableCell> 
             )}
           </TableRow>
         </TableHead>
@@ -51,7 +51,7 @@ const RolesTable: React.FC<RolesTableProps> = ({
               </TableCell>
               <TableCell>
                 <Typography variant="body2" color="text.secondary">
-                  {role.description || 'No description'}
+                  {role.description || t('no_description')} {/*  Fixed: replaced hardcoded text */}
                 </Typography>
               </TableCell>
               {/* Only show Actions column if user has edit or delete permissions */}
@@ -66,7 +66,7 @@ const RolesTable: React.FC<RolesTableProps> = ({
                         color="primary"
                         onClick={() => onEdit(role)}
                       >
-                        {t('edit')}
+                        {t('edit')} {/*  Fixed: already using common namespace */}
                       </Button>
                     )}
                     {/* Only show Delete button if user has delete permission */}
@@ -77,7 +77,7 @@ const RolesTable: React.FC<RolesTableProps> = ({
                         color="error"
                         onClick={() => handleDelete(role.id)}
                       >
-                        {t('delete')}
+                        {t('delete')} {/*  Fixed: already using common namespace */}
                       </Button>
                     )}
                   </Box>

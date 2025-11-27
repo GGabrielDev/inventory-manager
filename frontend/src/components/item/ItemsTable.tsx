@@ -22,13 +22,13 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common'); //  Fixed: added 'common' namespace
 
   if (items.length === 0) {
     return (
       <Paper sx={{ p: 3, textAlign: 'center' }}>
         <Typography variant="h6" color="text.secondary">
-          {t('common:noDataFound')}
+          {t('no_data_found')} {/*  Fixed: removed 'common:' prefix */}
         </Typography>
       </Paper>
     );
@@ -39,16 +39,16 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>{t('common:id')}</TableCell>
-            <TableCell>{t('common:name')}</TableCell>
-            <TableCell>{t('common:quantity')}</TableCell>
-            <TableCell>{t('common:unit')}</TableCell>
-            <TableCell>{t('common:category')}</TableCell>
-            <TableCell>{t('common:department')}</TableCell>
-            <TableCell>{t('common:createdAt')}</TableCell>
-            <TableCell>{t('common:updatedAt')}</TableCell>
+            <TableCell>{t('id')}</TableCell> {/*  Fixed: removed 'common:' prefix */}
+            <TableCell>{t('name')}</TableCell> {/*  Fixed: removed 'common:' prefix */}
+            <TableCell>{t('quantity')}</TableCell> {/*  Fixed: removed 'common:' prefix */}
+            <TableCell>{t('unit')}</TableCell> {/*  Fixed: removed 'common:' prefix */}
+            <TableCell>{t('category')}</TableCell> {/*  Fixed: removed 'common:' prefix */}
+            <TableCell>{t('department')}</TableCell> {/*  Fixed: removed 'common:' prefix */}
+            <TableCell>{t('created_at')}</TableCell> {/*  Fixed: removed 'common:' prefix */}
+            <TableCell>{t('updated_at')}</TableCell> {/*  Fixed: removed 'common:' prefix */}
             {(canEditItem || canDeleteItem) && (
-              <TableCell>{t('common:actions')}</TableCell>
+              <TableCell>{t('actions')}</TableCell> 
             )}
           </TableRow>
         </TableHead>
@@ -62,10 +62,10 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
                 <Chip label={item.unit} size="small" />
               </TableCell>
               <TableCell>
-                {item.category ? item.category.name : t('common:none')}
+                {item.category ? item.category.name : t('none')} {/* ✅ Fixed: removed 'common:' prefix */}
               </TableCell>
               <TableCell>
-                {item.department ? item.department.name : t('common:none')}
+                {item.department ? item.department.name : t('none')} {/* ✅ Fixed: removed 'common:' prefix */}
               </TableCell>
               <TableCell>
                 {format(new Date(item.creationDate), 'PPp')}
@@ -82,7 +82,7 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
                         size="small"
                         onClick={() => onEdit(item)}
                       >
-                        {t('common:edit')}
+                        {t('edit')} {/*  Fixed: removed 'common:' prefix */}
                       </Button>
                     )}
                     {canDeleteItem && (
@@ -92,7 +92,7 @@ const ItemsTable: React.FC<ItemsTableProps> = ({
                         size="small"
                         onClick={() => onDelete(item.id)}
                       >
-                        {t('common:delete')}
+                        {t('delete')} {/*  Fixed: removed 'common:' prefix */}
                       </Button>
                     )}
                   </div>

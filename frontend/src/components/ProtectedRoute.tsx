@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation('common'); //  Fixed: removed array and use single namespace
   const { token, loading, error } = useAuth();
 
   // If no token, redirect to login
@@ -38,7 +38,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       >
         <CircularProgress size={48} thickness={4} />
         <Typography variant="body1" color="text.secondary">
-          {t('common:loading', 'Loading...')}
+          {t('loading')} {/*  Fixed: removed 'common:' prefix and fallback */}
         </Typography>
       </Box>
     );

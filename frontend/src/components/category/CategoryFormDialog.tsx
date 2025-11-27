@@ -20,7 +20,7 @@ const CategoryFormDialog: React.FC<CategoryFormDialogProps> = ({
   canEdit,
   canCreate,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common'); // ✅ Fixed: added 'common' namespace
   const { createCategory, updateCategory, error, setError } = useCategoryManagement();
 
   const [formData, setFormData] = useState<CategoryFormData>({
@@ -77,13 +77,13 @@ const CategoryFormDialog: React.FC<CategoryFormDialogProps> = ({
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <form onSubmit={handleSubmit}>
         <DialogTitle>
-          {isEditing ? t('common:edit') : t('common:create')} {t('common:category')}
+          {isEditing ? t('edit') : t('create')} {t('category')} {/* ✅ Fixed: removed 'common:' prefix */}
         </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label={t('common:name')}
+            label={t('name')} 
             type="text"
             fullWidth
             variant="outlined"
@@ -100,14 +100,14 @@ const CategoryFormDialog: React.FC<CategoryFormDialogProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} disabled={loading}>
-            {t('common:cancel')}
+            {t('cancel')} {/* ✅ Fixed: removed 'common:' prefix */}
           </Button>
           <Button
             type="submit"
             variant="contained"
             disabled={loading || !canSubmit || !formData.name.trim()}
           >
-            {loading ? t('common:saving') : (isEditing ? t('common:update') : t('common:create'))}
+            {loading ? t('saving') : (isEditing ? t('update') : t('create'))} {/* ✅ Fixed: removed 'common:' prefix */}
           </Button>
         </DialogActions>
       </form>

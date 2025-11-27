@@ -20,7 +20,6 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "types": ["node"],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
